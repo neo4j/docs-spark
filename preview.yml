@@ -1,7 +1,7 @@
 site:
-  title: Neo4j Docs Template
-  url: https://neo4j.com/docs
-  start_page: docs-template:ROOT:index.adoc
+  title: Neo4j Spark
+  url: https://neo4j.com/docs/spark
+  start_page: docs-spark:ROOT:index.adoc
 
 content:
   sources:
@@ -24,7 +24,7 @@ urls:
 antora:
   extensions:
   - require: "@neo4j-antora/antora-modify-sitemaps"
-    sitemap_version: '1.0'
+    sitemap_version: '5.0'
     sitemap_loc_version: 'current'
     move_sitemaps_to_components: true
 
@@ -51,7 +51,7 @@ asciidoc:
     includePDF: false
     nonhtmloutput: ""
     experimental: ''
-    copyright: 2022
+    copyright: 2023
     common-license-page-uri: https://neo4j.com/docs/license/
     check-mark: icon:check[]
     cross-mark: icon:times[]
