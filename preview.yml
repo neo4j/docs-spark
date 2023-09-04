@@ -1,7 +1,7 @@
 site:
   title: Neo4j Spark
-  url: https://neo4j.com/docs/spark
-  start_page: docs-spark:ROOT:index.adoc
+  url: https://neo4j.com/docs/
+  start_page: spark:ROOT:index.adoc
 
 content:
   sources:
