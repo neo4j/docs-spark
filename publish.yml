@@ -7,7 +7,7 @@ site:
 content:
   sources:
     - url: https://github.com/neo4j/docs-spark.git
-      branches: ['dev', '4.2', '4.1', '4.0']
+      branches: ['5.x', '4.2', '4.1', '4.0']
       exclude:
       - '!**/_includes/*'
       - '!**/readme.adoc'
