@@ -1,3 +1,4 @@
+
 = Neo4j Connector for Apache Spark v{connector-version}
 
 ifdef::backend-html5[(C) {copyright}]
