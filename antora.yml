@@ -1,4 +1,4 @@
-name: docs-spark
+name: spark
 title: Neo4j Spark
 version: '4.2'
 start_page: ROOT:index.adoc
