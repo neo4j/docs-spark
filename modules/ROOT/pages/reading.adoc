@@ -83,7 +83,7 @@ When `string` is set, it coerces all the properties to String, otherwise it trie
 |`true`
 |No
 
-|`pushdown.limit.enabled`
+|`pushdown.limit.enabled` label:new[Introduced in 5.1]
 |Enable or disable the PushdownLimit support.
 |`true`
 |No

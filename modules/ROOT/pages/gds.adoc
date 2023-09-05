@@ -18,7 +18,7 @@ All of the link:{url-neo4j-gds-manual}[functionality of GDS^] is used by issuing
 accessible via Spark, because the Neo4j Connector for Apache Spark can issue Cypher queries and read their results back.  This combination means
 that you can use Neo4j and GDS as a graph co-processor in an existing ML workflow that you may implement in Apache Spark.
 
-== GDS first-class support
+== GDS first-class support label:new[Introduced in 5.1]
 
 Neo4j Spark Connector provides first-class support to Graph Data Science library let's see how it works.
 
