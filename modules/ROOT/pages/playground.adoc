@@ -8,7 +8,7 @@ image::colab-to-sandbox.png[Colab/PySpark to Neo4j sandbox architecture, align="
 
 These notebooks contain a set of examples that explain how the Neo4j Spark connector can fit into your data-driven workflow, and mostly important they allow you to test your knowledge with a set of exercises after each section.
 
-If you have any problem feel free to write a post in the +If you have any problem feel free to write a post in https://community.neo4j.com[Neo4j community forum] or in https://discord.com/invite/neo4j[Discord].
+If you have any problem feel free to write a post in the https://community.neo4j.com[Neo4j community forum] or in https://discord.com/invite/neo4j[Discord].
 
 If you want more exercises feel free to open an issue in the https://github.com/neo4j-contrib/neo4j-spark-connector[GitHub repository].
 
