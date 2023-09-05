@@ -7,7 +7,8 @@ site:
 content:
   sources:
     - url: https://github.com/neo4j/docs-spark.git
-      branches: ['5.x', '4.2', '4.1', '4.0']
+      edit_url: https://github.com/neo4j/docs-spark/tree/{refname}/{path}
+      branches: ['dev', '4.2', '4.1', '4.0']
       exclude:
       - '!**/_includes/*'
       - '!**/readme.adoc'
@@ -46,7 +47,7 @@ asciidoc:
     page-terms-to-mark: Cypher
     page-pagination: true
     page-no-canonical: true 
-    page-origin-private: true
+    page-origin-private: false
     page-hide-toc: false
     page-mixpanel: 4bfb2414ab973c741b6f067bf06d5575
     includePDF: false
