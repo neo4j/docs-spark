@@ -88,6 +88,11 @@ When `string` is set, it coerces all the properties to String, otherwise it trie
 |`true`
 |No
 
+|`pushdown.topN.enabled` label:new[v.5.2]
+|Enable or disable the PushDownTopN support.
+|`true`
+|No
+
 |`partitions`
 |This defines the parallelization level while pulling data from Neo4j.
 
