@@ -28,57 +28,57 @@ Check xref:overview.adoc#_spark_compatibility[this page] for more information ab
 
 === Using spark-submit, spark-shell, or pyspark
 
-[shell]
+[shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/spark-shell --jars neo4j-connector-apache-spark_2.12-5.0.1_for_spark_3.jar
+$SPARK_HOME/bin/spark-shell --jars neo4j-connector-apache-spark_2.13-{exact-connector-version}_for_spark_3.jar
 ----
 
 The connector is also available from link:https://spark-packages.org/?q=neo4j-connector-apache-spark[Spark Packages]:
 
-[shell]
+[shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/spark-shell --packages org.neo4j:neo4j-connector-apache-spark_2.12:5.0.1_for_spark_3
+$SPARK_HOME/bin/spark-shell --packages org.neo4j:neo4j-connector-apache-spark_2.13:{exact-connector-version}_for_spark_3
 ----
 
 === Using sbt
 
 If you use the link:https://github.com/databricks/sbt-spark-package[sbt-spark-package plugin], in your `build.sbt` file add:
 
-[shell]
+[shell, subs="attributes+"]
 ----
-scala spDependencies += "org.neo4j/neo4j-connector-apache-spark_${scala.version}:5.0.1_for_spark_${spark.version}"
+scala spDependencies += "org.neo4j/neo4j-connector-apache-spark_${scala.version}:{exact-connector-version}_for_spark_${spark.version.major}"
 ----
 
 Otherwise:
 
-[text]
+[text, subs="attributes+"]
 ----
-libraryDependencies += "org.neo4j" % "neo4j-connector-apache-spark_${scala.version}" % "5.0.1_for_spark_${spark.version}"
+libraryDependencies += "org.neo4j" % "neo4j-connector-apache-spark_${scala.version}" % "{exact-connector-version}_for_spark_${spark.version.major}"
 ----
 
 === Using Maven
 
 .pom.xml
-[source,xml]
+[source,xml, subs="attributes+"]
 ----
 <dependencies>
   <!-- list of dependencies -->
   <dependency>
     <groupId>org.neo4j</groupId>
     <artifactId>neo4j-connector-apache-spark_${scala.version}</artifactId>
-    <version>5.0.1_for_spark_${spark.version}</version>
+    <version>{exact-connector-version}_for_spark_${spark.version.major}</version>
   </dependency>
 </dependencies>
 ----
 
 === Using Gradle
 
-[source,`build.gradle`]
+[source,`build.gradle`, subs="attributes+"]
 ----
 
 dependencies{
     // list of dependencies
-    compile "org.neo4j:neo4j-spark-connector:${connector.version}"
+    compile "org.neo4j:neo4j-connector-apache-spark_${scala.version}:{exact-connector-version}_for_spark_${spark.version.major}"
 }
 ----
 
@@ -296,6 +296,50 @@ val df = (spark.read
       .option("relationship.target.labels", "Product")
       .load
       .select("`target.name`", "`target.id`")
+      .limit(10))
+
+
+df.show()
+----
+
+The `limit` value will be pushed down to Neo4j.
+
+
+=== Push-down top N
+
+The Neo4j Connector for Apache Spark implements the `SupportsPushDownTopN` interface.
+That allows you to push top N aggregations down to the Neo4j layer.
+In this way the data that Spark receives have been already aggregated and limited by Neo4j.
+This decreases the amount of data transferred from Neo4j to Spark.
+
+You can manually disable the `PushDownTopN` support using the `pushdown.topN.enabled` option and set it to `false` (default is `true`).
+
+
+[source,scala]
+----
+// Given a DB populated with the following query
+"""
+  CREATE (pe:Person {id: 1, fullName: 'Jane Doe'})
+  WITH pe
+  UNWIND range(1, 10) as id
+  CREATE (pr:Product {id: id * rand(), name: 'Product ' + id, price: id})
+  CREATE (pe)-[:BOUGHT{when: rand(), quantity: rand() * 1000}]->(pr)
+  RETURN *
+"""
+import org.apache.spark.sql.{SaveMode, SparkSession}
+val spark = SparkSession.builder().getOrCreate()
+
+val df = (spark.read
+      .format("org.neo4j.spark.DataSource")
+      .option("url", "bolt://localhost:7687")
+      .option("authentication.basic.username", "neo4j")
+      .option("authentication.basic.password", "letmein!")
+      .option("relationship", "BOUGHT")
+      .option("relationship.source.labels", "Person")
+      .option("relationship.target.labels", "Product")
+      .load
+      .select("`target.name`", "`target.id`")
+      .sort(col("`target.name`").desc)
       .limit(10))
 
 
