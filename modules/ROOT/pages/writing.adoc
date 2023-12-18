@@ -473,7 +473,6 @@ val originalDf = spark.read.format("org.neo4j.spark.DataSource")
 
 originalDf
     .where("`target.price` > 2000")
-    .coalesce(1)
     .write
     .format("org.neo4j.spark.DataSource")
     .option("url", "bolt://expensiveprod.host.com:7687")
@@ -671,10 +670,12 @@ For `Overwrite` mode you *must have unique constraints on the keys*.
 
 === Schema optimization operations
 
+
 The Spark Connector supports schema optimization operations via:
 
-* index.
-* constraints.
+* index (deprecated);
+* constraints;
+* property type enforcement;
 * set of schema queries.
 
 To speed up the import itself that is executed *before* the import process starts.
@@ -683,10 +684,6 @@ You can set the optimization via `schema.optimization.type` option that works on
 
 * `INDEX`: it creates only indexes on provided nodes.
 * `NODE_CONSTRAINTS`: it creates only indexes on provided nodes.
-
-[IMPORTANT]
-The `schema.optimization.type` option cannot be used with the `query` option.
-If you are using a <<write-query, custom Cypher query>>, you need to create indexes and constraints manually using the <<script-option, `script` option>>.
 
 
 ==== Index creation
@@ -716,8 +713,7 @@ If the `node.keys` option were set to `"name,surname"` instead, the index name w
 
 The index is not recreated if it is already present.
 
-
-==== Constraint creation
+===== Constraint creation
 
 Below you can see an example of how to create constraints while you're creating nodes.
 
