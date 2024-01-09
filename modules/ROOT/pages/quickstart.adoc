@@ -16,7 +16,7 @@ It's fairly easy to use, although it can be highly customized.
 First, install Spark as documented on link:https://spark.apache.org/downloads.html[their website].
 
 Choose the version carefully since the wrong combination of Scala version and Spark version breaks your code.
-Check xref:overview.adoc#_spark_compatibility[this page] for more information about the proper JAR to use.
+Check xref:overview.adoc#_spark_and_scala_compatibility[this page] for more information about the proper JAR to use.
 
 [#_where_to_get_the_jars]
 === Where to get the JARs?
@@ -24,7 +24,7 @@ Check xref:overview.adoc#_spark_compatibility[this page] for more information ab
 You can download the connector JAR from the link:https://neo4j.com/product/connectors/apache-spark-connector/[Neo4j Connector Page] or from the link:https://github.com/neo4j-contrib/neo4j-spark-connector/releases[GitHub releases page].
 
 As for xref:#prerequisites[the Spark installation], make sure to choose the version carefully since the wrong combination of Scala version and Spark version breaks your code.
-Check xref:overview.adoc#_spark_compatibility[this page] for more information about the proper JAR to use.
+Check xref:overview.adoc#_spark_and_scala_compatibility[this page] for more information about the proper JAR to use.
 
 === Using spark-submit, spark-shell, or pyspark
 
@@ -146,7 +146,7 @@ Before going into details, we need to address you to some preliminary considerat
 
 Spark doesn't natively support all Neo4j data types (i.e., link:https://neo4j.com/docs/cypher-manual/current/values-and-types/spatial/#spatial-values-point-type[`Point`], link:https://neo4j.com/docs/cypher-manual/current/values-and-types/temporal/#cypher-temporal-instants[`Time`], link:https://neo4j.com/docs/cypher-manual/current/values-and-types/temporal/#cypher-temporal-durations[`Duration`]). Such types are transformed into Struct types containing all the useful data.
 
-For complete details on type handling, consult the xref::types.adoc[Data type mapping between Neo4j and Spark].
+For complete details on type handling, consult the xref:types.adoc[Data type mapping between Neo4j and Spark].
 
 .Complex data type conversion
 |===
