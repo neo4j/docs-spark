@@ -703,7 +703,11 @@ Before the import starts, the following schema query is being created:
 CREATE INDEX ON :Person(surname)
 ----
 
-*Take into consideration that the first label is used for the index creation.*
+The name of the created index is `spark_INDEX_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
+In this example, the name of the created index is `spark_INDEX_Person_surname`.
+If the `node.keys` option were set to `"name,surname"` instead, the index name would become `spark_INDEX_Person_name-surname`.
+
+The index is recreated if it is already present.
 
 
 ==== Constraint creation
@@ -727,7 +731,11 @@ Before the import starts, the code above creates the following schema query:
 CREATE CONSTRAINT FOR (p:Person) REQUIRE (p.surname) IS UNIQUE
 ----
 
-*Take into consideration that the first label is used for the index creation.*
+The name of the created constraint is `spark_NODE_CONSTRAINTS_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
+In this example, the name of the created constraint is `spark_NODE_CONSTRAINTS_Person_surname`.
+If the `node.keys` option were set to `"name,surname"` instead, the constraint name would become `spark_NODE_CONSTRAINTS_Person_name-surname`.
+
+The constraint is recreated if it is already present.
 
 === Script option
 
