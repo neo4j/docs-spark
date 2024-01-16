@@ -36,3 +36,6 @@ target/
 # node modules
 node_modules/
 .env
+
+# IDE
+.vscode/
