@@ -681,6 +681,10 @@ You can set the optimization via `schema.optimization.type` option that works on
 * `INDEX`: it creates only indexes on provided nodes.
 * `NODE_CONSTRAINTS`: it creates only indexes on provided nodes.
 
+[IMPORTANT]
+The `schema.optimization.type` option cannot be used with the `query` option.
+If you are using a <<write-query, custom Cypher query>>, you need to create indexes and constraints manually using the <<script-option, `script` option>>.
+
 
 ==== Index creation
 
@@ -712,7 +716,7 @@ The index is recreated if it is already present.
 
 ==== Constraint creation
 
-Below you can see an example of how to create indexes while you're creating nodes.
+Below you can see an example of how to create constraints while you're creating nodes.
 
 ----
 ds.write
@@ -737,6 +741,7 @@ If the `node.keys` option were set to `"name,surname"` instead, the constraint n
 
 The constraint is recreated if it is already present.
 
+[[script-option]]
 === Script option
 
 The script option allows you to execute a series of preparation script before Spark
