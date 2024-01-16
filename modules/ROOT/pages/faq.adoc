@@ -88,6 +88,13 @@ NoClassDefFoundError: org/apache/spark/sql/sources/v2/ReadSupport
 Caused by: ClassNotFoundException: org.apache.spark.sql.sources.v2.ReadSupport
 ----
 
+Or the following:
+
+----
+java.lang.NoClassDefFoundError: scala/collection/IterableOnce
+Caused by: java.lang.ClassNotFoundException: scala.collection.IterableOnce
+----
+
 This means that your Spark version doesn't match the Spark version on the connector.
 Refer to xref:overview.adoc#_spark_and_scala_compatibility[this page] to know which version you need.
 
