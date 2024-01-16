@@ -189,6 +189,7 @@ Writing data to a Neo4j database can be done in three ways:
 
 In case you use the option `query`, the Spark Connector persists the entire Dataset by using the provided query.
 The nodes are sent to Neo4j in a batch of rows defined in the `batch.size` property, and your query is wrapped up in an `UNWIND $events AS event` statement.
+The `query` option supports both `CREATE` and `MERGE` clauses.
 
 Let's look at the following simple Spark program:
 
@@ -199,11 +200,24 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 import spark.implicits._
 
-val df = (1 to 10)/*...*/.toDF()
+case class Person(name: String, surname: String, age: Int)
+
+// Create an example DataFrame
+val df = Seq(
+    Person("John", "Doe", 42),
+    Person("Jane", "Doe", 40)
+).toDF()
+
+// Define the Cypher query to use in the write
+val query = "CREATE (n:Person {fullName: event.name + ' ' + event.surname})"
+
 df.write
   .format("org.neo4j.spark.DataSource")
   .option("url", "bolt://localhost:7687")
-  .option("query", "CREATE (n:Person {fullName: event.name + event.surname})")
+  .option("authentication.basic.username", USERNAME)
+  .option("authentication.basic.password", PASSWORD)
+  .option("query", query)
+  .mode(SaveMode.Overwrite)
   .save()
 ----
 
@@ -212,10 +226,56 @@ This generates the following query:
 [source,cypher]
 ----
 UNWIND $events AS event
-CREATE (n:Person {fullName: event.name + event.surname})
+CREATE (n:Person {fullName: event.name + ' ' + event.surname})
 ----
 
 Thus `events` is the batch created from your dataset.
+
+==== Considerations
+
+* You must specify the write mode (from `SaveMode`):
+** `Append`: uses CREATE (Spark 3.x)
+** `Overwrite`: uses MERGE
+** `ErrorIfExists`: uses CREATE (Spark 2.x)
+
+* You can use the `events` list in `WITH` statements as well.
+For example, you can replace the query in the previous example with the following:
+
+[source,scala]
+----
+val query = """
+    |WITH event.name + ' ' + toUpper(event.surname) AS fullName
+    |CREATE (n:Person {fullName: fullName})
+""".stripMargin
+----
+
+* Subqueries that reference the `events` list in ``CALL``s are supported:
+
+[source,scala]
+----
+val query = """
+    |CALL {
+    |  WITH event
+    |  RETURN event.name + ' ' + toUpper(event.surname) AS fullName
+    |}
+    |CREATE (n:Person {fullName: fullName})
+""".stripMargin
+----
+
+* If APOC is installed, APOC procedures and functions can be used:
+
+[source,scala]
+----
+val query = """
+    |CALL {
+    |  WITH event
+    |  RETURN event.name + ' ' + apoc.text.toUpperCase(event.surname) AS fullName
+    |}
+    |CREATE (n:Person {fullName: fullName})
+""".stripMargin
+----
+
+* Although a `RETURN` clause is not forbidden, adding one does not have any effect on the query result.
 
 [[write-node]]
 === Node
