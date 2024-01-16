@@ -233,10 +233,7 @@ Thus `events` is the batch created from your dataset.
 
 ==== Considerations
 
-* You must specify the write mode (from `SaveMode`):
-** `Append`: uses CREATE (Spark 3.x)
-** `Overwrite`: uses MERGE
-** `ErrorIfExists`: uses CREATE (Spark 2.x)
+* You must always specify the <<save-mode>>.
 
 * You can use the `events` list in `WITH` statements as well.
 For example, you can replace the query in the previous example with the following:
