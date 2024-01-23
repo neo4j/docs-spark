@@ -756,7 +756,7 @@ The connector allows to enforce the following constraints:
 |`schema.optimization.node.key` |true/false |false | Create the `NODE KEY` constraint for the properties defined in the option `node.keys`
 |`schema.optimization.relationship.unique` |true/false |false | Create the `UNIQUE` constraint for the properties defined in the option `relationship.keys`
 |`schema.optimization.relationship.key` |true/false |false | Create the `RELATIONSHIP KEY` constraint for the properties defined in the option `relationship.keys`
-|`schema.type.constraint` |true/false |false | Creates the type constraints for node/relationships enforcing the type from the DataFrame schema
+|`schema.type.constraint` |true/false |false | Creates the type constraints for nodes/relationships enforcing the type from the DataFrame schema
 |===
 
 [NOTE]
