@@ -752,11 +752,9 @@ The connector allows to enforce the following constraints:
 |===
 |config |values |default |description
 
-|`schema.optimization.node.unique` |true/false |false | Create the `UNIQUE` constraint for the properties defined in the option `node.keys`
-|`schema.optimization.node.key` |true/false |false | Create the `NODE KEY` constraint for the properties defined in the option `node.keys`
-|`schema.optimization.relationship.unique` |true/false |false | Create the `UNIQUE` constraint for the properties defined in the option `relationship.keys`
-|`schema.optimization.relationship.key` |true/false |false | Create the `RELATIONSHIP KEY` constraint for the properties defined in the option `relationship.keys`
-|`schema.type.constraint` |true/false |false | Creates the type constraints for nodes/relationships enforcing the type from the DataFrame schema
+|`schema.optimization.node` |UNIQUE/KEY/NONE |NONE | Create the `UNIQUE` or `NODE KEY` constraint for the properties defined in the option `node.keys`
+|`schema.optimization.relationship` |UNIQUE/KEY/NONE |false | Create the `UNIQUE` or `NODE KEY` constraint for the properties defined in the option `relationship.keys`
+|`schema.optimization` |TYPE/EXISTS/NONE |NONE | A comma separated list of values. Creates the type constraints for nodes/relationships enforcing the type and non-nullability from the DataFrame schema
 |===
 
 [NOTE]
@@ -764,7 +762,12 @@ Please consider that if you define more than one label we use the *first* for cr
 
 ===== Node constraints
 
-====== Using `schema.optimization.node.unique`
+====== Using `schema.optimization.node`
+
+**Enforcing unique constraint**
+
+[NOTE]
+For a detailed description of how Neo4j handles unique constraints on nodes please go to the official https://neo4j.com/docs/cypher-manual/current/constraints/#unique-node-property[documentation]
 
 Given the following example:
 
@@ -776,7 +779,7 @@ Given the following example:
       .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
       .option("labels", ":Person:Customer")
       .option("node.keys", "surname")
-      .option("schema.optimization.node.unique", true)
+      .option("schema.optimization.node", "UNIQUE")
       .save()
 ----
 
@@ -784,7 +787,10 @@ Under the hood the Spark connector will create the following constraint:
 
 `CREATE CONSTRAINT `spark_NODE_UNIQUE-CONSTRAINT_Person_surname` IF NOT EXISTS FOR (e:Person) REQUIRE (e.surname) IS UNIQUE`
 
-====== Using `schema.optimization.node.key`
+**Enforcing node key constraint**
+
+[NOTE]
+For a detailed description of how Neo4j handles node key constraints please go to the official https://neo4j.com/docs/cypher-manual/current/constraints/#node-key[documentation]
 
 Given the following example:
 
@@ -796,7 +802,7 @@ Given the following example:
       .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
       .option("labels", ":Person:Customer")
       .option("node.keys", "surname")
-      .option("schema.optimization.node.key", true)
+      .option("schema.optimization.node.keys", "KEY")
       .save()
 ----
 
@@ -806,7 +812,12 @@ Under the hood the Spark connector will create the following constraint:
 
 ===== Relationship constraints
 
-====== Using `schema.optimization.relationship.unique`
+====== Using `schema.optimization.relationship`
+
+**Enforcing unique constraint**
+
+[NOTE]
+For a detailed description of how Neo4j handles unique constraints on relationships please go to the official https://neo4j.com/docs/cypher-manual/current/constraints/#unique-relationship-property[documentation]
 
 Given the following example:
 
@@ -825,7 +836,7 @@ Given the following example:
       .option("relationship.target.labels", ":NodeB")
       .option("relationship.target.node.keys", "idTarget:id")
       .option("relationship.target.save.mode", "Overwrite")
-      .option("schema.optimization.relationship.unique", true)
+      .option("schema.optimization.relationship.keys", "UNIQUE")
       .option("relationship.keys", "foo,bar")
       .save()
 ----
@@ -834,7 +845,10 @@ Under the hood the Spark connector will create the following constraint:
 
 `CREATE CONSTRAINT `spark_RELATIONSHIP_UNIQUE-CONSTRAINT_MY_REL_foo-bar` IF NOT EXISTS FOR ()-[e:MY_REL]->() REQUIRE (e.foo, e.bar) IS UNIQUE`
 
-====== Using `schema.optimization.relationship.key`
+**Enforcing relationship key constraint**
+
+[NOTE]
+For a detailed description of how Neo4j handles relationship key constraint please go to the official https://neo4j.com/docs/cypher-manual/current/constraints/#relationship-key[documentation]
 
 Given the following example:
 
@@ -853,7 +867,7 @@ Given the following example:
       .option("relationship.target.labels", ":NodeB")
       .option("relationship.target.node.keys", "idTarget:id")
       .option("relationship.target.save.mode", "Overwrite")
-      .option("schema.optimization.relationship.key", true)
+      .option("schema.optimization.relationship.keys", "KEY")
       .option("relationship.keys", "foo,bar")
       .save()
 ----
@@ -865,7 +879,7 @@ Under the hood the Spark connector will create the following constraint:
 ===== Property type constraints
 
 Since Neo4j 5.11 the database allows to create type constraints for node and relationship properties.
-In order to leverage this feature we added the option `schema.type.constraint` that will use the DataFrame schema in order to enforce the type.
+In order to leverage this feature we added the option `schema.optimization` that will use the DataFrame schema in order to enforce the type.
 Internally the connector will use the following mapping:
 
 .Spark to Cypher constraint type mapping
@@ -896,6 +910,13 @@ Internally the connector will use the following mapping:
 
 For the arrays in particular we use the version without null elements as Neo4j does not allow to have them in arrays.
 
+You can leverage this kind of schema enforcement with the value `TYPE`.
+
+===== Property existence constraints
+
+Neo4j defines "property existence" as a synonym for NOT NULL condition.
+You can leverage this kind of schema enforcement with the value `EXISTS`, the connector will use the nullability of the DataFrame column to choose whether to apply or not the NOT NULL condition.
+
 ====== Node Property type and existence constraints
 
 Given the following example:
@@ -908,7 +929,7 @@ Given the following example:
       .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
       .option("labels", ":Person:Customer")
       .option("node.keys", "surname")
-      .option("schema.type.constraint", true)
+      .option("schema.optimization", "TYPE,EXISTS")
       .save()
 ----
 
@@ -921,7 +942,7 @@ The constraint query looks like the following:
 CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-surname` IF NOT EXISTS FOR (e:Person) REQUIRE e.surname IS :: STRING
 ----
 
-If the DataFrame schema says that the field is also not null the connector creates an existence constraint as it follows:
+If the DataFrame schema says that the field is also NOT NULL the connector creates an existence constraint as it follows:
 
 [source, cypher]
 ----
@@ -946,7 +967,7 @@ Given the following example:
       .option("relationship.target.labels", ":NodeB")
       .option("relationship.target.node.keys", "idTarget:id")
       .option("relationship.target.save.mode", "Overwrite")
-      .option("schema.type.constraint", true)
+      .option("schema.optimization", "TYPE,EXISTS")
       .save()
 ----
 
@@ -961,7 +982,7 @@ The connector will create:
 CREATE CONSTRAINT `spark_RELATIONSHIP-TYPE-CONSTRAINT-MY_REL-foo` IF NOT EXISTS FOR ()-[e:MY_REL]->() REQUIRE e.foo IS :: STRING
 ----
 
-If the DataFrame schema says that the field is also not null the connector creates an existence constraint as it follows:
+If the DataFrame schema says that the field is also NOT NULL the connector creates an existence constraint as it follows:
 
 [source, cypher]
 ----
