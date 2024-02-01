@@ -81,14 +81,12 @@ We are working to fully support all the save modes on Spark 3.
 
 == I am getting errors _NoClassDefFoundError_ or _ClassNotFoundException_. What should I do?
 
-You may get this type of error:
+You may get one of the following types of error:
 
 ----
 NoClassDefFoundError: org/apache/spark/sql/sources/v2/ReadSupport
 Caused by: ClassNotFoundException: org.apache.spark.sql.sources.v2.ReadSupport
 ----
-
-Or the following:
 
 ----
 java.lang.NoClassDefFoundError: scala/collection/IterableOnce
