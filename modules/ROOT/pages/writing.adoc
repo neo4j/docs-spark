@@ -237,39 +237,33 @@ Thus `events` is the batch created from your dataset.
 
 * You can use the `events` list in `WITH` statements as well.
 For example, you can replace the query in the previous example with the following:
-
-[source,scala]
++
+[source, cypher]
 ----
-val query = """
-    |WITH event.name + ' ' + toUpper(event.surname) AS fullName
-    |CREATE (n:Person {fullName: fullName})
-""".stripMargin
+WITH event.name + ' ' + toUpper(event.surname) AS fullName
+CREATE (n:Person {fullName: fullName})
 ----
 
 * Subqueries that reference the `events` list in ``CALL``s are supported:
-
-[source,scala]
++
+[source, cypher]
 ----
-val query = """
-    |CALL {
-    |  WITH event
-    |  RETURN event.name + ' ' + toUpper(event.surname) AS fullName
-    |}
-    |CREATE (n:Person {fullName: fullName})
-""".stripMargin
+CALL {
+  WITH event
+  RETURN event.name + ' ' + toUpper(event.surname) AS fullName
+}
+CREATE (n:Person {fullName: fullName})
 ----
 
 * If APOC is installed, APOC procedures and functions can be used:
-
-[source,scala]
++
+[source, cypher]
 ----
-val query = """
-    |CALL {
-    |  WITH event
-    |  RETURN event.name + ' ' + apoc.text.toUpperCase(event.surname) AS fullName
-    |}
-    |CREATE (n:Person {fullName: fullName})
-""".stripMargin
+CALL {
+  WITH event
+  RETURN event.name + ' ' + apoc.text.toUpperCase(event.surname) AS fullName
+}
+CREATE (n:Person {fullName: fullName})
 ----
 
 * Although a `RETURN` clause is not forbidden, adding one does not have any effect on the query result.
