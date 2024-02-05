@@ -712,7 +712,7 @@ CREATE INDEX ON :Person(surname)
 
 The name of the created index is `spark_INDEX_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
 In this example, the name of the created index is `spark_INDEX_Person_surname`.
-If the `node.keys` option were set to `"name,surname"` instead, the index name would become `spark_INDEX_Person_name-surname`.
+If the `node.keys` option were set to `"name,surname"` instead, the index name would be `spark_INDEX_Person_name-surname`.
 
 The index is not recreated if it is already present.
 
@@ -740,7 +740,7 @@ CREATE CONSTRAINT FOR (p:Person) REQUIRE (p.surname) IS UNIQUE
 
 The name of the created constraint is `spark_NODE_CONSTRAINTS_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
 In this example, the name of the created constraint is `spark_NODE_CONSTRAINTS_Person_surname`.
-If the `node.keys` option were set to `"name,surname"` instead, the constraint name would become `spark_NODE_CONSTRAINTS_Person_name-surname`.
+If the `node.keys` option were set to `"name,surname"` instead, the constraint name would be `spark_NODE_CONSTRAINTS_Person_name-surname`.
 
 The constraint is not recreated if it is already present.
 
