@@ -714,7 +714,7 @@ The name of the created index is `spark_INDEX_<LABEL>_<NODE_KEYS>`, where `<LABE
 In this example, the name of the created index is `spark_INDEX_Person_surname`.
 If the `node.keys` option were set to `"name,surname"` instead, the index name would become `spark_INDEX_Person_name-surname`.
 
-The index is recreated if it is already present.
+The index is not recreated if it is already present.
 
 
 ==== Constraint creation
@@ -742,7 +742,7 @@ The name of the created constraint is `spark_NODE_CONSTRAINTS_<LABEL>_<NODE_KEYS
 In this example, the name of the created constraint is `spark_NODE_CONSTRAINTS_Person_surname`.
 If the `node.keys` option were set to `"name,surname"` instead, the constraint name would become `spark_NODE_CONSTRAINTS_Person_name-surname`.
 
-The constraint is recreated if it is already present.
+The constraint is not recreated if it is already present.
 
 [[script-option]]
 === Script option
