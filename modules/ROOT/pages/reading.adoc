@@ -606,3 +606,8 @@ Where:
 * `<target_labels>` is the list of labels provided by `relationship.target.labels` option
 * `<relationship>` is the list of labels provided by `relationship`  option
 * `<limit>` is the value provided via `schema.flatten.limit`
+
+=== Performance considerations
+
+If the schema is not specified, the Spark Connector uses sampling as explained xref:quickstart.adoc#_schema[here] and xref:architecture.adoc#_schema_considerations[here].
+Since sampling is potentially an expensive operation, consider xref:quickstart.adoc#user-defined-schema[supplying your own schema].
