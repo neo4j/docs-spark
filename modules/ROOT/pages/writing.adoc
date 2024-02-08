@@ -52,8 +52,10 @@ To persist data into Neo4j, the Spark Connector supports two save modes that
 work only if `UNIQUE` or `NODE KEY` constraints are defined in Neo4j for the given properties.
 
 [NOTE]
+====
 The SaveMode examples apply to the Scala class `org.apache.spark.sql.SaveMode`.  For PySpark,
 use a static string with the name of the SaveMode. So instead of `SaveMode.Overwrite`, use `Overwrite` for PySpark.
+====
 
 For <<write-node,Node>> type:
 
@@ -672,7 +674,7 @@ For `Overwrite` mode you *must have unique constraints on the keys*.
 
 The Spark Connector supports schema optimization operations via:
 
-* index (deprecated);
+* indexes (deprecated);
 * constraints;
 * property type enforcement;
 * set of schema queries.
@@ -681,14 +683,19 @@ To speed up the import itself that is executed *before* the import process start
 
 
 [NOTE]
-since the version **5.3.0** option **schema.optimization.type** is deprecated in favor of **`schema.optimization.node.\*`**, **`schema.optimization.relationship.*`** and **schema.type.constraint**.
-
-==== Deprecated approach
+====
+Starting from version **`5.3.0`**, the **`schema.optimization.type`** option is deprecated in favor of **`schema.optimization.node.keys`**, **`schema.optimization.relationship.keys`**, and **`schema.type.constraint`**.
+====
+==== `schema.optimization.type` (Deprecated)
 
 You can set the optimization via `schema.optimization.type` option that works only if you are merging nodes and takes three values:
 
 * `INDEX`: it creates only indexes on provided nodes.
 * `NODE_CONSTRAINTS`: it creates only indexes on provided nodes.
+
+[IMPORTANT]
+The `schema.optimization.type` option cannot be used with the `query` option.
+If you are using a <<write-query, custom Cypher query>>, you need to create indexes and constraints manually using the <<script-option, `script` option>>.
 
 ===== Index creation
 
@@ -744,7 +751,7 @@ If the `node.keys` option were set to `"name,surname"` instead, the constraint n
 *Take into consideration that the first label is used for the index creation.*
 
 
-==== Approach
+==== With constraints
 
 The connector allows to enforce the following constraints:
 
@@ -752,8 +759,8 @@ The connector allows to enforce the following constraints:
 |===
 |config |values |default |description
 
-|`schema.optimization.node` |UNIQUE/KEY/NONE |NONE | Create the `UNIQUE` or `NODE KEY` constraint for the properties defined in the option `node.keys`
-|`schema.optimization.relationship` |UNIQUE/KEY/NONE |false | Create the `UNIQUE` or `NODE KEY` constraint for the properties defined in the option `relationship.keys`
+|`schema.optimization.node.keys` |UNIQUE/KEY/NONE |NONE | Create the `UNIQUE` or `NODE KEY` constraint for the properties defined in the option `node.keys`
+|`schema.optimization.relationship.keys` |UNIQUE/KEY/NONE |false | Create the `UNIQUE` or `NODE KEY` constraint for the properties defined in the option `relationship.keys`
 |`schema.optimization` |TYPE/EXISTS/NONE |NONE | A comma separated list of values. Creates the type constraints for nodes/relationships enforcing the type and non-nullability from the DataFrame schema
 |===
 
@@ -762,12 +769,11 @@ Please consider that if you define more than one label we use the *first* for cr
 
 ===== Node constraints
 
-====== Using `schema.optimization.node`
-
 **Enforcing unique constraint**
 
 [NOTE]
-For a detailed description of how Neo4j handles unique constraints on nodes please go to the official https://neo4j.com/docs/cypher-manual/current/constraints/#unique-node-property[documentation]
+For a detailed description of how Neo4j handles unique constraints on nodes see the https://neo4j.com/docs/cypher-manual/current/constraints/#unique-node-property[Cypher documentation]
+
 
 Given the following example:
 
@@ -779,7 +785,7 @@ Given the following example:
       .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
       .option("labels", ":Person:Customer")
       .option("node.keys", "surname")
-      .option("schema.optimization.node", "UNIQUE")
+      .option("schema.optimization.node.keys", "UNIQUE")
       .save()
 ----
 
@@ -790,7 +796,7 @@ Under the hood the Spark connector will create the following constraint:
 **Enforcing node key constraint**
 
 [NOTE]
-For a detailed description of how Neo4j handles node key constraints please go to the official https://neo4j.com/docs/cypher-manual/current/constraints/#node-key[documentation]
+For a detailed description of how Neo4j handles node key constraints see the https://neo4j.com/docs/cypher-manual/current/constraints/#node-key[Cypher documentation]
 
 Given the following example:
 
@@ -812,12 +818,10 @@ Under the hood the Spark connector will create the following constraint:
 
 ===== Relationship constraints
 
-====== Using `schema.optimization.relationship`
-
 **Enforcing unique constraint**
 
 [NOTE]
-For a detailed description of how Neo4j handles unique constraints on relationships please go to the official https://neo4j.com/docs/cypher-manual/current/constraints/#unique-relationship-property[documentation]
+For a detailed description of how Neo4j handles unique constraints on relationships see the official https://neo4j.com/docs/cypher-manual/current/constraints/#unique-relationship-property[Cypher documentation]
 
 Given the following example:
 
@@ -848,7 +852,7 @@ Under the hood the Spark connector will create the following constraint:
 **Enforcing relationship key constraint**
 
 [NOTE]
-For a detailed description of how Neo4j handles relationship key constraint please go to the official https://neo4j.com/docs/cypher-manual/current/constraints/#relationship-key[documentation]
+For a detailed description of how Neo4j handles relationship key constraint see the official https://neo4j.com/docs/cypher-manual/current/constraints/#relationship-key[Cypher documentation]
 
 Given the following example:
 
