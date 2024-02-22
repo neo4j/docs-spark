@@ -1,24 +1,29 @@
 * *Getting started*
 
-* xref::overview.adoc[]
-* xref::installation.adoc[]
+* xref:overview.adoc[]
+* xref:installation.adoc[]
 * Examples
-** xref::quickstart.adoc[]
-** xref::python.adoc[]
-** xref::quick-java-example.adoc[]
-** xref::playground.adoc[]
-* xref::considerations.adoc[]
+** xref:quickstart.adoc[]
+** xref:python.adoc[Python example]
+** xref:quick-java-example.adoc[Java example]
+** xref:playground.adoc[Explore with notebooks]
 
-* *More*
+* *Operations*
+* xref:considerations.adoc[]
+* xref:types.adoc[]
+* xref:configuration.adoc[]
+* Reading from Neo4j
+** xref:reading.adoc[]
+* Writing to Neo4j
+** xref:writing.adoc[]
+* xref:streaming.adoc[]
 
-* xref::configuration.adoc[Neo4j Spark Connector options and configuration]
-* xref::reading.adoc[Reading from Neo4j]
-* xref::writing.adoc[Writing to Neo4j]
-* xref::streaming.adoc[Using Spark Structured Streaming API]
-* xref::gds.adoc[Using with Neo4j Graph Data Science]
-* xref::neo4j-cluster.adoc[Using with Neo4j Causal Cluster]
-* xref::aura.adoc[Using with Neo4j AuraDB]
-* xref::dwh.adoc[Interacting with Data Warehouses]
-* xref::architecture.adoc[Architecture guidance]
-* xref::types.adoc[Data type mapping between Neo4j and Spark]
-* xref::faq.adoc[Neo4j Connector for Apache Spark FAQ]
+* *Use with*
+* xref:gds.adoc[Neo4j Graph Data Science]
+* xref:neo4j-cluster.adoc[Neo4j Causal Cluster]
+* xref:aura.adoc[Neo4j AuraDB]
+* xref:dwh.adoc[Data warehouses]
+
+* *References*
+* xref:architecture.adoc[Architecture guidance]
+* xref:faq.adoc[Neo4j Connector for Apache Spark FAQ]
