@@ -20,12 +20,6 @@ driver URI is provided by AuraDB itself when you create a database.
 * In AuraDB Enterprise consider creating a separate username/password for Spark access; avoid running all processes through the default
 `neo4j` account.
 
-== Connecting to AuraDB from Spark on Databricks
-
-AuraDB customers connecting from Databricks may encounter SSL handshake errors due to Databricks' custom Java security settings removing certain cipher support.
-
-See the AuraDB support article link:{url-aura-kbase-databricks}[Connecting to Aura with Databricks] for more information and instructions on how to configure your Databricks cluster to support connections to AuraDB.
-
 == Combining AuraDB and AuraDS
 
 AuraDB is the Neo4j Cloud solution for OLTP processes while AuraDS is designed for computing large-scale graph/ml algorithms in the cloud. With the Neo4j Spark connector you can easily:

@@ -1,0 +1,27 @@
+= Databricks
+
+== Using the connector on Databricks
+
+You need to first get the proper JAR for the Databricks Runtime Version, xref:quickstart.adoc#_where_to_get_the_jars[here] you can find where to download the JARs.
+
+Go to your cluster page, select the *Library* tab and install a new library simply by uploading the JAR.
+
+== Configuration on Databricks
+
+On Databricks you can't set Session configuration at runtime, but you can set Spark configuration on the cluster you're running your notebooks on.
+To do this go on the cluster configuration page, click the _Advanced Options_ toggle and then the _Spark_ tab.
+
+Add the Neo4j Connector configuration in the text area like this:
+
+----
+neo4j.url bolt://1.2.3.4
+neo4j.authentication.type basic
+neo4j.authentication.basic.password mysecret
+neo4j.authentication.basic.username neo4j
+----
+
+== Connecting to AuraDB from Spark on Databricks
+
+AuraDB customers connecting from Databricks may encounter SSL handshake errors due to Databricks' custom Java security settings removing certain cipher support.
+
+See the AuraDB support article link:{url-aura-kbase-databricks}[Connecting to Aura with Databricks] for more information and instructions on how to configure your Databricks cluster to support connections to AuraDB.

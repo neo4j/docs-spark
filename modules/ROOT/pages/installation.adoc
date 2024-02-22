@@ -79,11 +79,3 @@ dependencies{
     compile "org.neo4j:neo4j-connector-apache-spark_${scala.version}:{exact-connector-version}_for_spark_${spark.version.major}"
 }
 ----
-
-== Using the connector on Databricks
-
-You need to first get the proper JAR for the Databricks Runtime Version, xref:quickstart.adoc#_where_to_get_the_jars[here] you can find where to download the JARs.
-
-Go to your cluster page, select the *Library* tab and install a new library simply by uploading the JAR.
-
-This is it!

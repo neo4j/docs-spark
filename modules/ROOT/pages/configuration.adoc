@@ -47,22 +47,6 @@ val dfProduct = spark.read.format("org.neo4j.spark.DataSource")
         .load()
 ----
 
-== Configuration on Databricks
-
-On Databricks you can't set Session configuration at runtime, but you can set Spark configuration on the cluster you're running your notebooks on.
-To do this go on the cluster configuration page, click the _Advanced Options_ toggle and then the _Spark_ tab.
-
-Add the Neo4j Connector configuration in the text area like this:
-
-----
-neo4j.url bolt://1.2.3.4
-neo4j.authentication.type basic
-neo4j.authentication.basic.password mysecret
-neo4j.authentication.basic.username neo4j
-----
-
-
-
 == Neo4j driver options
 
 Under the covers, the Spark connector uses the link:https://neo4j.com/docs/java-manual/current/get-started/#java-driver-get-started-about[official Neo4j Java Driver].  In many situations, you want the control to set driver options to account for your production deployment of Neo4j and how to communicate with it. You can do this using the `options` example above.

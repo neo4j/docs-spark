@@ -20,9 +20,10 @@
 
 * *Use with*
 * xref:gds.adoc[Neo4j Graph Data Science]
+* xref:databricks.adoc[]
+* xref:dwh.adoc[Data warehouses]
 * xref:neo4j-cluster.adoc[Neo4j Causal Cluster]
 * xref:aura.adoc[Neo4j AuraDB]
-* xref:dwh.adoc[Data warehouses]
 
 * *References*
 * xref:architecture.adoc[Architecture guidance]
