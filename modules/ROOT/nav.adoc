@@ -1,6 +1,6 @@
 * *Getting started*
 
-* xref:overview.adoc[]
+* xref:index.adoc[Introduction]
 * xref:installation.adoc[]
 * Examples
 ** xref:quickstart.adoc[]
