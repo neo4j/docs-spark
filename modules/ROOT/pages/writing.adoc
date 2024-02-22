@@ -182,93 +182,9 @@ so if the process at some point fails, all the previous data are already persist
 
 Writing data to a Neo4j database can be done in three ways:
 
-* <<write-query,Custom Cypher query>>
 * <<write-node,Node>>
 * <<write-rel,Relationship>>
-
-[[write-query]]
-=== Custom Cypher query
-
-In case you use the option `query`, the Spark Connector persists the entire Dataset by using the provided query.
-The nodes are sent to Neo4j in a batch of rows defined in the `batch.size` property, and your query is wrapped up in an `UNWIND $events AS event` statement.
-The `query` option supports both `CREATE` and `MERGE` clauses.
-
-Let's look at the following simple Spark program:
-
-[source,scala]
-----
-import org.apache.spark.sql.{SaveMode, SparkSession}
-
-val spark = SparkSession.builder().getOrCreate()
-import spark.implicits._
-
-case class Person(name: String, surname: String, age: Int)
-
-// Create an example DataFrame
-val df = Seq(
-    Person("John", "Doe", 42),
-    Person("Jane", "Doe", 40)
-).toDF()
-
-// Define the Cypher query to use in the write
-val query = "CREATE (n:Person {fullName: event.name + ' ' + event.surname})"
-
-df.write
-  .format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
-  .option("authentication.basic.username", USERNAME)
-  .option("authentication.basic.password", PASSWORD)
-  .option("query", query)
-  .mode(SaveMode.Overwrite)
-  .save()
-----
-
-This generates the following query:
-
-[source,cypher]
-----
-UNWIND $events AS event
-CREATE (n:Person {fullName: event.name + ' ' + event.surname})
-----
-
-Thus `events` is the batch created from your dataset.
-
-==== Considerations
-
-* You must always specify the <<save-mode>>.
-
-* You can use the `events` list in `WITH` statements as well.
-For example, you can replace the query in the previous example with the following:
-+
-[source, cypher]
-----
-WITH event.name + ' ' + toUpper(event.surname) AS fullName
-CREATE (n:Person {fullName: fullName})
-----
-
-* Subqueries that reference the `events` list in ``CALL``s are supported:
-+
-[source, cypher]
-----
-CALL {
-  WITH event
-  RETURN event.name + ' ' + toUpper(event.surname) AS fullName
-}
-CREATE (n:Person {fullName: fullName})
-----
-
-* If APOC is installed, APOC procedures and functions can be used:
-+
-[source, cypher]
-----
-CALL {
-  WITH event
-  RETURN event.name + ' ' + apoc.text.toUpperCase(event.surname) AS fullName
-}
-CREATE (n:Person {fullName: fullName})
-----
-
-* Although a `RETURN` clause is not forbidden, adding one does not have any effect on the query result.
+* xref:writing-cypher.adoc[Custom Cypher query]
 
 [[write-node]]
 === Node
@@ -994,44 +910,6 @@ CREATE CONSTRAINT `spark_RELATIONSHIP-NOT_NULL-CONSTRAINT-MY_REL-foo` IF NOT EXI
 ----
 
 The constraint is not recreated if it is already present.
-
-[[script-option]]
-=== Script option
-
-The script option allows you to execute a series of preparation script before Spark
-Job execution. The result of the last query can be reused in combination with the
-`query` ingestion mode as it follows:
-
-----
-val ds = Seq(SimplePerson("Andrea", "Santurbano")).toDS()
-
-ds.write
-  .format(classOf[DataSource].getName)
-  .mode(SaveMode.ErrorIfExists)
-  .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
-  .option("query", "CREATE (n:Person{fullName: event.name + ' ' + event.surname, age: scriptResult[0].age})")
-  .option("script",
-    """CREATE INDEX person_surname FOR (p:Person) ON (p.surname);
-      |CREATE CONSTRAINT product_name_sku FOR (p:Product)
-      | REQUIRE (p.name, p.sku)
-      | IS NODE KEY;
-      |RETURN 36 AS age;
-      |""".stripMargin)
-  .save()
-----
-
-Before the import starts, the connector runs the content of the `script` option,
-and the result of the last query is injected into the `query`. At the end the full
-query executed by the connector while the data is being ingested is the following:
-
-----
-WITH $scriptResult AS scriptResult
-UNWIND $events AS event
-CREATE (n:Person{fullName: event.name + ' ' + event.surname, age: scriptResult[0].age})
-----
-
-`scriptResult` is the result from the last query contained within the `script` options
-that is `RETURN 36 AS age;`
 
 === Performance considerations
 

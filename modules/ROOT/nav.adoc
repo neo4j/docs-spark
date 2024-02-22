@@ -13,9 +13,11 @@
 * xref:types.adoc[]
 * xref:configuration.adoc[]
 * Reading from Neo4j
-** xref:reading.adoc[]
+** xref:reading.adoc[With labels and relationships]
+** xref:reading-cypher.adoc[With a custom Cypher query]
 * Writing to Neo4j
-** xref:writing.adoc[]
+** xref:writing.adoc[With labels and relationships]
+** xref:writing-cypher.adoc[With a custom Cypher query]
 * xref:streaming.adoc[]
 
 * *Use with*

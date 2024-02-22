@@ -1,0 +1,145 @@
+[[read-query]]
+= Read data with a custom Cypher query
+
+You can specify a Cypher query in this way:
+
+[source,scala]
+----
+import org.apache.spark.sql.{SaveMode, SparkSession}
+
+val spark = SparkSession.builder().getOrCreate()
+
+spark.read.format("org.neo4j.spark.DataSource")
+  .option("url", "bolt://localhost:7687")
+  .option("query", "MATCH (n:Person) WITH n LIMIT 2 RETURN id(n) AS id, n.name AS name")
+  .load()
+  .show()
+----
+
+.Result of the above code
+|===
+|id |name
+
+|0|John Doe
+|1|Jane Doe
+|===
+
+[TIP]
+====
+We recommend individual property fields to be returned, rather than returning graph entity (node, relationship, and path) types. This best maps to Spark's type system and yields the best results. So instead of writing:
+
+`MATCH (p:Person) RETURN p`
+
+write the following:
+
+`MATCH (p:Person) RETURN id(p) AS id, p.name AS name`.
+
+If your query returns a graph entity, use the `labels` or `relationship` modes instead.
+====
+
+The structure of the Dataset returned by the query is influenced by the query itself.
+In this particular context, it could happen that the connector isn't able to sample the Schema from the query,
+so in these cases, we suggest trying with the option `schema.strategy` set to `string` as described xref:quickstart.adoc#string-strategy[here].
+
+[NOTE]
+Read query *must always* return some data (read: *must always* have a return statement).
+If you use store procedures, remember to `YIELD` and then `RETURN` data.
+
+== Script option
+
+The script option allows you to execute a series of preparation script before Spark
+Job execution, the result of the last query can be reused in combination with the
+`query` read mode as it follows:
+
+----
+import org.apache.spark.sql.SparkSession
+
+val spark = SparkSession.builder().getOrCreate()
+
+spark.read.format("org.neo4j.spark.DataSource")
+  .option("url", "bolt://localhost:7687")
+  .option("script", "RETURN 'foo' AS val")
+  .option("query", "UNWIND range(1,2) as id RETURN id AS val, scriptResult[0].val AS script")
+  .load()
+  .show()
+----
+
+Before the extraction from Neo4j starts, the connector runs the content of the `script` option
+and the result of the last query is injected into the `query`.
+
+.Result of the above code
+|===
+|val|script
+
+|1|foo
+|2|foo
+|===
+
+
+== Schema
+The first 10 (or any number specified by the `schema.flatten.limit` option) results are flattened and the schema is created from those properties.
+
+If the query returns no data, the sampling is not possible.
+In this case, the connector creates a schema from the return statement, and every column is going to be of type String.
+This does not cause any problems since you have no data in your dataset.
+
+For example, you have this query:
+[source]
+----
+MATCH (n:NON_EXISTENT_LABEL) RETURN id(n) AS id, n.name, n.age
+----
+
+The created schema is the following:
+
+|===
+|Column|Type
+
+|id|String
+|n.name|String
+|n.age|String
+|===
+
+[TIP]
+====
+The returned column order is not guaranteed to match the RETURN statement for Neo4j 3.x and Neo4j 4.0.
+
+Starting from Neo4j 4.1 the order is the same.
+====
+
+[[limit-query]]
+== Limit the results
+
+This connector does not permit using `SKIP` or `LIMIT` at the end of a Cypher query. +
+Attempts to do this result in errors, such as the message: +
+_SKIP/LIMIT are not allowed at the end of the query_.
+
+This is not supported, because internally the connector uses SKIP/LIMIT pagination to break read sets up into multiple partitions to support partitioned reads.
+As a result, user-provided SKIP/LIMIT clashes with what the connector itself adds to your query to support parallelism.
+
+There is a work-around though; you can still accomplish the same by using `SKIP / LIMIT` internal inside of the query, rather than after the final `RETURN` block of the query.
+
+Here's an example.
+This first query is rejected and fails:
+
+[source,cypher]
+----
+MATCH (p:Person)
+RETURN p.name AS name
+ORDER BY name
+LIMIT 10
+----
+
+However, you can reformulate this query to make it works:
+
+[source,cypher]
+----
+MATCH (p:Person)
+WITH p.name AS name
+ORDER BY name
+LIMIT 10
+RETURN p.name
+----
+
+The queries return the exact same data, but only the second one is usable with the Spark connector and partition-able, because of the `WITH` clause and the simple final `RETURN` clause. If you choose to reformulate queries to use "internal SKIP/LIMIT", take careful notice of ordering operations to guarantee the same result set.
+
+You may also use the `query.count` option rather than reformulating your query (more on it <<quickstart.adoc#parallelize,here>>).
