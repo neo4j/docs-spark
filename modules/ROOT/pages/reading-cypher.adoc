@@ -1,5 +1,5 @@
 [[read-query]]
-= Read data with a custom Cypher query
+= Custom Cypher query
 
 You can specify a Cypher query in this way:
 
