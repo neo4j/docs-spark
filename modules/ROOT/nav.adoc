@@ -8,10 +8,11 @@
 ** xref:quick-java-example.adoc[Java example]
 ** xref:playground.adoc[Explore with notebooks]
 
-* *Operations*
-* xref:considerations.adoc[]
-* xref:types.adoc[]
-* xref:configuration.adoc[]
+* *Common usage*
+* Concepts
+** xref:considerations.adoc[]
+** xref:schema.adoc[]
+** xref:types.adoc[]
 * Reading from Neo4j
 ** xref:reading.adoc[With labels and relationships]
 ** xref:reading-cypher.adoc[]
@@ -19,13 +20,14 @@
 ** xref:writing.adoc[With labels and relationships]
 ** xref:writing-cypher.adoc[]
 * xref:streaming.adoc[]
-
-* *Use with*
+* xref:configuration.adoc[Options and configuration]
 * xref:gds.adoc[Neo4j Graph Data Science]
+
+* *Usage with other platforms*
 * xref:databricks.adoc[]
-* xref:dwh.adoc[Data warehouses]
-* xref:neo4j-cluster.adoc[Neo4j Causal Cluster]
-* xref:aura.adoc[Neo4j AuraDB]
+* xref:dwh.adoc[Data warehouses ^SPLIT?^]
+* xref:aura.adoc[Neo4j AuraDB ^REMOVE^]
+* xref:neo4j-cluster.adoc[Neo4j Causal Cluster ^REMOVE^]
 
 * *References*
 * xref:architecture.adoc[Architecture guidance]
