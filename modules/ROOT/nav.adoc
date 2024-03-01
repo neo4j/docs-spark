@@ -2,11 +2,10 @@
 
 * xref:index.adoc[Introduction]
 * xref:installation.adoc[]
-* Examples
-** xref:quickstart.adoc[]
-** xref:python.adoc[Python example]
-** xref:quick-java-example.adoc[Java example]
-** xref:playground.adoc[Explore with notebooks]
+* xref:quickstart.adoc[Quickstart]
+* xref:python.adoc[Python example ^MERGE^]
+* xref:playground.adoc[Explore with notebooks ^MERGE^]
+* xref:quick-java-example.adoc[Java example ^MERGE^]
 
 * *Operations*
 * Reading from Neo4j
@@ -23,13 +22,12 @@
 * xref:gds.adoc[Data science with Neo4j GDS]
 * xref:configuration.adoc[Options and configuration]
 
-* *Third-party platforms*
+* *Spark-based platforms*
 * xref:databricks.adoc[]
-* Data warehouses
-** xref:dwh/snowflake.adoc[]
-** xref:dwh/bigquery.adoc[]
-** xref:dwh/redshift.adoc[]
-** xref:dwh/azure-synapse-analytics.adoc[]
+* xref:dwh/snowflake.adoc[]
+* xref:dwh/bigquery.adoc[]
+* xref:dwh/redshift.adoc[]
+* xref:dwh/azure-synapse-analytics.adoc[]
 * xref:aura.adoc[Neo4j AuraDB ^REMOVE^]
 * xref:neo4j-cluster.adoc[Neo4j Causal Cluster ^REMOVE^]
 
