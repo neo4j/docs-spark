@@ -2,10 +2,6 @@
 
 * xref:index.adoc[Introduction]
 * xref:installation.adoc[]
-* Concepts
-** xref:types.adoc[]
-** xref:schema.adoc[]
-** xref:considerations.adoc[]
 * Examples
 ** xref:quickstart.adoc[]
 ** xref:python.adoc[Python example]
@@ -19,11 +15,15 @@
 * Writing to Neo4j
 ** xref:writing.adoc[With Spark options]
 ** xref:writing-cypher.adoc[With Cypher query]
-* xref:gds.adoc[Graph Data Science]
+* Using a schema
+** xref:schema.adoc[Inferred schema]
+** xref:schema-user.adoc[User-defined schema]
+* xref:considerations.adoc[Spark optimizations]
 * xref:streaming.adoc[Spark Structured Streaming]
+* xref:gds.adoc[Data science with Neo4j GDS]
 * xref:configuration.adoc[Options and configuration]
 
-* *Usage with other platforms*
+* *Third-party platforms*
 * xref:databricks.adoc[]
 * Data warehouses
 ** xref:dwh/snowflake.adoc[]
@@ -34,5 +34,6 @@
 * xref:neo4j-cluster.adoc[Neo4j Causal Cluster ^REMOVE^]
 
 * *References*
-* xref:architecture.adoc[Architecture guidance]
-* xref:faq.adoc[Neo4j Connector for Apache Spark FAQ]
+* xref:types.adoc[]
+* xref:architecture.adoc[Architecture guidance ^SPLIT^]
+* xref:faq.adoc[Troubleshooting ^?^]
