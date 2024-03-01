@@ -1,4 +1,4 @@
-= Data type mapping between Neo4j and Spark
+= Data type mapping
 :description: This chapter provides a reference to type compatibility issues between Neo4j and Spark.
 
 == Background
@@ -74,4 +74,49 @@ In some cases, there are data types that Neo4j provides that Spark does not have
 |`array[element]`
 |In Neo4j, arrays must be consistently typed (i.e., an array of all Float values). The inner Spark type matches the type mapping above.
 
+|===
+
+== Complex data types
+
+Spark doesn't natively support all Neo4j data types (i.e., link:https://neo4j.com/docs/cypher-manual/current/values-and-types/spatial/#spatial-values-point-type[`Point`], link:https://neo4j.com/docs/cypher-manual/current/values-and-types/temporal/#cypher-temporal-instants[`Time`], link:https://neo4j.com/docs/cypher-manual/current/values-and-types/temporal/#cypher-temporal-durations[`Duration`]). Such types are transformed into Struct types containing all the useful data.
+
+For complete details on type handling, consult the xref:types.adoc[Data type mapping between Neo4j and Spark].
+
+.Complex data type conversion
+|===
+|Type |Struct
+
+|Duration
+a|
+----
+Struct(Array(
+    ("type", DataTypes.StringType, false),
+    ("months", DataTypes.LongType, false),
+    ("days", DataTypes.LongType, false),
+    ("seconds", DataTypes.LongType, false),
+    ("nanoseconds", DataTypes.IntegerType, false),
+    ("value", DataTypes.StringType, false)
+  ))
+----
+
+|Point
+a|
+----
+Struct(Array(
+    ("type", DataTypes.StringType, false),
+    ("srid", DataTypes.IntegerType, false),
+    ("x", DataTypes.DoubleType, false),
+    ("y", DataTypes.DoubleType, false),
+    ("z", DataTypes.DoubleType, true),
+  ))
+----
+
+|Time
+a|
+----
+Struct(Array(
+    ("type", DataTypes.StringType, false),
+    ("value", DataTypes.StringType, false)
+  ))
+----
 |===

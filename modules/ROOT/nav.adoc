@@ -2,30 +2,34 @@
 
 * xref:index.adoc[Introduction]
 * xref:installation.adoc[]
+* Concepts
+** xref:types.adoc[]
+** xref:schema.adoc[]
+** xref:considerations.adoc[]
 * Examples
 ** xref:quickstart.adoc[]
 ** xref:python.adoc[Python example]
 ** xref:quick-java-example.adoc[Java example]
 ** xref:playground.adoc[Explore with notebooks]
 
-* *Common usage*
-* Concepts
-** xref:considerations.adoc[]
-** xref:schema.adoc[]
-** xref:types.adoc[]
+* *Operations*
 * Reading from Neo4j
-** xref:reading.adoc[With labels and relationships]
-** xref:reading-cypher.adoc[]
+** xref:reading.adoc[With Spark options]
+** xref:reading-cypher.adoc[With Cypher query]
 * Writing to Neo4j
-** xref:writing.adoc[With labels and relationships]
-** xref:writing-cypher.adoc[]
-* xref:streaming.adoc[]
+** xref:writing.adoc[With Spark options]
+** xref:writing-cypher.adoc[With Cypher query]
+* xref:gds.adoc[Graph Data Science]
+* xref:streaming.adoc[Spark Structured Streaming]
 * xref:configuration.adoc[Options and configuration]
-* xref:gds.adoc[Neo4j Graph Data Science]
 
 * *Usage with other platforms*
 * xref:databricks.adoc[]
-* xref:dwh.adoc[Data warehouses ^SPLIT?^]
+* Data warehouses
+** xref:dwh/snowflake.adoc[]
+** xref:dwh/bigquery.adoc[]
+** xref:dwh/redshift.adoc[]
+** xref:dwh/azure-synapse-analytics.adoc[]
 * xref:aura.adoc[Neo4j AuraDB ^REMOVE^]
 * xref:neo4j-cluster.adoc[Neo4j Causal Cluster ^REMOVE^]
 
