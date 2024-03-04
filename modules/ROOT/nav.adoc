@@ -3,6 +3,7 @@
 * xref:index.adoc[Introduction]
 * xref:installation.adoc[]
 * xref:quickstart.adoc[Quickstart]
+* xref:databricks.adoc[Databricks support]
 * xref:python.adoc[Python example ^MERGE^]
 * xref:playground.adoc[Explore with notebooks ^MERGE^]
 * xref:quick-java-example.adoc[Java example ^MERGE^]
@@ -22,8 +23,7 @@
 * xref:gds.adoc[Data science with Neo4j GDS]
 * xref:configuration.adoc[Options and configuration]
 
-* *Spark-based platforms*
-* xref:databricks.adoc[]
+* *Third-party data sources*
 * xref:dwh/snowflake.adoc[]
 * xref:dwh/bigquery.adoc[]
 * xref:dwh/redshift.adoc[]
