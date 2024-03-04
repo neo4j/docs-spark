@@ -25,7 +25,6 @@
 * xref:dwh/bigquery.adoc[]
 * xref:dwh/redshift.adoc[]
 * xref:dwh/azure-synapse-analytics.adoc[]
-* xref:aura.adoc[Neo4j AuraDB ^REMOVE^]
 * xref:neo4j-cluster.adoc[Neo4j Causal Cluster ^REMOVE^]
 
 * *References*
