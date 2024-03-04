@@ -22,10 +22,10 @@
 
 * *Third-party data sources*
 * Spark-based data transfer ^?^
-* xref:dwh/snowflake.adoc[]
-* xref:dwh/bigquery.adoc[]
-* xref:dwh/redshift.adoc[]
-* xref:dwh/azure-synapse-analytics.adoc[]
+* xref:snowflake.adoc[]
+* xref:bigquery.adoc[]
+* xref:redshift.adoc[]
+* xref:azure-synapse-analytics.adoc[]
 
 * *Additional information*
 * xref:architecture.adoc[General ^?^ guidance]
