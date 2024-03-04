@@ -4,7 +4,6 @@
 * xref:installation.adoc[]
 * xref:quickstart.adoc[Quickstart]
 * xref:databricks.adoc[Databricks support]
-* xref:quick-java-example.adoc[Java example ^MERGE^]
 
 * *Operations*
 * Reading from Neo4j
