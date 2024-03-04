@@ -15,12 +15,12 @@
 * Using a schema
 ** xref:schema.adoc[Inferred schema]
 ** xref:schema-user.adoc[User-defined schema]
-* xref:considerations.adoc[Spark optimizations]
 * xref:streaming.adoc[Spark Structured Streaming]
 * xref:gds.adoc[Data science with Neo4j GDS]
 * xref:configuration.adoc[Options and configuration]
 
 * *Third-party data sources*
+* Spark-based data transfer ^?^
 * xref:dwh/snowflake.adoc[]
 * xref:dwh/bigquery.adoc[]
 * xref:dwh/redshift.adoc[]
@@ -28,5 +28,6 @@
 
 * *References*
 * xref:types.adoc[]
-* xref:architecture.adoc[Architecture guidance ^SPLIT^]
+* xref:considerations.adoc[Spark optimizations]
+* xref:architecture.adoc[Architecture guidance]
 * xref:faq.adoc[Troubleshooting ^?^]
