@@ -27,8 +27,8 @@
 * xref:dwh/redshift.adoc[]
 * xref:dwh/azure-synapse-analytics.adoc[]
 
-* *References*
+* *Additional information*
+* xref:architecture.adoc[General ^?^ guidance]
 * xref:types.adoc[]
 * xref:considerations.adoc[Spark optimizations]
-* xref:architecture.adoc[General ^?^ guidance]
 * xref:faq.adoc[Troubleshooting ^?^]
