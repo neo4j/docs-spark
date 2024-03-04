@@ -16,6 +16,7 @@
 ** xref:schema.adoc[Inferred schema]
 ** xref:schema-user.adoc[User-defined schema]
 * xref:streaming.adoc[Spark Structured Streaming]
+* xref:performance.adoc[Performance tuning]
 * xref:gds.adoc[Data science with Neo4j GDS]
 * xref:configuration.adoc[Options and configuration]
 
@@ -29,5 +30,5 @@
 * *References*
 * xref:types.adoc[]
 * xref:considerations.adoc[Spark optimizations]
-* xref:architecture.adoc[Architecture guidance]
+* xref:architecture.adoc[General ^?^ guidance]
 * xref:faq.adoc[Troubleshooting ^?^]
