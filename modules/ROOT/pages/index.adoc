@@ -21,7 +21,7 @@ and Scala.
 
 === Neo4j compatibility
 This connector works with Neo4j 4.4 and 5.x, whether run as a single instance,
- as a cluster, or a managed service in Neo4j AuraDB.
+ as a cluster, or a managed service in Neo4j Aura.
 The connector supports Community and Enterprise Edition, however schema optimization is only available on Enterprise.
 such works with Neo4j Community Edition as well, with the appropriate version number.
 
