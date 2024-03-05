@@ -12,7 +12,7 @@
 * Writing to Neo4j
 ** xref:writing.adoc[With Spark options]
 ** xref:writing-cypher.adoc[With Cypher query]
-* Using a schema
+* Using schemas
 ** xref:schema.adoc[Inferred schema]
 ** xref:schema-user.adoc[User-defined schema]
 * xref:streaming.adoc[Spark Structured Streaming]

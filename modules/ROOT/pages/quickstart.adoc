@@ -2,6 +2,59 @@
 :description: This chapter describes the quick way to get started with Neo4j Connector for Apache Spark.
 :page-aliases: python.adoc, playground.adoc, quick-java-example.adoc, aura.adoc, neo4j-cluster.adoc
 
+== Connection
+
+=== Using with Neo4j AuraDB
+
+[abstract]
+--
+This chapter describes considerations around using Neo4j Connector for Apache Spark with link:https://neo4j.com/cloud/aura/[Neo4j AuraDB].
+--
+
+==== Overview
+
+link:https://neo4j.com/cloud/aura/[Neo4j AuraDB] is a fully managed cloud graph database service.
+
+==== Connecting to AuraDB
+
+Connecting to Neo4j AuraDB is similar to connecting to on-premise Neo4j instances, but keep in mind:
+
+* Always use a `neo4j+s://` driver URI when communicating with the cluster in the client application.  The optimal
+driver URI is provided by AuraDB itself when you create a database.
+* In AuraDB Enterprise consider creating a separate username/password for Spark access; avoid running all processes through the default
+`neo4j` account.
+
+==== Combining AuraDB and AuraDS
+
+AuraDB is the Neo4j Cloud solution for OLTP processes while AuraDS is designed for computing large-scale graph/ml algorithms in the cloud. With the Neo4j Spark connector you can easily:
+
+* export the data from AuraDB ingesting it in AuraDS
+* run GDS graph/ml algorithms over your data in AuraDS
+* write the result of the computation back to AuraDB in order to enrich your transactional data
+
+=== Using with Neo4j Causal Cluster
+
+:description: This chapter describes considerations around using Neo4j Connector for Apache Spark with Neo4j Enterprise Causal Cluster.
+
+==== Overview
+
+link:https://neo4j.com/docs/operations-manual/current/clustering/[Neo4j Clustering] is a feature available in
+Enterprise Edition, which allows high availability of the database through having multiple database members.
+
+Neo4j Enterprise uses a link:https://neo4j.com/docs/operations-manual/current/clustering/introduction/#causal-clustering-introduction-operational[Primary/Secondary servers]
+operational view. Write operations are always processed by the Primary servers only, while reads can be serviced by either Primary servers (link:https://neo4j.com/docs/operations-manual/current/clustering/internals/#causal-clustering-elections-and-leadership[Leaders or Followers]),
+or optionally by Read Replicas, which maintain a copy of the database and serve to scale out read operations
+horizontally.
+
+==== Remote clients
+
+Sometimes there are remote applications that talk to Neo4j via official drivers, that want to use
+streams functionality. Best practices in these cases are:
+
+* Always use a `neo4j+s://` driver URI when communicating with the cluster in the client application.
+
+== Scala
+
 You can create Spark DataFrames and write them to your Neo4j database:
 
 .Write the DataFrame to nodes of label `Person`
@@ -221,52 +274,3 @@ This code will produce the following output:
 +----+--------+------------------+----+
 only showing top 20 rows
 ----
-
-== Using with Neo4j AuraDB
-
-[abstract]
---
-This chapter describes considerations around using Neo4j Connector for Apache Spark with link:https://neo4j.com/cloud/aura/[Neo4j AuraDB].
---
-
-=== Overview
-
-link:https://neo4j.com/cloud/aura/[Neo4j AuraDB] is a fully managed cloud graph database service.
-
-=== Connecting to AuraDB
-
-Connecting to Neo4j AuraDB is similar to connecting to on-premise Neo4j instances, but keep in mind:
-
-* Always use a `neo4j+s://` driver URI when communicating with the cluster in the client application.  The optimal
-driver URI is provided by AuraDB itself when you create a database.
-* In AuraDB Enterprise consider creating a separate username/password for Spark access; avoid running all processes through the default
-`neo4j` account.
-
-=== Combining AuraDB and AuraDS
-
-AuraDB is the Neo4j Cloud solution for OLTP processes while AuraDS is designed for computing large-scale graph/ml algorithms in the cloud. With the Neo4j Spark connector you can easily:
-
-* export the data from AuraDB ingesting it in AuraDS
-* run GDS graph/ml algorithms over your data in AuraDS
-* write the result of the computation back to AuraDB in order to enrich your transactional data
-
-== Using with Neo4j Causal Cluster
-
-:description: This chapter describes considerations around using Neo4j Connector for Apache Spark with Neo4j Enterprise Causal Cluster.
-
-=== Overview
-
-link:https://neo4j.com/docs/operations-manual/current/clustering/[Neo4j Clustering] is a feature available in
-Enterprise Edition, which allows high availability of the database through having multiple database members.
-
-Neo4j Enterprise uses a link:https://neo4j.com/docs/operations-manual/current/clustering/introduction/#causal-clustering-introduction-operational[Primary/Secondary servers]
-operational view. Write operations are always processed by the Primary servers only, while reads can be serviced by either Primary servers (link:https://neo4j.com/docs/operations-manual/current/clustering/internals/#causal-clustering-elections-and-leadership[Leaders or Followers]),
-or optionally by Read Replicas, which maintain a copy of the database and serve to scale out read operations
-horizontally.
-
-=== Remote clients
-
-Sometimes there are remote applications that talk to Neo4j via official drivers, that want to use
-streams functionality. Best practices in these cases are:
-
-* Always use a `neo4j+s://` driver URI when communicating with the cluster in the client application.
