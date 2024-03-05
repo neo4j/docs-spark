@@ -1,9 +1,11 @@
+* xref:index.adoc[]
+
 * *Getting started*
 
-* xref:index.adoc[Introduction]
-* xref:installation.adoc[]
+* xref:installation.adoc[Installation]
 * xref:quickstart.adoc[Quickstart]
-* xref:databricks.adoc[Databricks]
+* xref:databricks.adoc[Databricks installation]
+* xref:dwh.adoc[Third-party data sources]
 
 * *Operations*
 * Reading from Neo4j
@@ -21,7 +23,6 @@
 * xref:configuration.adoc[Options and configuration]
 
 * *Third-party data sources*
-* xref:dwh.adoc[Data warehouses]
 * xref:snowflake.adoc[]
 * xref:bigquery.adoc[]
 * xref:redshift.adoc[]

@@ -1,1 +1,3 @@
 = Data warehouses
+
+* xref:snowflake.adoc[]
