@@ -3,7 +3,7 @@
 * xref:index.adoc[Introduction]
 * xref:installation.adoc[]
 * xref:quickstart.adoc[Quickstart]
-* xref:databricks.adoc[Databricks support]
+* xref:databricks.adoc[Databricks]
 
 * *Operations*
 * Reading from Neo4j
@@ -21,14 +21,13 @@
 * xref:configuration.adoc[Options and configuration]
 
 * *Third-party data sources*
-* Spark-based data transfer ^?^
 * xref:snowflake.adoc[]
 * xref:bigquery.adoc[]
 * xref:redshift.adoc[]
 * xref:azure-synapse-analytics.adoc[]
 
-* *Additional information*
-* xref:architecture.adoc[General ^?^ guidance]
+* *Reference*
+* xref:architecture.adoc[Concepts]
 * xref:types.adoc[]
 * xref:considerations.adoc[Spark optimizations]
 * xref:faq.adoc[Troubleshooting ^?^]

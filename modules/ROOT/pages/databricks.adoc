@@ -20,7 +20,7 @@ neo4j.authentication.basic.password mysecret
 neo4j.authentication.basic.username neo4j
 ----
 
-== Connecting to AuraDB from Spark on Databricks
+== Connecting to AuraDB from Databricks
 
 AuraDB customers connecting from Databricks may encounter SSL handshake errors due to Databricks' custom Java security settings removing certain cipher support.
 
