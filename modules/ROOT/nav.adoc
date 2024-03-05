@@ -21,6 +21,7 @@
 * xref:configuration.adoc[Options and configuration]
 
 * *Third-party data sources*
+* xref:dwh.adoc[Data warehouses]
 * xref:snowflake.adoc[]
 * xref:bigquery.adoc[]
 * xref:redshift.adoc[]
