@@ -3,7 +3,7 @@
 
 :description: This chapter provides an introduction to the Neo4j Connector for Apache Spark.
 
-The Neo4j Connector for Apache Spark is intended to make integrating graphs with Spark easy.
+The Neo4j Connector for Apache Spark can be used to transfer data to and from Neo4j to Spark based platforms including Apache Spark, Databricks and data warehouses like Snowflake, and Amazon Redshift. Please refer to xref:dwh.adoc[].
 
 There are effectively two ways of using the connector:
 
