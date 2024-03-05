@@ -20,7 +20,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 val df = (spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
+  .option("url", "neo4j://localhost:7687")
   .option("authentication.basic.username", "neo4j")
   .option("authentication.basic.password", "letmein!")
   .option("labels", ":Person")
@@ -59,7 +59,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 (spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
+  .option("url", "neo4j://localhost:7687")
   .option("authentication.basic.username", "neo4j")
   .option("authentication.basic.password", "letmein!")
   .option("relationship", "BOUGHT")
@@ -104,7 +104,7 @@ val spark = SparkSession.builder().getOrCreate()
 
 val df = (spark.read
       .format("org.neo4j.spark.DataSource")
-      .option("url", "bolt://localhost:7687")
+      .option("url", "neo4j://localhost:7687")
       .option("authentication.basic.username", "neo4j")
       .option("authentication.basic.password", "letmein!")
       .option("relationship", "BOUGHT")
@@ -147,7 +147,7 @@ val spark = SparkSession.builder().getOrCreate()
 
 val df = (spark.read
       .format("org.neo4j.spark.DataSource")
-      .option("url", "bolt://localhost:7687")
+      .option("url", "neo4j://localhost:7687")
       .option("authentication.basic.username", "neo4j")
       .option("authentication.basic.password", "letmein!")
       .option("relationship", "BOUGHT")
@@ -178,7 +178,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 val df = (spark.read.format("org.neo4j.spark.DataSource")
-        .option("url", "bolt://localhost:7687")
+        .option("url", "neo4j://localhost:7687")
         .option("authentication.basic.username", "neo4j")
         .option("authentication.basic.password", "letmein!")
         .option("labels", "Person")

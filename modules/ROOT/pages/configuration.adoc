@@ -13,7 +13,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 val df = spark.read.format("org.neo4j.spark.DataSource")
-        .option("url", "bolt://localhost:7687")
+        .option("url", "neo4j://localhost:7687")
         .option("authentication.type", "basic")
         .option("authentication.basic.username", "myuser")
         .option("authentication.basic.password", "neo4jpassword")
@@ -32,7 +32,7 @@ Here is a full example:
 import org.apache.spark.sql.{SaveMode, SparkSession}
 
 val spark = SparkSession.builder()
-    .config("neo4j.url", "bolt://localhost:7687")
+    .config("neo4j.url", "neo4j://localhost:7687")
     .config("neo4j.authentication.type", "basic")
     .config("neo4j.authentication.basic.username", "myuser")
     .config("neo4j.authentication.basic.password", "neo4jpassword")
@@ -193,13 +193,13 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 val df = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://first.host.com:7687")
+  .option("url", "neo4j://first.host.com:7687")
   .option("labels", "Person")
   .load()
 
 df.write.format("org.neo4j.spark.DataSource")
   .mode(SaveMode.ErrorIfExists)
-  .option("url", "bolt://second.host.com:7687")
+  .option("url", "neo4j://second.host.com:7687")
   .option("labels", "Person")
   .save()
 ----
@@ -214,12 +214,12 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 val dfOne = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://first.host.com:7687")
+  .option("url", "neo4j://first.host.com:7687")
   .option("labels", "Person")
   .load()
 
 val dfTwo = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://second.host.com:7687")
+  .option("url", "neo4j://second.host.com:7687")
   .option("labels", "Person")
   .load()
 

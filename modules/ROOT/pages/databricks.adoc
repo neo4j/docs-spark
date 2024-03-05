@@ -14,7 +14,7 @@ To do this go on the cluster configuration page, click the _Advanced Options_ to
 Add the Neo4j Connector configuration in the text area like this:
 
 ----
-neo4j.url bolt://1.2.3.4
+neo4j.url neo4j://1.2.3.4
 neo4j.authentication.type basic
 neo4j.authentication.basic.password mysecret
 neo4j.authentication.basic.username neo4j

@@ -78,7 +78,7 @@ df = spark.readStream \
 
 query = df.writeStream \
     .format("org.neo4j.spark.DataSource") \
-    .option("url", "bolt://localhost:7687") \
+    .option("url", "neo4j://localhost:7687") \
     .option("save.mode", "ErrorIfExists") \
     .option("checkpointLocation", "/tmp/checkpoint/myCheckPoint") \
     .option("labels", "Person") \
@@ -118,7 +118,7 @@ spark = SparkSession \
 
 df = spark.readStream \
     .format("org.neo4j.spark.DataSource") \
-    .option("url", "bolt://localhost:7687") \
+    .option("url", "neo4j://localhost:7687") \
     .option("labels", "Person") \
     .option("streaming.property.name", "timestamp") \
     .option("streaming.from", "NOW") \
@@ -186,7 +186,7 @@ spark = SparkSession \
 
 df = spark.readStream \
     .format("org.neo4j.spark.DataSource") \
-    .option("url", "bolt://localhost:7687") \
+    .option("url", "neo4j://localhost:7687") \
     .option("streaming.from", "NOW") \
     .option("streaming.property.name", "timestamp") \
     .option("query", \

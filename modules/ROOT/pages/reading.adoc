@@ -20,7 +20,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
+  .option("url", "neo4j://localhost:7687")
   .option("labels", "Person")
   .load()
   .show()
@@ -161,7 +161,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
+  .option("url", "neo4j://localhost:7687")
   .option("labels", "Person")
   .load()
 ----
@@ -174,7 +174,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
+  .option("url", "neo4j://localhost:7687")
   .option("labels", "Person:Customer:Confirmed")
   .load()
 ----
@@ -247,7 +247,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
+  .option("url", "neo4j://localhost:7687")
   .option("relationship", "BOUGHT")
   .option("relationship.source.labels", "Person")
   .option("relationship.target.labels", "Product")
@@ -279,7 +279,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
+  .option("url", "neo4j://localhost:7687")
   .option("relationship", "BOUGHT")
   .option("relationship.nodes.map", "false")
   .option("relationship.source.labels", "Person")
@@ -304,7 +304,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
+  .option("url", "neo4j://localhost:7687")
   .option("relationship", "BOUGHT")
   .option("relationship.nodes.map", "true")
   .option("relationship.source.labels", "Person")
@@ -405,7 +405,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 val df = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
+  .option("url", "neo4j://localhost:7687")
   .option("relationship", "BOUGHT")
   .option("relationship.nodes.map", "false")
   .option("relationship.source.labels", "Person")
@@ -430,7 +430,7 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 val spark = SparkSession.builder().getOrCreate()
 
 val df = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "bolt://localhost:7687")
+  .option("url", "neo4j://localhost:7687")
   .option("relationship", "BOUGHT")
   .option("relationship.nodes.map", "true")
   .option("relationship.source.labels", "Person")
