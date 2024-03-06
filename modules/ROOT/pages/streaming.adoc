@@ -1,5 +1,5 @@
 
-= Using Spark Structured Streaming API
+= Spark Structured Streaming
 
 :description: The chapter describes how to use Spark Structured Streaming API with the Neo4j Connector for Apache Spark.
 

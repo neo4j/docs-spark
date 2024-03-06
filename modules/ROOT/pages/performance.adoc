@@ -1,4 +1,4 @@
-= Improving performance
+= Performance tuning
 
 To get the best possible performance reading from (and particularly writing to) Neo4j, make sure you've gone
 through this checklist:

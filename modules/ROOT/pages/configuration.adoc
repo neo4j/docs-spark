@@ -1,5 +1,5 @@
 [#options]
-= Neo4j Spark Connector options and configuration
+= Options and configuration
 
 :description: The chapter describes configuration options of Neo4j Connector for Apache Spark.  
 

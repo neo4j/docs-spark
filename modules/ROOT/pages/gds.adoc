@@ -1,5 +1,4 @@
-= Using with Neo4j Graph Data Science
-
+= Data science with Neo4j GDS
 :description: This chapter provides an information on using the Neo4j Connector for Apache Spark with Neo4j Graph Data Science.
 
 link:{url-neo4j-product-gds-lib}[Neo4j Graph Data Science (GDS)] lets data scientists benefit from powerful graph algorithms. It provides unsupervised machine learning (ML) methods and heuristics that learn and describe the topology of your graph. GDS includes hardened graph algorithms with enterprise features, like deterministic seeding for consistent results and reproducible ML workflows.

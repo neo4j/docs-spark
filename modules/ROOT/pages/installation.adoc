@@ -1,15 +1,9 @@
+[#_installation_guide]
 = Installation
 :description: This chapter describes the quick way to get started with Neo4j Connector for Apache Spark.
 
-*Neo4j Connector for Apache Spark* allows you to read from and write to Neo4j databases.
-
-It's fairly easy to use, although it can be highly customized.
-
-[#_installation_guide]
-== Installation guide
-
 [#prerequisites]
-=== Prerequisites
+== Prerequisites
 
 First, install Spark as documented on link:https://spark.apache.org/downloads.html[their website].
 
@@ -17,14 +11,14 @@ Choose the version carefully since the wrong combination of Scala version and Sp
 Check xref:overview.adoc#_spark_and_scala_compatibility[this page] for more information about the proper JAR to use.
 
 [#_where_to_get_the_jars]
-=== Where to get the JARs?
+== Where to get the JARs?
 
 You can download the connector JAR from the link:https://neo4j.com/product/connectors/apache-spark-connector/[Neo4j Connector Page] or from the link:https://github.com/neo4j-contrib/neo4j-spark-connector/releases[GitHub releases page].
 
 As for xref:#prerequisites[the Spark installation], make sure to choose the version carefully since the wrong combination of Scala version and Spark version breaks your code.
 Check xref:overview.adoc#_spark_and_scala_compatibility[this page] for more information about the proper JAR to use.
 
-=== Using spark-submit, spark-shell, or pyspark
+== Using spark-submit, spark-shell, or pyspark
 
 [shell, subs="attributes+"]
 ----
@@ -38,7 +32,7 @@ The connector is also available from link:https://spark-packages.org/?q=neo4j-co
 $SPARK_HOME/bin/spark-shell --packages org.neo4j:neo4j-connector-apache-spark_2.13:{exact-connector-version}_for_spark_3
 ----
 
-=== Using sbt
+== Using sbt
 
 If you use the link:https://github.com/databricks/sbt-spark-package[sbt-spark-package plugin], in your `build.sbt` file add:
 
@@ -54,7 +48,7 @@ Otherwise:
 libraryDependencies += "org.neo4j" % "neo4j-connector-apache-spark_${scala.version}" % "{exact-connector-version}_for_spark_${spark.version.major}"
 ----
 
-=== Using Maven
+== Using Maven
 
 .pom.xml
 [source,xml, subs="attributes+"]
@@ -69,7 +63,7 @@ libraryDependencies += "org.neo4j" % "neo4j-connector-apache-spark_${scala.versi
 </dependencies>
 ----
 
-=== Using Gradle
+== Using Gradle
 
 [source,`build.gradle`, subs="attributes+"]
 ----

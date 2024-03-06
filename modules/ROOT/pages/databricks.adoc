@@ -1,4 +1,4 @@
-= Databricks
+= Databricks setup
 
 == Using the connector on Databricks
 

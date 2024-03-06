@@ -3,8 +3,8 @@
 * *Getting started*
 
 * xref:installation.adoc[]
-* xref:quickstart.adoc[Quickstart]
-* xref:databricks.adoc[Databricks setup]
+* xref:quickstart.adoc[]
+* xref:databricks.adoc[]
 
 * *Operations*
 * Reading from Neo4j
@@ -16,15 +16,15 @@
 * Using schemas
 ** xref:schema.adoc[Inferred schema]
 ** xref:schema-user.adoc[User-defined schema]
-* xref:streaming.adoc[Spark Structured Streaming]
-* xref:gds.adoc[Data science with Neo4j GDS]
+* xref:streaming.adoc[]
+* xref:gds.adoc[]
 * xref:dwh.adoc[]
 +
 --
 include::partial$dwh-list.adoc[]
 --
-* xref:performance.adoc[Performance tuning]
-* xref:configuration.adoc[Options and configuration]
+* xref:performance.adoc[]
+* xref:configuration.adoc[]
 
 * *Reference*
 * xref:architecture.adoc[Concepts]
