@@ -19,10 +19,10 @@
 * xref:streaming.adoc[Spark Structured Streaming]
 * xref:gds.adoc[Data science with Neo4j GDS]
 * xref:dwh.adoc[]
-** xref:snowflake.adoc[]
-** xref:bigquery.adoc[]
-** xref:redshift.adoc[]
-** xref:azure-synapse-analytics.adoc[]
++
+--
+include::partial$dwh-list.adoc[]
+--
 * xref:performance.adoc[Performance tuning]
 * xref:configuration.adoc[Options and configuration]
 

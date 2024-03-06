@@ -1,3 +1,5 @@
 = Data warehouses
 
-* xref:snowflake.adoc[]
+Supported data warehouses:
+
+include::partial$dwh-list.adoc[]
