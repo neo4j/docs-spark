@@ -16,18 +16,18 @@
 * Using schemas
 ** xref:schema.adoc[Inferred schema]
 ** xref:schema-user.adoc[User-defined schema]
-* xref:streaming.adoc[]
-* xref:gds.adoc[]
-* xref:dwh.adoc[]
+* xref:dwh.adoc[Data warehouses support]
 +
 --
 include::partial$dwh-list.adoc[]
 --
+* xref:gds.adoc[]
+* xref:streaming.adoc[]
 * xref:performance.adoc[]
-* xref:configuration.adoc[]
+** xref:architecture.adoc[Data modeling]
+** xref:considerations.adoc[Spark optimizations]
 
 * *Reference*
-* xref:architecture.adoc[Concepts]
+* xref:configuration.adoc[]
 * xref:types.adoc[]
-* xref:considerations.adoc[Spark optimizations]
 * xref:faq.adoc[]
