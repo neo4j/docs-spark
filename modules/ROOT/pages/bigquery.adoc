@@ -35,7 +35,7 @@ val bigqueryDF: DataFrame = spark.read
 bigqueryDF.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.ErrorIfExists)
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Answer")
   .load()
 ----
@@ -56,7 +56,7 @@ bigqueryDF = (spark.read
 (bigqueryDF.write
   .format("org.neo4j.spark.DataSource")
   .mode("ErrorIfExists")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Answer")
   .load())
 ----
@@ -74,7 +74,7 @@ bigqueryDF = (spark.read
 // Step (1)
 // Load `:Answer` nodes as DataFrame
 val neo4jDF: DataFrame = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Answer")
   .load()
 
@@ -95,7 +95,7 @@ neo4jDF.write
 # Step (1)
 # Load `:Answer` nodes as DataFrame
 neo4jDF = (spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Answer")
   .load())
 

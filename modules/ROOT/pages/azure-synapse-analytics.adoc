@@ -48,7 +48,7 @@ val azureDF: DataFrame = spark.read
 azureDF.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.ErrorIfExists)
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .save()
 ----
@@ -70,7 +70,7 @@ azureDF = (spark.read
 (azureDF.write
   .format("org.neo4j.spark.DataSource")
   .mode("ErrorIfExists")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .save())
 ----
@@ -91,7 +91,7 @@ into an Azure Synapse Analytics table:
 // Step (1)
 // Load `:Person:Customer` nodes as DataFrame
 val neo4jDF: DataFrame = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .load()
 
@@ -111,7 +111,7 @@ neo4jDF.write
 # Step (1)
 # Load `:Person:Customer` nodes as DataFrame
 neo4jDF = (spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .load())
 
