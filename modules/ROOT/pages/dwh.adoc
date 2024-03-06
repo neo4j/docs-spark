@@ -49,7 +49,7 @@ val snowflakeDF: DataFrame = spark.read
 snowflakeDF.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.ErrorIfExists)
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .save()
 ----
@@ -75,7 +75,7 @@ snowflakeDF = (spark.read
 (snowflakeDF.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.ErrorIfExists)
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .save())
 ----
@@ -93,7 +93,7 @@ snowflakeDF = (spark.read
 // Step (1)
 // Load `:Person:Customer` nodes as DataFrame
 val neo4jDF: DataFrame = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .load()
 
@@ -118,7 +118,7 @@ neo4jDF.write
 # Step (1)
 # Load `:Person:Customer` nodes as DataFrame
 neo4jDF = (spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .load())
 
@@ -174,7 +174,7 @@ val bigqueryDF: DataFrame = spark.read
 bigqueryDF.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.ErrorIfExists)
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Answer")
   .load()
 ----
@@ -195,7 +195,7 @@ bigqueryDF = (spark.read
 (bigqueryDF.write
   .format("org.neo4j.spark.DataSource")
   .mode("ErrorIfExists")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Answer")
   .load())
 ----
@@ -213,7 +213,7 @@ bigqueryDF = (spark.read
 // Step (1)
 // Load `:Answer` nodes as DataFrame
 val neo4jDF: DataFrame = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Answer")
   .load()
 
@@ -234,7 +234,7 @@ neo4jDF.write
 # Step (1)
 # Load `:Answer` nodes as DataFrame
 neo4jDF = (spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Answer")
   .load())
 
@@ -296,7 +296,7 @@ val redshiftDF: DataFrame = spark.read
 redshiftDF.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.ErrorIfExists)
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .save()
 ----
@@ -319,7 +319,7 @@ redshiftDF = (spark.read
 (redshiftDF.write
   .format("org.neo4j.spark.DataSource")
   .mode("ErrorIfExists")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .save())
 ----
@@ -350,7 +350,7 @@ val redshiftDF: DataFrame = spark.read
 redshiftDF.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.ErrorIfExists)
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .save()
 ----
@@ -373,7 +373,7 @@ redshiftDF = (spark.read
 (redshiftDF.write
   .format("org.neo4j.spark.DataSource")
   .mode("ErrorIfExists")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .save())
 ----
@@ -395,7 +395,7 @@ A good starting point in this case is this link:https://docs.databricks.com/data
 // Step (1)
 // Load `:Person:Customer` nodes as DataFrame
 val neo4jDF: DataFrame = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .load()
 
@@ -417,7 +417,7 @@ neo4jDF.write
 # Step (1)
 # Load `:Person:Customer` nodes as DataFrame
 neo4jDF = (spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .load())
 
@@ -447,7 +447,7 @@ A good starting point in this case is this link:https://github.com/spark-redshif
 // Step (1)
 // Load `:Person:Customer` nodes as DataFrame
 val neo4jDF: DataFrame = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .load()
 
@@ -469,7 +469,7 @@ neo4jDF.write
 # Step (1)
 # Load `:Person:Customer` nodes as DataFrame
 neo4jDF = (spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .load())
 
@@ -536,7 +536,7 @@ val azureDF: DataFrame = spark.read
 azureDF.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.ErrorIfExists)
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .save()
 ----
@@ -558,7 +558,7 @@ azureDF = (spark.read
 (azureDF.write
   .format("org.neo4j.spark.DataSource")
   .mode("ErrorIfExists")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .save())
 ----
@@ -579,7 +579,7 @@ into an Azure Synapse Analytics table:
 // Step (1)
 // Load `:Person:Customer` nodes as DataFrame
 val neo4jDF: DataFrame = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .load()
 
@@ -599,7 +599,7 @@ neo4jDF.write
 # Step (1)
 # Load `:Person:Customer` nodes as DataFrame
 neo4jDF = (spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://<host>:<password>")
+  .option("url", "neo4j://<host>:<port>")
   .option("labels", ":Person:Customer")
   .load())
 
