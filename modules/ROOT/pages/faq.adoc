@@ -1,10 +1,5 @@
 [#faq]
-= Neo4j Connector for Apache Spark FAQ
-
-== What is the license for this connector?
-
-The source code is offered under the terms of the Apache 2.0 open source license.  You are free
-to download, modify, and redistribute the connector; however, Neo4j support applies only to official builds provided by Neo4j.
+= Connector FAQ
 
 == Is this software connected to Morpheus or Cypher for Apache Spark (CAPS)?
 
@@ -13,28 +8,6 @@ that could execute Cypher queries within the Spark environment, and provided a n
 By contrast, this connector does not provide that
 functionality and focuses on doing reads and writes back and forth between Neo4j and Spark. Via this connector, all Cypher code is executed strictly within Neo4j. The Spark
 environment operates in terms of DataFrames as it always did, and this connector does not provide graph API primitives for Spark.
-
-== Can this connector be used for pre-processing of data and loading it into Neo4j?
-
-Yes. This connector enables Spark to be used as a good method of loading data directly into Neo4j. See xref:architecture.adoc[the architecture section] for a detailed discussion of
-Normalized loading vs. Cypher destructuring and guidance on different approaches for how to do performant data loads into Neo4j.
-
-== How can I speed up writes to Neo4j?
-
-The Spark connector fundamentally writes data to Neo4j in batches. Neo4j is a transactional
-database, and all modifications are made within a transaction. Those transactions in turn
-have overhead.
-
-The two simplest ways of increasing write performance are the following:
-
-* You can increase the batch size (option `batch.size`). The larger the batch, the fewer transactions are executed to write all of your data, and the less transactional overhead is incurred.
-* Ensure that your Neo4j instance has ample free heap and properly sized page cache. Small heaps make you unable to commit large batches, which in turn slows overall import.
-
-[NOTE]
-For best performance, make sure you are familiar with the material in the link:https://neo4j.com/docs/operations-manual/current/performance/[Operations manual].
-
-It is important to keep in mind that Neo4j scales writes vertically and reads horizontally.  In
-the link:https://neo4j.com/docs/operations-manual/current/clustering/introduction/[Causal Cluster Model], only the cluster leader (1 machine) may accept writes. For this reason, focus on getting the best hardware and performance on your cluster leader to maximize write throughput.
 
 == My writes are failing due to Deadlock Exceptions. What should I do?
 
@@ -106,4 +79,4 @@ To avoid this issue you can use the xref:quickstart.adoc#user-defined-schema[use
 
 == Where can I get help?
 
-link:https://community.neo4j.com/[The Neo4j Community] site is a great place to ask questions, talk with other users who use the connector, and get help from Neo4j experts
+link:https://community.neo4j.com/[The Neo4j Community] site is a great place to ask questions, talk with other users who use the connector, and get help from Neo4j experts.

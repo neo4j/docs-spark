@@ -2,7 +2,7 @@
 
 * *Getting started*
 
-* xref:installation.adoc[Installation]
+* xref:installation.adoc[]
 * xref:quickstart.adoc[Quickstart]
 * xref:databricks.adoc[Databricks setup]
 
@@ -30,4 +30,4 @@ include::partial$dwh-list.adoc[]
 * xref:architecture.adoc[Concepts]
 * xref:types.adoc[]
 * xref:considerations.adoc[Spark optimizations]
-* xref:faq.adoc[Troubleshooting ^?^]
+* xref:faq.adoc[]
