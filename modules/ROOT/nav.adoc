@@ -4,8 +4,7 @@
 
 * xref:installation.adoc[Installation]
 * xref:quickstart.adoc[Quickstart]
-* xref:databricks.adoc[Databricks installation]
-* xref:dwh.adoc[Third-party data sources]
+* xref:databricks.adoc[Databricks setup]
 
 * *Operations*
 * Reading from Neo4j
@@ -18,15 +17,14 @@
 ** xref:schema.adoc[Inferred schema]
 ** xref:schema-user.adoc[User-defined schema]
 * xref:streaming.adoc[Spark Structured Streaming]
-* xref:performance.adoc[Performance tuning]
 * xref:gds.adoc[Data science with Neo4j GDS]
+* xref:dwh.adoc[]
+** xref:snowflake.adoc[]
+** xref:bigquery.adoc[]
+** xref:redshift.adoc[]
+** xref:azure-synapse-analytics.adoc[]
+* xref:performance.adoc[Performance tuning]
 * xref:configuration.adoc[Options and configuration]
-
-* *Third-party data sources*
-* xref:snowflake.adoc[]
-* xref:bigquery.adoc[]
-* xref:redshift.adoc[]
-* xref:azure-synapse-analytics.adoc[]
 
 * *Reference*
 * xref:architecture.adoc[Concepts]
