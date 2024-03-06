@@ -43,7 +43,7 @@ asciidoc:
     page-search-type: Docs
     page-search-site: Reference Docs
     page-canonical-root: /docs
-    page-terms-to-mark: Cypher, Databricks
+    page-terms-to-mark: Cypher
     page-pagination: true
     page-no-canonical: true
     page-origin-private: false
