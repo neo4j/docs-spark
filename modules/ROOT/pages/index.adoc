@@ -3,18 +3,19 @@
 :page-aliases: overview.adoc
 
 The Neo4j Connector for Apache Spark provides integration between Neo4j and Apache Spark.
-
 You can use the connector to preprocess and transfer data to and from Neo4j.
-You can install the connector on Databricks.
 
 There are effectively two ways of using the connector:
 
 - **As a data source**: you can read any set of nodes or relationships as a DataFrame in Spark.
 - **As a sink**: you can write any DataFrame to Neo4j as a collection of nodes or relationships or use a Cypher statement to process records in a DataFrame into the graph pattern of your choice.
 
-The connector supports several xref:dwh.adoc[data warehouses] both as sources and as sinks:
+The connector supports several xref:dwh.adoc[data warehouses] both as sources and as sinks.
 
-include::partial$dwh-list.adoc[]
+== Databricks support
+
+You can install the connector on Databricks.
+See the instructions xref:databricks.adoc[here].
 
 == Multiple languages support
 
