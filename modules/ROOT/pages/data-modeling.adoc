@@ -1,0 +1,62 @@
+= Data modeling
+
+Given the following Cypher query:
+
+[source,cypher]
+----
+CREATE (c1:Customer{id:1, username: 'foo', city: 'Venezia'}),
+(p1:Product{id: 100, name: 'My Awesome Product'}),
+(c2:Customer{id:2, username: 'bar', city: 'Pescara'}),
+(p2:Product{id: 101, name: 'My Awesome Product 2'}),
+(c1)-[:BOUGHT{quantity: 10}]->(p1),
+(c2)-[:BOUGHT{quantity: 13}]->(p1),
+(c2)-[:BOUGHT{quantity: 4}]->(p2);
+----
+
+The graph structure is decomposed into three tables.
+
+.Customer table
+|===
+|id |username |city
+
+|1
+|foo
+|Venezia
+
+|2
+|bar
+|Pescara
+|===
+
+.Product table
+|===
+|id |name
+
+|100
+|My Awesome Product
+
+|101
+|My Awesome Product 2
+|===
+
+.BOUGHT table
+|===
+|source_id |target_id | quantity
+
+|1
+|100
+|10
+
+|2
+|100
+|13
+
+|2
+|101
+|4
+|===
+
+To have this decomposition you can use two strategies that allow to extract metadata from your graph:
+
+* xref:performance.adoc#_apoc[APOC]
+* xref:performance.adoc#_automatic_sampling[Automatic sampling]

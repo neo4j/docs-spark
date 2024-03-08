@@ -1,7 +1,6 @@
 * xref:index.adoc[]
 
 * *Getting started*
-* xref:introduction.adoc[]
 * xref:installation.adoc[]
 * xref:quickstart.adoc[]
 * xref:databricks.adoc[]
@@ -28,6 +27,7 @@ include::partial$dwh-list.adoc[]
 ** xref:considerations.adoc[]
 
 * *Reference*
-* xref:configuration.adoc[]
+* xref:data-modeling.adoc[]
 * xref:types.adoc[]
+* xref:configuration.adoc[]
 * xref:faq.adoc[]
