@@ -35,125 +35,92 @@ horizontally.
 
 Always use a `neo4j+s://` driver URI when communicating with the cluster in the client application.
 
-== Code
+== Code examples
 
-=== Scala
-
-You can create Spark DataFrames and write them to your Neo4j database:
-
-.Write the DataFrame to nodes of label `Person`
-[source,scala]
-----
-import org.apache.spark.sql.{SaveMode, SparkSession}
-
-val spark = SparkSession.builder().getOrCreate()
-import spark.implicits._
-
-val df = List(
-  ("John Doe", 32),
-  ("Jane Doe", 42),
-).toDF("name", "age")
-
-(df.write.format("org.neo4j.spark.DataSource")
-  .mode(SaveMode.Append)
-  .option("url", "neo4j://localhost:7687")
-  .option("authentication.basic.username", "neo4j")
-  .option("authentication.basic.password", "letmein!")
-  .option("labels", ":Person")
-  .save())
-----
-
+You can create Spark DataFrames and write them to your Neo4j database.
 Similarly, you can read from your Neo4j database and have the data available as Spark DataFrame.
 
-.Read all the nodes with label `Person`
-[source,scala]
+=== Interactive examples
+
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+
+Copy-paste and run this code in the Spark interactive shell.
+
+[source, scala]
 ----
 import org.apache.spark.sql.{SaveMode, SparkSession}
 
 val spark = SparkSession.builder().getOrCreate()
 
-val df = (spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://localhost:7687")
-  .option("authentication.basic.username", "neo4j")
-  .option("authentication.basic.password", "letmein!")
-  .option("labels", "Person")
-  .load())
+// Replace with the actual connection URI and credentials
+val url = "neo4j://localhost:7687"
+val username = "neo4j"
+val password = "password"
 
-df.show()
+// Create example Dataset
+val df = List(
+    ("John", "Doe", 42),
+    ("Jane", "Doe", 40)
+).toDF("name", "surname", "age")
+
+// Write to Neo4j
+df.write.format("org.neo4j.spark.DataSource")
+    .mode(SaveMode.Overwrite)
+    .option("url", url)
+    .option("authentication.basic.username", username)
+    .option("authentication.basic.password", password)
+    .option("labels", ":Person")
+    .option("node.keys", "name,surname")
+    .save()
 ----
+=====
 
-Visit the xref:reading.adoc[Reading] and xref:writing.adoc[Writing] sections for advanced usage.
+[.include-with-Python]
+=====
 
-=== Using with PySpark / Python
-
-:description: This chapter provides an information on using the Neo4j Connector for Apache Spark with Python.
-
-This connector uses the link:https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/spark-sql-data-source-api-v2.html[DataSource V2 API] in
-Spark.
-
-With a properly configured PySpark interpreter, you are able to use Python to call the connector and do all the Spark
-work.  
-
-The following examples show what the API looks like in Scala versus Python to aid adaptation of any code examples you might have and to get started quickly.
-
-This first listing is a simple program that reads all `Person` nodes out of a Neo4j instance into a DataFrame, in Scala.
-
-[source,scala]
-----
-import org.apache.spark.sql.{SaveMode, SparkSession}
-
-val spark = SparkSession.builder().getOrCreate()
-
-spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://localhost:7687")
-  .option("labels", "Person:Customer:Confirmed")
-  .load()
-----
-
-Here is the same program in Python:
-
-[source,python]
-----
-spark.read.format("org.neo4j.spark.DataSource") \
-  .option("url", "neo4j://localhost:7687") \
-  .option("labels", "Person:Customer:Confirmed") \
-  .load()
-----
+Copy-paste and run this code in the PySpark interactive shell.
 
 For the most part, the API is the same; you should only adopt the syntax for Python by adding backslashes to allow line continuance and avoid running into Python's indentation rules.
 
-=== API differences
-
-Some common API constants may need to be referred to as strings in the PySpark API. Consider the following two examples in Scala and Python,
-focusing on the `SaveMode`.
-
-[source,scala]
+[source, python]
 ----
-import org.apache.spark.sql.{SaveMode, SparkSession}
+import pyspark
+from pyspark.sql import SparkSession
 
-df.write
-  .format("org.neo4j.spark.DataSource")
-  .mode(SaveMode.ErrorIfExists)
-  .option("url", "neo4j://localhost:7687")
-  .option("labels", ":Person")
-  .save()
+spark = SparkSession.builder.getOrCreate()
+
+# Replace with the actual connection URI and credentials
+url = "neo4j://localhost:7687"
+username = "neo4j"
+password = "password"
+
+df = spark.createDataFrame([
+    {"name": "John", "surname": "Doe", "age": 32},
+    {"name": "Jane", "surname": "Doe", "age": 42}
+])
+
+(df.write.format("org.neo4j.spark.DataSource")
+    .mode("Overwrite")
+    .option("url", url)
+    .option("authentication.basic.username", username)
+    .option("authentication.basic.password", password)
+    .option("labels", ":Person")
+    .option("node.keys", "name,surname")
+    .save())
 ----
 
-The same program in Python is very similar. Note the language syntax differences and the `mode`:
-
-[source,python]
-----
-df.write \
-  .format("org.neo4j.spark.DataSource") \
-  .mode("ErrorIfExists") \
-  .option("url", "neo4j://localhost:7687") \
-  .option("labels", ":Person") \
-  .save()
-----
+[NOTE]
+======
+Some common API constants may need to be referred to as strings in the PySpark API.
+For example, the save mode in the Python API is specified with `df.mode("ErrorIfExists")`.
+======
 
 To avoid the necessity for backslashes on each line, you can also use parentheses like so:
 
-[source,python]
+[source, python]
 ----
 result = (df.write 
   .format("org.neo4j.spark.DataSource")
@@ -162,41 +129,19 @@ result = (df.write
   .option("labels", ":Person")
   .save())
 ----
+=====
+====
 
-=== Notebooks
+Visit the xref:reading.adoc[Reading] and xref:writing.adoc[Writing] sections for details on the usage.
 
-In directory https://github.com/neo4j-contrib/neo4j-spark-connector/tree/5.0/examples[examples] you'll find two useful notebooks that allows you to test Neo4j and PySpark in a cloud-to-cloud environment using Neo4j sandboxes and Google colab.
+=== Java application example
 
-image::colab-to-sandbox.png[Colab/PySpark to Neo4j sandbox architecture, align="center"]
-
-These notebooks contain a set of examples that explain how the Neo4j Spark connector can fit into your data-driven workflow, and mostly important they allow you to test your knowledge with a set of exercises after each section.
-
-If you have any problem feel free to write a post in the https://community.neo4j.com[Neo4j community forum] or in https://discord.com/invite/neo4j[Discord].
-
-If you want more exercises feel free to open an issue in the https://github.com/neo4j-contrib/neo4j-spark-connector[GitHub repository].
-
-* `neo4j_data_engineering.ipynb` file explains how to interact with the Neo4j Spark connector from a Data Engineering perspective, so how to write your Spark jobs and how to read/write data from/to Neo4j;
-* `neo4j_data_science.ipynb` file explains how to interact with the Neo4j Spark connector from a Data Science perspective, so how to combine Pandas (in PySpark) with the Neo4j Graph Data Science library for highlighting frauds in a banking scenario.
-
-==== Test your knowledge
-
-After each session you will find an exercise that will test your knowledge as shown in the image below:
-
-image::exercise-example.png[An exercise, align="center"]
-
-We provide asserts that will test the output of your code and we also provide a solution that you can check by expanding the text `Show a possible solution`
-
-Enjoy!
-
-=== Quick Java Example
-
-In order to use Neo4j Connector for Apache Spark in your Java application
-you need to add Spark Packages repository and the dependency.
+In order to use Neo4j Connector for Apache Spark in your Java application you need to add Spark Packages repository and the dependency.
 Look at xref:quickstart.adoc#_installation_guide[this section] for more information.
 
 Let's say you have a Neo4j instance with link:https://neo4j.com/developer/example-data/#built-in-examples[the movie graph] running on `localhost`.
 
-[source,java]
+[source, java]
 ----
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -223,33 +168,25 @@ public class SparkApp {
 }
 ----
 
-This code will produce the following output:
+== Notebooks
 
-[source,text]
-----
-+----+--------+------------------+----+
-|<id>|<labels>|              name|born|
-+----+--------+------------------+----+
-|   1|[Person]|      Keanu Reeves|1964|
-|   2|[Person]|  Carrie-Anne Moss|1967|
-|   3|[Person]|Laurence Fishburne|1961|
-|   4|[Person]|      Hugo Weaving|1960|
-|   5|[Person]|    Andy Wachowski|1967|
-|   6|[Person]|    Lana Wachowski|1965|
-|   7|[Person]|       Joel Silver|1952|
-|   8|[Person]|       Emil Eifrem|1978|
-|  12|[Person]|   Charlize Theron|1975|
-|  13|[Person]|         Al Pacino|1940|
-|  14|[Person]|   Taylor Hackford|1944|
-|  16|[Person]|        Tom Cruise|1962|
-|  17|[Person]|    Jack Nicholson|1937|
-|  18|[Person]|        Demi Moore|1962|
-|  19|[Person]|       Kevin Bacon|1958|
-|  20|[Person]| Kiefer Sutherland|1966|
-|  21|[Person]|         Noah Wyle|1971|
-|  22|[Person]|  Cuba Gooding Jr.|1968|
-|  23|[Person]|      Kevin Pollak|1957|
-|  24|[Person]|        J.T. Walsh|1943|
-+----+--------+------------------+----+
-only showing top 20 rows
-----
+In directory https://github.com/neo4j-contrib/neo4j-spark-connector/tree/5.0/examples[examples] you'll find two useful notebooks that allows you to test Neo4j and PySpark in a cloud-to-cloud environment using Neo4j sandboxes and Google colab.
+
+image::colab-to-sandbox.png[Colab/PySpark to Neo4j sandbox architecture, align="center"]
+
+These notebooks contain a set of examples that explain how the Neo4j Spark connector can fit into your data-driven workflow, and mostly important they allow you to test your knowledge with a set of exercises after each section.
+
+If you have any problem feel free to write a post in the https://community.neo4j.com[Neo4j community forum] or in https://discord.com/invite/neo4j[Discord].
+
+If you want more exercises feel free to open an issue in the https://github.com/neo4j-contrib/neo4j-spark-connector[GitHub repository].
+
+* `neo4j_data_engineering.ipynb` file explains how to interact with the Neo4j Spark connector from a Data Engineering perspective, so how to write your Spark jobs and how to read/write data from/to Neo4j;
+* `neo4j_data_science.ipynb` file explains how to interact with the Neo4j Spark connector from a Data Science perspective, so how to combine Pandas (in PySpark) with the Neo4j Graph Data Science library for highlighting frauds in a banking scenario.
+
+=== Test your knowledge
+
+After each session you will find an exercise that will test your knowledge as shown in the image below:
+
+image::exercise-example.png[An exercise, align="center"]
+
+We provide asserts that will test the output of your code and we also provide a solution that you can check by expanding the text `Show a possible solution`
