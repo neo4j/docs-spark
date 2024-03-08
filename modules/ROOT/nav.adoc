@@ -1,7 +1,7 @@
 * xref:index.adoc[]
 
 * *Getting started*
-
+* xref:introduction.adoc[]
 * xref:installation.adoc[]
 * xref:quickstart.adoc[]
 * xref:databricks.adoc[]
@@ -24,8 +24,8 @@ include::partial$dwh-list.adoc[]
 * xref:gds.adoc[]
 * xref:streaming.adoc[]
 * xref:performance.adoc[]
-** xref:architecture.adoc[Data modeling]
-** xref:considerations.adoc[Spark optimizations]
+** xref:architecture.adoc[]
+** xref:considerations.adoc[]
 
 * *Reference*
 * xref:configuration.adoc[]

@@ -1,4 +1,4 @@
-= Spark features
+= Spark optimizations
 :description: This chapter describes the quick way to get started with Neo4j Connector for Apache Spark.
 
 Before going into details, we need to address you to some preliminary considerations on data types, filters, and schema.
