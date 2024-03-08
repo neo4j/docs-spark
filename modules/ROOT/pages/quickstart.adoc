@@ -2,18 +2,29 @@
 :description: This chapter describes the quick way to get started with Neo4j Connector for Apache Spark.
 :page-aliases: python.adoc, playground.adoc, quick-java-example.adoc, aura.adoc, neo4j-cluster.adoc
 
-== Connection
+== Connection URI
 
-=== Connecting to Neo4j Aura
+=== Standard connection
 
-Connecting to link:https://neo4j.com/docs/aura/[Neo4j Aura] is similar to connecting to on-premise Neo4j instances, but keep in mind:
+The standard connection URI uses the `neo4j://` protocol.
+For example, the URI of a local Neo4j instance is `neo4j://localhost:7687`.
 
-* Always use a `neo4j+s://` driver URI when communicating with the cluster in the client application.  The optimal
-driver URI is provided by AuraDB itself when you create a database.
-* In AuraDB Enterprise consider creating a separate username/password for Spark access; avoid running all processes through the default
-`neo4j` account.
+=== Connection to Neo4j Aura
 
-=== Combining AuraDB and AuraDS
+The connection to link:https://neo4j.com/docs/aura/[Neo4j Aura] must use the `neo4j+s://` protocol.
+An Aura connection URI has the form `neo4j+s://xxxxxxxx.databases.neo4j.io`.
+
+[TIP]
+====
+In an AuraDB Enterprise environment, consider creating a separate username/password for Spark access instead of the default `neo4j` account.
+====
+
+==== Combining AuraDB and AuraDS
+
+[CAUTION]
+====
+TODO: Remove this paragraph?
+====
 
 AuraDB is the Neo4j Cloud solution for OLTP processes while AuraDS is designed for computing large-scale graph/ml algorithms in the cloud.
 With the Neo4j Spark connector you can easily:
@@ -22,7 +33,7 @@ With the Neo4j Spark connector you can easily:
 * run GDS graph/ml algorithms over your data in AuraDS
 * write the result of the computation back to AuraDB in order to enrich your transactional data
 
-=== Connecting to a Neo4j Cluster
+=== Connection to a Neo4j Cluster
 
 link:https://neo4j.com/docs/operations-manual/current/clustering/[Neo4j Clustering] is a feature available in
 Enterprise Edition, which allows high availability of the database through having multiple database members.
