@@ -3,42 +3,32 @@
 :page-aliases: overview.adoc
 
 The Neo4j Connector for Apache Spark provides integration between Neo4j and Apache Spark.
+
 You can use the connector to process and transfer data between Neo4j and other platforms such as xref:databricks.adoc[Databricks] and several xref:dwh.adoc[data warehouses].
+Based on the Spark DataSource API, the connector supports all the programming languages that Spark supports.
 
-== Data modeling
+== Graphs and tables
 
-By default, the connector uses the *Tables for Labels* approach to convert data between Neo4j graphs and Spark table-based DataFrames.
+By default, the connector uses the _Tables for Labels_ approach to convert Neo4j graphs into Spark table-based DataFrames and vice versa.
 
 For example, consider a graph with the following schema:
 
-[source, cypher]
-----
-(:Customer)-[:BOUGHT]->(:Product)
-----
+image::example-graph.svg["Example graph"]
 
 The connector interprets the graph as two tables for `Customer` and `Product` nodes and one table for the `BOUGHT` relationship between them, with any node or relationship properties as columns on their respective table.
-See the xref:data-modeling.adoc[] section for more details.
+The xref:data-modeling.adoc[] section shows a more detailed example of this process.
 
-The connector supports custom Cypher queries as well, both for xref:reading-cypher.adoc[reading] and for xref:writing-cypher.adoc[writing].
-
-== Multiple languages support
-
-Because the connector is based on the new Spark DataSource API, other Spark interpreters for languages such as Python and R work.
-
-The API remains the same, and mostly only slight syntax changes are necessary to accommodate the differences between (for example) Python
-and Scala.
+The connector supports custom Cypher queries as well, both for xref:reading-cypher.adoc[reading] and for xref:writing-cypher.adoc[writing] data.
 
 == Compatibility
 
 === Neo4j compatibility
-This connector works with Neo4j 4.4 and 5.x, whether run as a single instance,
- as a cluster, or a managed service in Neo4j Aura.
-The connector supports Community and Enterprise Edition, however schema optimization is only available on Enterprise.
-such works with Neo4j Community Edition as well, with the appropriate version number.
+The connector supports Neo4j 4.4 and 5.x, whether run as a single instance, as a cluster, or a managed service in Neo4j Aura.
+It supports both the Community and the Enterprise Edition.
 
 === Spark and Scala compatibility
 
-This connector currently supports Spark 3.0+ with Scala 2.12 and Scala 2.13.
+The connector currently supports Spark 3.0+ with Scala 2.12 and Scala 2.13.
 
 Depending on the combination of Spark and Scala versions you need a different JAR.
 JARs are named in the form:
