@@ -84,7 +84,7 @@ df.write.format("org.neo4j.spark.DataSource")
     .option("url", url)
     .option("authentication.basic.username", username)
     .option("authentication.basic.password", password)
-    .option("labels", ":Person")
+    .option("labels", "Person")
     .option("node.keys", "name,surname")
     .save
 
@@ -126,8 +126,8 @@ password = "password"
 
 # Create example DataFrame
 df = spark.createDataFrame([
-    {"name": "John", "surname": "Doe", "age": 32},
-    {"name": "Jane", "surname": "Doe", "age": 42}
+    {"name": "John", "surname": "Doe", "age": 42},
+    {"name": "Jane", "surname": "Doe", "age": 40}
 ])
 
 # Write to Neo4j
@@ -136,7 +136,7 @@ df = spark.createDataFrame([
     .option("url", url)
     .option("authentication.basic.username", username)
     .option("authentication.basic.password", password)
-    .option("labels", ":Person")
+    .option("labels", "Person")
     .option("node.keys", "name,surname")
     .save())
 
@@ -155,9 +155,13 @@ df = spark.createDataFrame([
 === Application examples
 
 To develop a standalone application, you need to install the Spark connector as explained in the xref:installation.adoc#applications[Installation] section.
-After that, you can run the following examples with `spark-submit`.
+You can then run the following examples with `spark-submit`.
 
-The examples assume that the data from the <<interactive, interactive examples>> are already loaded on the Neo4j instance.
+.example.jsonl
+[source, jsonl]
+----
+include::example$example.jsonl[]
+----
 
 [.tabbed-example]
 ====
