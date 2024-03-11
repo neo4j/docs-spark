@@ -30,6 +30,7 @@ Here is a compatibility table to help you choose the correct JAR.
 |`neo4j-connector-apache-spark_2.13-{exact-connector-version}_for_spark_3.jar`
 |===
 
+[#shell]
 == Use with the interactive shell
 
 With Spark installed in the `SPARK_HOME` directory, run the following command to launch a Spark interactive shell with the connector included:
@@ -74,6 +75,7 @@ $SPARK_HOME/bin/pyspark --packages org.neo4j:neo4j-connector-apache-spark_2.12:{
 =====
 ====
 
+[#applications]
 == Include in standalone applications
 
 You can include the connector in your application using a build tool.

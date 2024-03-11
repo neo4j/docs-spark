@@ -53,7 +53,7 @@ Similarly, you can read from your Neo4j database and have the data available as 
 
 === Interactive examples
 
-You can copy-paste and run the following examples directly in the xref:installation.adoc#_to_run_code_interactively[interactive Spark shell] (`spark-shell` for Scala, `pyspark` for Python).
+You can copy-paste and run the following examples directly in the xref:installation.adoc#shell[interactive Spark shell] (`spark-shell` for Scala, `pyspark` for Python).
 
 [.tabbed-example]
 ====
@@ -144,7 +144,7 @@ Visit the xref:reading.adoc[Reading] and xref:writing.adoc[Writing] sections for
 
 === Application examples
 
-To develop a standalone application, you need to install the Spark connector as explained in the xref:installation.adoc#_to_develop_applications[Installation] section.
+To develop a standalone application, you need to install the Spark connector as explained in the xref:installation.adoc#applications[Installation] section.
 After that, you can run the following examples with `spark-submit`.
 
 [.tabbed-example]
