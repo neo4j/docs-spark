@@ -53,12 +53,12 @@ Similarly, you can read from your Neo4j database and have the data available as 
 
 === Interactive examples
 
+Copy-paste and run the example code in the Spark interactive shell (`spark-shell` for Scala, `pyspark` for Python).
+
 [.tabbed-example]
 ====
 [.include-with-Scala]
 =====
-
-Copy-paste and run this code in the Spark interactive shell.
 
 [source, scala]
 ----
@@ -92,13 +92,10 @@ df.write.format("org.neo4j.spark.DataSource")
 [.include-with-Python]
 =====
 
-Copy-paste and run this code in the PySpark interactive shell.
-
 For the most part, the API is the same; you should only adopt the syntax for Python by adding backslashes to allow line continuance and avoid running into Python's indentation rules.
 
 [source, python]
 ----
-import pyspark
 from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.getOrCreate()
