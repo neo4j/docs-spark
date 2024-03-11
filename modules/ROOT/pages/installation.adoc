@@ -1,40 +1,48 @@
-[#_installation_guide]
 = Installation
 :description: This chapter describes the quick way to get started with Neo4j Connector for Apache Spark.
 
-[#prerequisites]
-== Prerequisites
+== Download Apache Spark
 
-First, install Spark as documented on link:https://spark.apache.org/downloads.html[their website].
+Download Spark as documented on the link:https://spark.apache.org/downloads.html[Spark website].
 
-Choose the version carefully since the wrong combination of Scala version and Spark version breaks your code.
-Check xref:overview.adoc#_spark_and_scala_compatibility[this page] for more information about the proper JAR to use.
+== Download the connector
 
-[#_where_to_get_the_jars]
-== Where to get the JARs?
+Download the connector JAR file from the link:https://neo4j.com/product/connectors/apache-spark-connector/[Neo4j Connector Page] or from the link:https://github.com/neo4j-contrib/neo4j-spark-connector/releases[GitHub releases page].
+The JAR file name has the `neo4j-connector-apache-spark_<Scala version>-<connector version>_for_spark_3.jar` format, for example:
 
-You can download the connector JAR from the link:https://neo4j.com/product/connectors/apache-spark-connector/[Neo4j Connector Page] or from the link:https://github.com/neo4j-contrib/neo4j-spark-connector/releases[GitHub releases page].
+`neo4j-connector-apache-spark_2.12-{exact-connector-version}_for_spark_3.jar`
 
-As for xref:#prerequisites[the Spark installation], make sure to choose the version carefully since the wrong combination of Scala version and Spark version breaks your code.
-Check xref:overview.adoc#_spark_and_scala_compatibility[this page] for more information about the proper JAR to use.
+Make sure to match both the Spark version and the Scala version.
+Here is a compatibility table to help you choose the correct JAR.
 
-== To run code interactively
+.Compatibility table
+|===
+| | Spark 3.0.x and 3.1.x | 3.2.x and above
 
-With `spark-shell`, or `pyspark`:
+|*Scala 2.12* |`neo4j-connector-apache-spark_2.12-4.1.5_for_spark_3.jar`
+|`neo4j-connector-apache-spark_2.12-{exact-connector-version}_for_spark_3.jar`
+
+|*Scala 2.13* |`neo4j-connector-apache-spark_2.13-4.1.5_for_spark_3.jar`
+|`neo4j-connector-apache-spark_2.13-{exact-connector-version}_for_spark_3.jar`
+|===
+
+== Run code interactively
+
+With `spark-shell` or `pyspark`:
 
 [shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/spark-shell --jars neo4j-connector-apache-spark_2.13-{exact-connector-version}_for_spark_3.jar
+$SPARK_HOME/bin/spark-shell --jars neo4j-connector-apache-spark_2.12-{exact-connector-version}_for_spark_3.jar
 ----
 
 The connector is also available from link:https://spark-packages.org/?q=neo4j-connector-apache-spark[Spark Packages]:
 
 [shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/spark-shell --packages org.neo4j:neo4j-connector-apache-spark_2.13:{exact-connector-version}_for_spark_3
+$SPARK_HOME/bin/spark-shell --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3
 ----
 
-== To develop applications
+== Develop standalone applications
 
 === Using sbt
 

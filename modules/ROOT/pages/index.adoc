@@ -30,25 +30,6 @@ It supports both the Community and the Enterprise Edition.
 
 The connector currently supports Spark 3.0+ with Scala 2.12 and Scala 2.13.
 
-Depending on the combination of Spark and Scala versions you need a different JAR.
-JARs are named in the form:
-`neo4j-connector-apache-spark_${scala.version}_{exact-connector-version}_for_spark_3`
-
-Ensure that you have the appropriate JAR file for your environment. 
-Here's a compatibility table to help you choose the correct JAR.
-
-.Compatibility table
-|===
-| | Spark 3.0.x and 3.1.x | 3.2.x and above
-
-|*Scala 2.12* |`neo4j-connector-apache-spark_2.12-4.1.5_for_spark_3.jar`
-|`neo4j-connector-apache-spark_2.12-{exact-connector-version}_for_spark_3.jar`
-
-|*Scala 2.13* |`neo4j-connector-apache-spark_2.13-4.1.5_for_spark_3.jar`
-|`neo4j-connector-apache-spark_2.13-{exact-connector-version}_for_spark_3.jar`
-|===
-
-
 == Training
 
 If you want an introduction on the Neo4j Connector for Apache Spark, take a look at the training that Andrea Santurbano
