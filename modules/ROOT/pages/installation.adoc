@@ -26,7 +26,7 @@ Here is a compatibility table to help you choose the correct JAR.
 |`neo4j-connector-apache-spark_2.13-{exact-connector-version}_for_spark_3.jar`
 |===
 
-== Run code interactively
+== Use with the interactive shell
 
 With `spark-shell` or `pyspark`:
 
@@ -42,7 +42,7 @@ The connector is also available from link:https://spark-packages.org/?q=neo4j-co
 $SPARK_HOME/bin/spark-shell --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3
 ----
 
-== Develop standalone applications
+== Include in standalone applications
 
 === Using sbt
 
