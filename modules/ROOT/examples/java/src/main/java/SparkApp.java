@@ -1,5 +1,6 @@
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 
 public class SparkApp {
@@ -15,12 +16,23 @@ public class SparkApp {
         String username = "neo4j";
         String password = "password";
 
+        Dataset<Row> data = spark.read().json("../example.jsonl");
+
+        data.write().format("org.neo4j.spark.DataSource")
+            .mode(SaveMode.Overwrite)
+            .option("url", url)
+            .option("authentication.basic.username", username)
+            .option("authentication.basic.password", password)
+            .option("labels", "Person")
+            .option("node.keys", "name,surname")
+            .save();
+
         Dataset<Row> ds = spark.read().format("org.neo4j.spark.DataSource")
-                .option("url", url)
-                .option("authentication.basic.username", username)
-                .option("authentication.basic.password", password)
-                .option("labels", "Person")
-                .load();
+            .option("url", url)
+            .option("authentication.basic.username", username)
+            .option("authentication.basic.password", password)
+            .option("labels", "Person")
+            .load();
 
         ds.show();
     }

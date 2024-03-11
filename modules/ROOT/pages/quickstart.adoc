@@ -86,7 +86,7 @@ df.write.format("org.neo4j.spark.DataSource")
     .option("authentication.basic.password", password)
     .option("labels", ":Person")
     .option("node.keys", "name,surname")
-    .save()
+    .save
 
 // Read from Neo4j
 spark.read.format("org.neo4j.spark.DataSource")
