@@ -51,6 +51,7 @@ Always use a `neo4j+s://` driver URI when communicating with the cluster in the 
 You can create Spark DataFrames and write them to your Neo4j database.
 Similarly, you can read from your Neo4j database and have the data available as Spark DataFrame.
 
+[#interactive]
 === Interactive examples
 
 You can copy-paste and run the following examples directly in the xref:installation.adoc#shell[interactive Spark shell] (`spark-shell` for Scala, `pyspark` for Python).
@@ -101,7 +102,16 @@ spark.read.format("org.neo4j.spark.DataSource")
 [.include-with-Python]
 =====
 
-For the most part, the API is the same; you should only adopt the syntax for Python by adding backslashes to allow line continuance and avoid running into Python's indentation rules.
+[TIP]
+======
+Wrap the multiline blocks within brackets to avoid syntax errors.
+======
+
+[NOTE]
+======
+Some common API constants may need to be referred to as strings in the PySpark API.
+For example, the save mode in the Python API is specified with `df.mode("ErrorIfExists")`.
+======
 
 [source, python]
 ----
@@ -139,33 +149,15 @@ df = spark.createDataFrame([
     .load()
     .show())
 ----
-
-[NOTE]
-======
-Some common API constants may need to be referred to as strings in the PySpark API.
-For example, the save mode in the Python API is specified with `df.mode("ErrorIfExists")`.
-======
-
-To avoid the necessity for backslashes on each line, you can also use parentheses like so:
-
-[source, python]
-----
-result = (df.write 
-  .format("org.neo4j.spark.DataSource")
-  .mode("ErrorIfExists")
-  .option("url", "neo4j://localhost:7687")
-  .option("labels", ":Person")
-  .save())
-----
 =====
 ====
-
-Visit the xref:reading.adoc[Reading] and xref:writing.adoc[Writing] sections for details on the usage.
 
 === Application examples
 
 To develop a standalone application, you need to install the Spark connector as explained in the xref:installation.adoc#applications[Installation] section.
 After that, you can run the following examples with `spark-submit`.
+
+The examples assume that the data from the <<interactive, interactive examples>> are already loaded on the Neo4j instance.
 
 [.tabbed-example]
 ====
