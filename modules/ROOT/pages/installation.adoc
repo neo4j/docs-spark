@@ -32,7 +32,7 @@ Here is a compatibility table to help you choose the correct JAR.
 
 == Use with the interactive shell
 
-With Spark installed in the `SPARK_HOME` directory, run the following command to launch a Spark interactive shell:
+With Spark installed in the `SPARK_HOME` directory, run the following command to launch a Spark interactive shell with the connector included:
 
 [.tabbed-example]
 ====
@@ -76,7 +76,9 @@ $SPARK_HOME/bin/pyspark --packages org.neo4j:neo4j-connector-apache-spark_2.12:{
 
 == Include in standalone applications
 
-=== Using sbt
+You can include the connector in your application using a build tool.
+
+=== With sbt
 
 A minimal `build.sbt` file:
 
@@ -93,7 +95,7 @@ If you use the link:https://github.com/databricks/sbt-spark-package[sbt-spark-pa
 scala spDependencies += "org.neo4j/neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3"
 ----
 
-=== Using Maven
+=== With Maven
 
 A minimal `pom.xml` file:
 
@@ -103,7 +105,7 @@ A minimal `pom.xml` file:
 include::example$java/pom.xml[]
 ----
 
-=== Using Gradle
+=== With Gradle
 
 [source, `build.gradle`, subs="attributes+"]
 ----
