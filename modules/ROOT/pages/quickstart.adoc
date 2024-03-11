@@ -53,7 +53,7 @@ Similarly, you can read from your Neo4j database and have the data available as 
 
 === Interactive examples
 
-You can copy-paste and run the following examples directly in the interactive Spark shell (`spark-shell` for Scala, `pyspark` for Python).
+You can copy-paste and run the following examples directly in the xref:installation.adoc#_to_run_code_interactively[interactive Spark shell] (`spark-shell` for Scala, `pyspark` for Python).
 
 [.tabbed-example]
 ====
