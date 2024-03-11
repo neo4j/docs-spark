@@ -7,16 +7,11 @@ url = "neo4j://localhost:7687"
 username = "neo4j"
 password = "password"
 
-df = spark.createDataFrame([
-    {"name": "John", "surname": "Doe", "age": 32},
-    {"name": "Jane", "surname": "Doe", "age": 42}
-])
-
-(df.write.format("org.neo4j.spark.DataSource")
-    .mode("Overwrite")
+ds = (spark.read.format("org.neo4j.spark.DataSource")
     .option("url", url)
     .option("authentication.basic.username", username)
     .option("authentication.basic.password", password)
-    .option("labels", ":Person")
-    .option("node.keys", "name,surname")
-    .save())
+    .option("labels", ":Customer")
+    .load())
+
+ds.show()

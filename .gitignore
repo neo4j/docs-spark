@@ -39,3 +39,9 @@ node_modules/
 
 # IDE
 .vscode/
+
+# Examples
+modules/ROOT/examples/scala/project
+modules/ROOT/examples/scala/target
+
+modules/ROOT/examples/java/target

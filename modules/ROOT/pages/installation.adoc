@@ -20,7 +20,7 @@ Check xref:overview.adoc#_spark_and_scala_compatibility[this page] for more info
 
 == To run code interactively
 
-With using spark-submit, spark-shell, or pyspark:
+With `spark-shell`, or `pyspark`:
 
 [shell, subs="attributes+"]
 ----
@@ -38,38 +38,34 @@ $SPARK_HOME/bin/spark-shell --packages org.neo4j:neo4j-connector-apache-spark_2.
 
 === Using sbt
 
-If you use the link:https://github.com/databricks/sbt-spark-package[sbt-spark-package plugin], in your `build.sbt` file add:
+A minimal `build.sbt` file:
+
+.build.sbt
+[source, sbt]
+----
+include::example$scala/build.sbt[]
+----
+
+If you use the link:https://github.com/databricks/sbt-spark-package[sbt-spark-package plugin], add the following to your `build.sbt` instead:
 
 [shell, subs="attributes+"]
 ----
 scala spDependencies += "org.neo4j/neo4j-connector-apache-spark_${scala.version}:{exact-connector-version}_for_spark_${spark.version.major}"
 ----
 
-Otherwise:
-
-[text, subs="attributes+"]
-----
-libraryDependencies += "org.neo4j" % "neo4j-connector-apache-spark_${scala.version}" % "{exact-connector-version}_for_spark_${spark.version.major}"
-----
-
 === Using Maven
 
+A minimal `pom.xml` file:
+
 .pom.xml
-[source,xml, subs="attributes+"]
+[source, xml]
 ----
-<dependencies>
-  <!-- list of dependencies -->
-  <dependency>
-    <groupId>org.neo4j</groupId>
-    <artifactId>neo4j-connector-apache-spark_${scala.version}</artifactId>
-    <version>{exact-connector-version}_for_spark_${spark.version.major}</version>
-  </dependency>
-</dependencies>
+include::example$java/pom.xml[]
 ----
 
 === Using Gradle
 
-[source,`build.gradle`, subs="attributes+"]
+[source, `build.gradle`, subs="attributes+"]
 ----
 
 dependencies{

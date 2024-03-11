@@ -10,10 +10,15 @@ public class SparkApp {
                 .config("spark.master", "local")
                 .getOrCreate();
 
+        // Replace with the actual connection URI and credentials
+        String url = "neo4j://localhost:7687";
+        String username = "neo4j";
+        String password = "password";
+
         Dataset<Row> ds = spark.read().format("org.neo4j.spark.DataSource")
-                .option("url", "neo4j://localhost:7687")
-                .option("authentication.basic.username", "neo4j")
-                .option("authentication.basic.password", "password")
+                .option("url", url)
+                .option("authentication.basic.username", username)
+                .option("authentication.basic.password", password)
                 .option("labels", "Customer")
                 .load();
 
