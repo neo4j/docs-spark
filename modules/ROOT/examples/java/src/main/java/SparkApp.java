@@ -19,7 +19,7 @@ public class SparkApp {
                 .option("url", url)
                 .option("authentication.basic.username", username)
                 .option("authentication.basic.password", password)
-                .option("labels", "Customer")
+                .option("labels", "Person")
                 .load();
 
         ds.show();

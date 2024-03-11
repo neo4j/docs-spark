@@ -71,7 +71,7 @@ val url = "neo4j://localhost:7687"
 val username = "neo4j"
 val password = "password"
 
-// Create example Dataset
+// Create example DataFrame
 val df = List(
     ("John", "Doe", 42),
     ("Jane", "Doe", 40)
@@ -86,6 +86,15 @@ df.write.format("org.neo4j.spark.DataSource")
     .option("labels", ":Person")
     .option("node.keys", "name,surname")
     .save()
+
+// Read from Neo4j
+spark.read.format("org.neo4j.spark.DataSource")
+    .option("url", url)
+    .option("authentication.basic.username", username)
+    .option("authentication.basic.password", password)
+    .option("labels", "Person")
+    .load
+    .show
 ----
 =====
 
@@ -105,11 +114,13 @@ url = "neo4j://localhost:7687"
 username = "neo4j"
 password = "password"
 
+# Create example DataFrame
 df = spark.createDataFrame([
     {"name": "John", "surname": "Doe", "age": 32},
     {"name": "Jane", "surname": "Doe", "age": 42}
 ])
 
+# Write to Neo4j
 (df.write.format("org.neo4j.spark.DataSource")
     .mode("Overwrite")
     .option("url", url)
@@ -118,6 +129,15 @@ df = spark.createDataFrame([
     .option("labels", ":Person")
     .option("node.keys", "name,surname")
     .save())
+
+# Read from Neo4j
+(spark.read.format("org.neo4j.spark.DataSource")
+    .option("url", url)
+    .option("authentication.basic.username", username)
+    .option("authentication.basic.password", password)
+    .option("labels", "Person")
+    .load()
+    .show())
 ----
 
 [NOTE]
