@@ -53,7 +53,7 @@ Similarly, you can read from your Neo4j database and have the data available as 
 
 === Interactive examples
 
-Copy-paste and run the example code in the Spark interactive shell (`spark-shell` for Scala, `pyspark` for Python).
+You can copy-paste and run the following examples directly in the interactive Spark shell (`spark-shell` for Scala, `pyspark` for Python).
 
 [.tabbed-example]
 ====
@@ -142,39 +142,37 @@ result = (df.write
 
 Visit the xref:reading.adoc[Reading] and xref:writing.adoc[Writing] sections for details on the usage.
 
-=== Java application example
+=== Application examples
 
-In order to use Neo4j Connector for Apache Spark in your Java application you need to add Spark Packages repository and the dependency.
-Look at xref:quickstart.adoc#_installation_guide[this section] for more information.
+To develop a standalone application, you need to install the Spark connector as explained in the xref:installation.adoc#_to_develop_applications[Installation] section.
+After that, you can run the following examples with `spark-submit`.
 
-Let's say you have a Neo4j instance with link:https://neo4j.com/developer/example-data/#built-in-examples[the movie graph] running on `localhost`.
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+[source, scala]
+----
+include::example$scala/src/main/scala/SparkApp.scala[]
+----
+=====
 
+[.include-with-Python]
+=====
+[source, python]
+----
+include::example$python/spark_app.py[]
+----
+=====
+
+[.include-with-Java]
+=====
 [source, java]
 ----
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
-
-public class SparkApp {
-
-    public static void main(String[] args) {
-        SparkSession spark = SparkSession
-                .builder()
-                .appName("Spark SQL Example")
-                .config("spark.master", "local")
-                .getOrCreate();
-
-        Dataset<Row> ds = spark.read().format("org.neo4j.spark.DataSource")
-                .option("url", "neo4j://localhost:7687")
-                .option("authentication.basic.username", "neo4j")
-                .option("authentication.basic.password", "password")
-                .option("labels", "Person")
-                .load();
-
-        ds.show();
-    }
-}
+include::example$java/src/main/java/SparkApp.java[]
 ----
+=====
+====
 
 == Jupyter notebooks
 
