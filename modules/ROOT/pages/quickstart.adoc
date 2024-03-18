@@ -18,7 +18,7 @@ In an Enterprise environment, consider creating a separate username/password for
 [#uri]
 === Connection URI
 
-Local connection::
+Local instance::
 Use the `neo4j://` protocol, for example `neo4j://localhost:7687`.
 
 Neo4j Aura::
@@ -78,10 +78,10 @@ spark.read.format("org.neo4j.spark.DataSource")
 
 [.include-with-Python]
 =====
-
+Wrap multi-line code in parentheses
 [TIP]
 ======
-Wrap the multiline blocks within brackets to avoid syntax errors.
+Wrap chained methods in parentheses to avoid syntax errors.
 ======
 
 [NOTE]
