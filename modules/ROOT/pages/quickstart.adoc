@@ -2,57 +2,34 @@
 :description: This chapter describes the quick way to get started with Neo4j Connector for Apache Spark.
 :page-aliases: python.adoc, playground.adoc, quick-java-example.adoc, aura.adoc, neo4j-cluster.adoc
 
-== Connection URI
+== Before you start
 
-=== Standard connection
-
-The standard connection URI uses the `neo4j://` protocol.
-For example, the URI of a local Neo4j instance is `neo4j://localhost:7687`.
-
-=== Connection to Neo4j Aura
-
-The connection to link:https://neo4j.com/docs/aura/[Neo4j Aura] must use the `neo4j+s://` protocol.
-An Aura connection URI has the form `neo4j+s://xxxxxxxx.databases.neo4j.io`.
-
+. link:{neo4j-docs-base-uri}/operations-manual/current/installation/[Install] Neo4j or get a link:{neo4j-docs-base-uri}/aura/[Neo4j Aura] instance.
+Note down the <<uri, connection URI>> and the access credentials.
++
 [TIP]
 ====
-In an AuraDB Enterprise environment, consider creating a separate username/password for Spark access instead of the default `neo4j` account.
+In an Enterprise environment, consider creating a separate username/password for Spark access instead of the default `neo4j` account.
 ====
 
-==== Combining AuraDB and AuraDS
+. Make sure you have Java (version 8 or above) installed.
+. Download Spark as documented on the link:https://spark.apache.org/downloads.html[Spark website].
 
-[CAUTION]
-====
-TODO: Remove this paragraph?
-====
+[#uri]
+=== Connection URI
 
-AuraDB is the Neo4j Cloud solution for OLTP processes while AuraDS is designed for computing large-scale graph/ml algorithms in the cloud.
-With the Neo4j Spark connector you can easily:
+Local connection::
+Use the `neo4j://` protocol, for example `neo4j://localhost:7687`.
 
-* export the data from AuraDB ingesting it in AuraDS
-* run GDS graph/ml algorithms over your data in AuraDS
-* write the result of the computation back to AuraDB in order to enrich your transactional data
+Neo4j Aura::
+Use the `neo4j+s://` protocol.
+An Aura connection URI has the form `neo4j+s://xxxxxxxx.databases.neo4j.io`.
 
-=== Connection to a Neo4j Cluster
+Neo4j Cluster::
+Use the `neo4j+s://` protocol to link:{neo4j-docs-base-uri}/operations-manual/current/clustering/setup/routing/[route transactions] appropriately (_write_ transactions to the leader, _read_ transactions to followers and read replicas).
 
-link:https://neo4j.com/docs/operations-manual/current/clustering/[Neo4j Clustering] is a feature available in
-Enterprise Edition, which allows high availability of the database through having multiple database members.
-
-Neo4j Enterprise uses a link:https://neo4j.com/docs/operations-manual/current/clustering/introduction/#causal-clustering-introduction-operational[Primary/Secondary servers]
-operational view.
-Write operations are always processed by the Primary servers only, while reads can be serviced by either Primary servers (link:https://neo4j.com/docs/operations-manual/current/clustering/internals/#causal-clustering-elections-and-leadership[Leaders or Followers]),
-or optionally by Read Replicas, which maintain a copy of the database and serve to scale out read operations
-horizontally.
-
-Always use a `neo4j+s://` driver URI when communicating with the cluster in the client application.
-
-== Code examples
-
-You can create Spark DataFrames and write them to your Neo4j database.
-Similarly, you can read from your Neo4j database and have the data available as Spark DataFrame.
-
-[#interactive]
-=== Interactive examples
+[#shell]
+== Interactive shell
 
 You can copy-paste and run the following examples directly in the xref:installation.adoc#shell[interactive Spark shell] (`spark-shell` for Scala, `pyspark` for Python).
 
@@ -109,8 +86,8 @@ Wrap the multiline blocks within brackets to avoid syntax errors.
 
 [NOTE]
 ======
-Some common API constants may need to be referred to as strings in the PySpark API.
-For example, the save mode in the Python API is specified with `df.mode("ErrorIfExists")`.
+Some common API constants are specified as strings in the PySpark API.
+For example, the save mode in the Python API is set with `df.mode("ErrorIfExists")`.
 ======
 
 [source, python]
@@ -152,9 +129,9 @@ df = spark.createDataFrame([
 =====
 ====
 
-=== Application examples
+== Self-contained applications
 
-To develop a standalone application, you need to install the Spark connector as explained in the xref:installation.adoc#applications[Installation] section.
+To develop a self-contained application, you need to add the Spark connector to your build as explained in the xref:installation.adoc#applications[Installation] section.
 You can then run the following examples with `spark-submit`.
 
 .example.jsonl
@@ -167,6 +144,7 @@ include::example$example.jsonl[]
 ====
 [.include-with-Scala]
 =====
+.SparkApp.scala
 [source, scala]
 ----
 include::example$scala/src/main/scala/SparkApp.scala[]
@@ -194,9 +172,5 @@ include::example$java/src/main/java/SparkApp.java[]
 
 The code repository includes two https://github.com/neo4j-contrib/neo4j-spark-connector/tree/5.0/examples[Jupyter notebooks] that show how to use the connector in a data-driven workflow:
 
-* `neo4j_data_engineering.ipynb` shows how to write Spark jobs to read data from and write data to Neo4j.
-* `neo4j_data_science.ipynb` shows how to combine Pandas (in PySpark) with the Neo4j Graph Data Science library for highlighting frauds in a banking scenario.
-
-If you have any problem feel free to write a post in the https://community.neo4j.com[Neo4j community forum] or in https://discord.com/invite/neo4j[Discord].
-
-If you want more exercises feel free to open an issue in the https://github.com/neo4j-contrib/neo4j-spark-connector[GitHub repository].
+* `neo4j_data_engineering.ipynb` shows how to create Spark jobs to read data from and write data to Neo4j.
+* `neo4j_data_science.ipynb` shows how to combine Pandas (in PySpark) with the Neo4j Graph Data Science library to highlight frauds in a banking scenario.

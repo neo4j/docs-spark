@@ -80,3 +80,4 @@ To avoid this issue you can use the xref:quickstart.adoc#user-defined-schema[use
 == Where can I get help?
 
 link:https://community.neo4j.com/[The Neo4j Community] site is a great place to ask questions, talk with other users who use the connector, and get help from Neo4j experts.
+You can also write in the https://discord.com/invite/neo4j[Neo4j Discord channel].

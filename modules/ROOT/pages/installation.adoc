@@ -1,10 +1,6 @@
 = Installation
 :description: This chapter describes the quick way to get started with Neo4j Connector for Apache Spark.
 
-== Download Apache Spark
-
-Download Spark as documented on the link:https://spark.apache.org/downloads.html[Spark website].
-
 == Download the connector
 
 Download the connector JAR file from the link:https://neo4j.com/product/connectors/apache-spark-connector/[Neo4j Connector Page] or from the link:https://github.com/neo4j-contrib/neo4j-spark-connector/releases[GitHub releases page].
