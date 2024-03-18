@@ -32,6 +32,11 @@ The connector currently supports Spark 3.0+ with Scala 2.12 and Scala 2.13.
 
 == Training
 
+[CAUTION]
+====
+TODO: Remove this section?
+====
+
 If you want an introduction on the Neo4j Connector for Apache Spark, take a look at the training that Andrea Santurbano
 presented at NODES2020.
 
