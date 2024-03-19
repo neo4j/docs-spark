@@ -3,10 +3,11 @@
 
 The standard way to read data from Neo4j with the Spark connector is via data source options.
 
-include::partial$sparksession.adoc[]
-
 For example, given a graph with `Person` nodes, you can run the following code to get a DataFrame containing all `Person` nodes with their node properties.
 
+include::partial$sparksession.adoc[]
+
+.Basic read operation
 [source, scala]
 ----
 spark.read.format("org.neo4j.spark.DataSource")

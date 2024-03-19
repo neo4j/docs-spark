@@ -17,12 +17,14 @@ object SparkApp {
 
         val data = spark.read.json("example.jsonl")
 
+        // Write to Neo4j
         data.write.format("org.neo4j.spark.DataSource")
             .mode(SaveMode.Overwrite)
             .option("labels", "Person")
             .option("node.keys", "name,surname")
             .save()
         
+        // Read from Neo4j
         val ds = spark.read.format("org.neo4j.spark.DataSource")
             .option("labels", "Person")
             .load()
