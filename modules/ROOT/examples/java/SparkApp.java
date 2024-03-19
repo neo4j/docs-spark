@@ -16,7 +16,7 @@ public class SparkApp {
         String username = "neo4j";
         String password = "password";
 
-        Dataset<Row> data = spark.read().json("../example.jsonl");
+        Dataset<Row> data = spark.read().json("example.jsonl");
 
         data.write().format("org.neo4j.spark.DataSource")
             .mode(SaveMode.Overwrite)

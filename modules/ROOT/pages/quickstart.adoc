@@ -29,7 +29,7 @@ Neo4j Cluster::
 Use the `neo4j+s://` protocol to link:{neo4j-docs-base-uri}/operations-manual/current/clustering/setup/routing/[route transactions] appropriately (_write_ transactions to the leader, _read_ transactions to followers and read replicas).
 
 [#shell]
-== Interactive shell
+== Usage with the Spark shell
 
 You can copy-paste and run the following examples directly in the xref:installation.adoc#shell[interactive Spark shell] (`spark-shell` for Scala, `pyspark` for Python).
 
@@ -152,14 +152,17 @@ include::example$example.jsonl[]
 .SparkApp.scala
 [source, scala]
 ----
-include::example$scala/src/main/scala/SparkApp.scala[]
+include::example$scala/SparkApp.scala[]
 ----
 . Run `sbt package`.
 . Run `spark-submit`:
 +
 [source, shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/spark-submit --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3 --class SparkApp target/scala-2.12/spark-app_2.12-1.0.jar
+$SPARK_HOME/bin/spark-submit \
+  --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3 \
+  --class SparkApp \
+  target/scala-2.12/spark-app_2.12-1.0.jar
 ----
 
 =====
@@ -168,7 +171,6 @@ $SPARK_HOME/bin/spark-submit --packages org.neo4j:neo4j-connector-apache-spark_2
 =====
 
 . Create a `python-example` directory.
-. Install `pyspark`.
 . Copy the `example.jsonl` and `spark_app.py` files below into the new directory.
 +
 .example.jsonl
@@ -186,7 +188,9 @@ include::example$python/spark_app.py[]
 +
 [source, shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/spark-submit --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3 spark_app.py
+$SPARK_HOME/bin/spark-submit \
+  --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3 \
+  spark_app.py
 ----
 
 =====
@@ -205,7 +209,7 @@ include::example$example.jsonl[]
 +
 [source, java]
 ----
-include::example$java/src/main/java/SparkApp.java[]
+include::example$java/SparkApp.java[]
 ----
 
 . Run `mvn package`.
@@ -213,7 +217,10 @@ include::example$java/src/main/java/SparkApp.java[]
 +
 [source, shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/spark-submit --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3 --class SparkApp target/spark-app-1.0.jar
+$SPARK_HOME/bin/spark-submit \
+  --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3 \
+  --class SparkApp \
+  target/spark-app-1.0.jar
 ----
 
 =====

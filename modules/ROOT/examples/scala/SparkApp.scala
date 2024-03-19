@@ -9,7 +9,7 @@ object SparkApp {
         val username = "neo4j"
         val password = "password"
 
-        val data = spark.read.json("../example.jsonl")
+        val data = spark.read.json("example.jsonl")
 
         data.write.format("org.neo4j.spark.DataSource")
             .mode(SaveMode.Overwrite)

@@ -7,7 +7,7 @@ url = "neo4j://localhost:7687"
 username = "neo4j"
 password = "password"
 
-data = spark.read.json("../example.jsonl")
+data = spark.read.json("example.jsonl")
 
 (data.write.format("org.neo4j.spark.DataSource")
     .mode("Overwrite")
