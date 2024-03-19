@@ -12,20 +12,27 @@ spark = (
     .getOrCreate()
 )
 
-data = spark.read.json("example.jsonl")
+# Create example DataFrame
+df = spark.createDataFrame(
+    [
+        {"name": "John", "surname": "Doe", "age": 42},
+        {"name": "Jane", "surname": "Doe", "age": 40},
+    ]
+)
 
+# Write to Neo4j
 (
-    data.write.format("org.neo4j.spark.DataSource")
+    df.write.format("org.neo4j.spark.DataSource")
     .mode("Overwrite")
     .option("labels", "Person")
     .option("node.keys", "name,surname")
     .save()
 )
 
-ds = (
+# Read from Neo4j
+(
     spark.read.format("org.neo4j.spark.DataSource")
     .option("labels", "Person")
     .load()
+    .show()
 )
-
-ds.show()
