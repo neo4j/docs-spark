@@ -14,6 +14,7 @@ In an Enterprise environment, consider creating a separate username/password for
 
 . Make sure you have Java (version 8 or above) installed.
 . Download Spark as documented on the link:https://spark.apache.org/downloads.html[Spark website].
+. If you are developing a non-Python self-contained application, make sure you have a xref:installation.adoc#applications[build tool] installed.
 
 [#uri]
 === Connection URI
@@ -132,8 +133,7 @@ df = spark.createDataFrame([
 [#applications]
 == Self-contained applications
 
-To develop a non-Python self-contained application, you need to add the Spark connector to your build as shown in the xref:installation.adoc#applications[Installation] section.
-For a Python application, run `spark-submit` directly.
+Non-Python applications require some additional setup.
 
 [.tabbed-example]
 ====
