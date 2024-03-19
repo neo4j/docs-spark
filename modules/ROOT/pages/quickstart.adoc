@@ -53,7 +53,7 @@ val spark = SparkSession
     .config("neo4j.url", url)
     .config("neo4j.authentication.basic.username", username)
     .config("neo4j.authentication.basic.password", password)
-    .getOrCreate
+    .getOrCreate()
 
 // Create example DataFrame
 val df = List(
@@ -66,13 +66,13 @@ df.write.format("org.neo4j.spark.DataSource")
     .mode(SaveMode.Overwrite)
     .option("labels", "Person")
     .option("node.keys", "name,surname")
-    .save
+    .save()
 
 // Read from Neo4j
 spark.read.format("org.neo4j.spark.DataSource")
     .option("labels", "Person")
-    .load
-    .show
+    .load()
+    .show()
 ----
 =====
 

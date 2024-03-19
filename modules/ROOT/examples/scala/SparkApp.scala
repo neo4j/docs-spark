@@ -13,7 +13,7 @@ object SparkApp {
             .config("neo4j.authentication.basic.username", username)
             .config("neo4j.authentication.basic.password", password)
             .appName("Spark App")
-            .getOrCreate
+            .getOrCreate()
 
         val data = spark.read.json("example.jsonl")
 
@@ -21,12 +21,12 @@ object SparkApp {
             .mode(SaveMode.Overwrite)
             .option("labels", "Person")
             .option("node.keys", "name,surname")
-            .save
+            .save()
         
         val ds = spark.read.format("org.neo4j.spark.DataSource")
             .option("labels", "Person")
-            .load
+            .load()
 
-        ds.show
+        ds.show()
     }
 }
