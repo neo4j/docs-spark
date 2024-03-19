@@ -1,6 +1,7 @@
 = Installation
 :description: This chapter describes the quick way to get started with Neo4j Connector for Apache Spark.
 
+[#version]
 == Choose the correct version
 
 Make sure to match both the Spark version and the Scala version of your setup.

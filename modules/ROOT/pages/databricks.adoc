@@ -1,27 +1,52 @@
 = Databricks setup
 
-== Using the connector on Databricks
+include::partial$third-party.adoc[]
 
-You need to first get the proper JAR for the Databricks Runtime Version, xref:quickstart.adoc#_where_to_get_the_jars[here] you can find where to download the JARs.
+== Prerequisites
 
-Go to your cluster page, select the *Library* tab and install a new library simply by uploading the JAR.
+* A Databricks workspace must be available on an URL like `\https://dbc-xxxxxxxx-yyyy.cloud.databricks.com`.
 
-== Configuration on Databricks
+== Set up a compute cluster
 
-On Databricks you can't set Session configuration at runtime, but you can set Spark configuration on the cluster you're running your notebooks on.
-To do this go on the cluster configuration page, click the _Advanced Options_ toggle and then the _Spark_ tab.
+. Create a compute cluster with `Single user` access, `Unrestricted` policy, and your preferred Scala runtime.
++
+[NOTE]
+====
+Access types different from `Single user` are not currently supported.
+====
+. In the cluster page, select the *Library* tab and search for the connector using the coordinates from the xref:installation.adoc#version[Installation] section.
++
+Alternatively, select *Install new* and search the connector on Maven Central (*not* on Spark Packages).
++
+[NOTE]
+====
+Make sure to select the correct version of the connector by matching both the Scala version and the Spark version to the cluster's runtime.
+====
 
-Add the Neo4j Connector configuration in the text area like this:
+== Session configuration (optional)
 
+You can set the Spark configuration on the cluster you are running your notebooks on.
+
+. Open the cluster configuration page.
+. Select the *Advanced Options* toggle under *Configuration*.
+. Select the *Spark* tab.
+
+For example, you can add Neo4j connection configuration in the text area as follows:
+
+[source]
 ----
-neo4j.url neo4j://1.2.3.4
+neo4j.url neo4j://<host>:<port>
 neo4j.authentication.type basic
-neo4j.authentication.basic.password mysecret
 neo4j.authentication.basic.username neo4j
+neo4j.authentication.basic.password password
 ----
 
-== Connecting to AuraDB from Databricks
+== Authentication methods
 
-AuraDB customers connecting from Databricks may encounter SSL handshake errors due to Databricks' custom Java security settings removing certain cipher support.
+All the authentication methods supported by the link:{neo4j-docs-base-uri}/java-manual/current/connect-advanced/#_authentication_methods[Neo4j Java Driver] (version 4.4 and higher) are supported.
 
-See the AuraDB support article link:{url-aura-kbase-databricks}[Connecting to Aura with Databricks] for more information and instructions on how to configure your Databricks cluster to support connections to AuraDB.
+== Connecting to Aura
+
+Aura customers connecting from Databricks may encounter SSL handshake errors due to Databricks' custom Java security settings removing support for some encryption ciphers.
+
+See the Aura support article link:https://support.neo4j.com/s/article/1500003161121-Connecting-to-Aura-with-Databricks[Connecting to Aura with Databricks] for more information.
