@@ -5,32 +5,28 @@ import org.apache.spark.sql.SparkSession;
 
 public class SparkApp {
     public static void main(String[] args) {
-        SparkSession spark = SparkSession
-                .builder()
-                .appName("Spark App")
-                .config("spark.master", "local")
-                .getOrCreate();
-
         // Replace with the actual connection URI and credentials
         String url = "neo4j://localhost:7687";
         String username = "neo4j";
         String password = "password";
 
+        SparkSession spark = SparkSession
+            .builder()
+            .appName("Spark App")
+            .config("neo4j.url", url)
+            .config("neo4j.authentication.basic.username", username)
+            .config("neo4j.authentication.basic.password", password)
+            .getOrCreate();
+
         Dataset<Row> data = spark.read().json("example.jsonl");
 
         data.write().format("org.neo4j.spark.DataSource")
             .mode(SaveMode.Overwrite)
-            .option("url", url)
-            .option("authentication.basic.username", username)
-            .option("authentication.basic.password", password)
             .option("labels", "Person")
             .option("node.keys", "name,surname")
             .save();
 
         Dataset<Row> ds = spark.read().format("org.neo4j.spark.DataSource")
-            .option("url", url)
-            .option("authentication.basic.username", username)
-            .option("authentication.basic.password", password)
             .option("labels", "Person")
             .load();
 

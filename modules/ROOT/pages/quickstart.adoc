@@ -43,12 +43,17 @@ You can copy-paste and run the following examples directly in the xref:installat
 ----
 import org.apache.spark.sql.{SaveMode, SparkSession}
 
-val spark = SparkSession.builder().getOrCreate()
-
 // Replace with the actual connection URI and credentials
 val url = "neo4j://localhost:7687"
 val username = "neo4j"
 val password = "password"
+
+val spark = SparkSession
+    .builder
+    .config("neo4j.url", url)
+    .config("neo4j.authentication.basic.username", username)
+    .config("neo4j.authentication.basic.password", password)
+    .getOrCreate
 
 // Create example DataFrame
 val df = List(
@@ -59,18 +64,12 @@ val df = List(
 // Write to Neo4j
 df.write.format("org.neo4j.spark.DataSource")
     .mode(SaveMode.Overwrite)
-    .option("url", url)
-    .option("authentication.basic.username", username)
-    .option("authentication.basic.password", password)
     .option("labels", "Person")
     .option("node.keys", "name,surname")
     .save
 
 // Read from Neo4j
 spark.read.format("org.neo4j.spark.DataSource")
-    .option("url", url)
-    .option("authentication.basic.username", username)
-    .option("authentication.basic.password", password)
     .option("labels", "Person")
     .load
     .show
@@ -95,12 +94,17 @@ For example, the save mode in the Python API is set with `df.mode("ErrorIfExists
 ----
 from pyspark.sql import SparkSession
 
-spark = SparkSession.builder.getOrCreate()
-
 # Replace with the actual connection URI and credentials
 url = "neo4j://localhost:7687"
 username = "neo4j"
 password = "password"
+
+spark = (SparkSession
+    .builder
+    .config("neo4j.url", url)
+    .config("neo4j.authentication.basic.username", username)
+    .config("neo4j.authentication.basic.password", password)
+    .getOrCreate())
 
 # Create example DataFrame
 df = spark.createDataFrame([
@@ -111,18 +115,12 @@ df = spark.createDataFrame([
 # Write to Neo4j
 (df.write.format("org.neo4j.spark.DataSource")
     .mode("Overwrite")
-    .option("url", url)
-    .option("authentication.basic.username", username)
-    .option("authentication.basic.password", password)
     .option("labels", "Person")
     .option("node.keys", "name,surname")
     .save())
 
 # Read from Neo4j
 (spark.read.format("org.neo4j.spark.DataSource")
-    .option("url", url)
-    .option("authentication.basic.username", username)
-    .option("authentication.basic.password", password)
     .option("labels", "Person")
     .load()
     .show())
