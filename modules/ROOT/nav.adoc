@@ -11,12 +11,11 @@ include::partial$dwh-list.adoc[]
 --
 
 * *Operations*
-* Reading from Neo4j
-** xref:reading.adoc[With Spark options]
-** xref:reading-cypher.adoc[With Cypher query]
-* Writing to Neo4j
-** xref:writing.adoc[With Spark options]
-** xref:writing-cypher.adoc[With Cypher query]
+* xref:reading.adoc[]
+** xref:reading-cypher.adoc[Cypher query]
+** xref:read-options.adoc[]
+* xref:writing.adoc[]
+** xref:writing-cypher.adoc[Cypher query]
 * Using schemas
 ** xref:schema.adoc[Inferred schema]
 ** xref:schema-user.adoc[User-defined schema]
