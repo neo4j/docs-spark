@@ -129,42 +129,93 @@ df = spark.createDataFrame([
 =====
 ====
 
+[#applications]
 == Self-contained applications
 
-To develop a self-contained application, you need to add the Spark connector to your build as explained in the xref:installation.adoc#applications[Installation] section.
-You can then run the following examples with `spark-submit`.
-
-.example.jsonl
-[source, jsonl]
-----
-include::example$example.jsonl[]
-----
+To develop a non-Python self-contained application, you need to add the Spark connector to your build as shown in the xref:installation.adoc#applications[Installation] section.
+For a Python application, run `spark-submit` directly.
 
 [.tabbed-example]
 ====
 [.include-with-Scala]
 =====
+. Create a `scala-example` directory.
+. Copy the `build.sbt` from the xref:installation.adoc#applications[Installation section] and the `example.jsonl` below into the new directory.
++
+.example.jsonl
+[source, jsonl]
+----
+include::example$example.jsonl[]
+----
+. Create a `src/main/scala` directory and copy the `SparkApp.scala` file below.
++
 .SparkApp.scala
 [source, scala]
 ----
 include::example$scala/src/main/scala/SparkApp.scala[]
 ----
+. Run `sbt package`.
+. Run `spark-submit`:
++
+[source, shell, subs="attributes+"]
+----
+$SPARK_HOME/bin/spark-submit --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3 --class SparkApp target/scala-2.12/spark-app_2.12-1.0.jar
+----
+
 =====
 
 [.include-with-Python]
 =====
+
+. Create a `python-example` directory.
+. Install `pyspark`.
+. Copy the `example.jsonl` and `spark_app.py` files below into the new directory.
++
+.example.jsonl
+[source, jsonl]
+----
+include::example$example.jsonl[]
+----
++
+.spark_app.py
 [source, python]
 ----
 include::example$python/spark_app.py[]
 ----
+. Run `spark-submit`:
++
+[source, shell, subs="attributes+"]
+----
+$SPARK_HOME/bin/spark-submit --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3 spark_app.py
+----
+
 =====
 
 [.include-with-Java]
 =====
+. Create a `java-example` directory.
+. Copy the `pom.xml` from the xref:installation.adoc#applications[Installation section] and the `example.jsonl` below into the new directory.
++
+.example.jsonl
+[source, jsonl]
+----
+include::example$example.jsonl[]
+----
+. Create a `src/main/java` directory and copy the `SparkApp.java` file below.
++
 [source, java]
 ----
 include::example$java/src/main/java/SparkApp.java[]
 ----
+
+. Run `mvn package`.
+. Run `spark-submit`:
++
+[source, shell, subs="attributes+"]
+----
+$SPARK_HOME/bin/spark-submit --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3 --class SparkApp target/spark-app-1.0.jar
+----
+
 =====
 ====
 
