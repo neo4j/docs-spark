@@ -1,4 +1,4 @@
-= Write options
+= Writer options
 
 The DataSource Writer has several options to connect and persist data into Neo4j.
 

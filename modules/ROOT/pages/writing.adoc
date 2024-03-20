@@ -184,7 +184,7 @@ Writing data to a Neo4j database can be done in three ways:
 
 * <<write-node,Node>>
 * <<write-rel,Relationship>>
-* xref:writing-cypher.adoc[Custom Cypher query]
+* xref:write-query.adoc[Custom Cypher query]
 
 [[write-node]]
 === Node

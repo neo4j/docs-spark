@@ -1,4 +1,4 @@
-= Read options
+= Reader options
 
 .List of available read options
 |===

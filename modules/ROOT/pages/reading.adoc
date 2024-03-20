@@ -8,7 +8,7 @@ There are two main approaches for reading data from a Neo4j database with the co
 * <<read-node, Read nodes>> using the `labels` option.
 * <<read-rel, Read a relationship>> with source and target nodes using the `relationship` option.
 
-If you need more flexibility, you can also run a xref:reading-cypher.adoc[custom Cypher query] using the `query` option.
+If you need more flexibility, you can also run a xref:read-query.adoc[custom Cypher query] using the `query` option.
 
 [[read-node]]
 == Read nodes

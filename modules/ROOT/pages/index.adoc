@@ -18,7 +18,7 @@ image::example-graph.svg["Example graph"]
 The connector interprets the graph as two tables for `Customer` and `Product` nodes and one table for the `BOUGHT` relationship between them, with any node or relationship properties as columns on their respective table.
 The xref:data-modeling.adoc[] section shows a more detailed example of this process, while the xref:types.adoc[] section shows how data types are mapped between Neo4j and Spark.
 
-The connector supports custom Cypher queries as well, both for xref:reading-cypher.adoc[reading] and for xref:writing-cypher.adoc[writing] data.
+The connector supports custom Cypher queries as well, both for xref:read-query.adoc[reading] and for xref:write-query.adoc[writing] data.
 
 == Compatibility
 

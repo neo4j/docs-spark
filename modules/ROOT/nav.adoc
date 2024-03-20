@@ -12,11 +12,11 @@ include::partial$dwh-list.adoc[]
 
 * *Operations*
 * xref:reading.adoc[]
-** xref:reading-cypher.adoc[]
-** xref:read-options.adoc[]
+** xref:read-query.adoc[]
+** xref:reader-options.adoc[]
 * xref:writing.adoc[]
-** xref:writing-cypher.adoc[Cypher query]
-** xref:write-options.adoc[]
+** xref:write-query.adoc[Cypher query]
+** xref:writer-options.adoc[]
 * Using schemas
 ** xref:schema.adoc[Inferred schema]
 ** xref:schema-user.adoc[User-defined schema]
