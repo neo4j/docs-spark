@@ -3,18 +3,25 @@
 
 include::partial$sparksession.adoc[]
 
-You can specify a Cypher query in this way:
+If you need more flexibility, you can use the `query` option to run a custom Cypher query.
 
-[source,scala]
+.`query` option example
+[source, scala]
 ----
+val query = """
+  MATCH (n:Person)
+  WITH n
+  LIMIT 2
+  RETURN id(n) AS id, n.name AS name
+"""
+
 spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://localhost:7687")
-  .option("query", "MATCH (n:Person) WITH n LIMIT 2 RETURN id(n) AS id, n.name AS name")
+  .option("query", query)
   .load()
   .show()
 ----
 
-.Result of the above code
+.Result
 |===
 |id |name
 
@@ -35,7 +42,7 @@ write the following:
 If your query returns a graph entity, use the `labels` or `relationship` modes instead.
 ====
 
-The structure of the Dataset returned by the query is influenced by the query itself.
+The structure of the DataFrame returned by the query is influenced by the query itself.
 In this particular context, it could happen that the connector isn't able to sample the Schema from the query,
 so in these cases, we suggest trying with the option `schema.strategy` set to `string` as described xref:quickstart.adoc#string-strategy[here].
 
@@ -43,52 +50,21 @@ so in these cases, we suggest trying with the option `schema.strategy` set to `s
 Read query *must always* return some data (read: *must always* have a return statement).
 If you use store procedures, remember to `YIELD` and then `RETURN` data.
 
-== Script option
-
-The script option allows you to execute a series of preparation script before Spark
-Job execution, the result of the last query can be reused in combination with the
-`query` read mode as it follows:
-
-----
-import org.apache.spark.sql.SparkSession
-
-val spark = SparkSession.builder().getOrCreate()
-
-spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://localhost:7687")
-  .option("script", "RETURN 'foo' AS val")
-  .option("query", "UNWIND range(1,2) as id RETURN id AS val, scriptResult[0].val AS script")
-  .load()
-  .show()
-----
-
-Before the extraction from Neo4j starts, the connector runs the content of the `script` option
-and the result of the last query is injected into the `query`.
-
-.Result of the above code
-|===
-|val|script
-
-|1|foo
-|2|foo
-|===
-
-
 == Schema
-The first 10 (or any number specified by the `schema.flatten.limit` option) results are flattened and the schema is created from those properties.
+The first 10 (or any number specified by the `schema.flatten.limit` option) results are flattened, and the schema is created from those properties.
 
-If the query returns no data, the sampling is not possible.
-In this case, the connector creates a schema from the return statement, and every column is going to be of type String.
-This does not cause any problems since you have no data in your dataset.
+If the query returns no data, sampling is not possible.
+In this case the connector creates a schema from the `RETURN` statement, with every column of type `String`.
+This does not cause any issues since the result set is empty.
 
-For example, you have this query:
-[source]
+.Query with empty result set
+[source, cypher]
 ----
-MATCH (n:NON_EXISTENT_LABEL) RETURN id(n) AS id, n.name, n.age
+MATCH (n:NON_EXISTENT_LABEL)
+RETURN id(n) AS id, n.name, n.age
 ----
 
-The created schema is the following:
-
+.Result
 |===
 |Column|Type
 
@@ -99,25 +75,19 @@ The created schema is the following:
 
 [TIP]
 ====
-The returned column order is not guaranteed to match the RETURN statement for Neo4j 3.x and Neo4j 4.0.
+In Neo4j 3.x and Neo4j 4.0, the order of the returned columns is not guaranteed to match the `RETURN` statement.
 
-Starting from Neo4j 4.1 the order is the same.
+Starting from Neo4j 4.1, the order is the same.
 ====
 
 [[limit-query]]
 == Limit the results
 
-This connector does not permit using `SKIP` or `LIMIT` at the end of a Cypher query. +
-Attempts to do this result in errors, such as the message: +
-_SKIP/LIMIT are not allowed at the end of the query_.
+The connector uses `SKIP` and `LIMIT` internally to support partitioned reads; as a result, `SKIP` and `LIMIT` clauses are not allowed in a custom Cypher query.
+Attempts to do this will cause execution errors.
 
-This is not supported, because internally the connector uses SKIP/LIMIT pagination to break read sets up into multiple partitions to support partitioned reads.
-As a result, user-provided SKIP/LIMIT clashes with what the connector itself adds to your query to support parallelism.
-
-There is a work-around though; you can still accomplish the same by using `SKIP / LIMIT` internal inside of the query, rather than after the final `RETURN` block of the query.
-
-Here's an example.
-This first query is rejected and fails:
+A possible workaround is to use `SKIP` and `LIMIT` _before_ the `RETURN` clause.
+For example, the following query fails:
 
 [source,cypher]
 ----
@@ -127,7 +97,7 @@ ORDER BY name
 LIMIT 10
 ----
 
-However, you can reformulate this query to make it works:
+The query can be rewritten with `LIMIT` before the `RETURN` to complete successfully:
 
 [source,cypher]
 ----
@@ -138,6 +108,39 @@ LIMIT 10
 RETURN p.name
 ----
 
-The queries return the exact same data, but only the second one is usable with the Spark connector and partition-able, because of the `WITH` clause and the simple final `RETURN` clause. If you choose to reformulate queries to use "internal SKIP/LIMIT", take careful notice of ordering operations to guarantee the same result set.
+[CAUTION]
+====
+When you rewrite a query, make sure the new query is equivalent to your original query so that the result is the same.
+====
 
 You may also use the `query.count` option rather than reformulating your query (more on it <<quickstart.adoc#parallelize,here>>).
+
+== The `script` option
+
+The `script` option allows to run a sequence of Cypher queries _before_ executing the read operation.
+
+The result of the `script` can be used in a subsequent `query`, for example to inject query parameters.
+
+.`script` and `query` example
+[source, scala]
+----
+val script = "RETURN 'foo' AS val"
+val query = """
+  UNWIND range(1, 2) as id
+  RETURN id AS val, scriptResult[0].val AS script
+"""
+
+spark.read.format("org.neo4j.spark.DataSource")
+  .option("script", script)
+  .option("query", query)
+  .load()
+  .show()
+----
+
+.Result
+|===
+|val|script
+
+|1|foo
+|2|foo
+|===

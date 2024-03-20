@@ -1,7 +1,10 @@
 = Reading from Neo4j
 :description: The chapter explains how to read data from a Neo4j database.
 
-The standard way to read data from Neo4j with the Spark connector is via data source options.
+There are two main approaches for reading data from a Neo4j database with the connector:
+
+* Read <<read-node, nodes>> using the `labels` option.
+* Read a <<read-rel, relationship>> with source and target nodes using the `relationship` option.
 
 For example, given a graph with `Person` nodes, you can run the following code to get a DataFrame containing all `Person` nodes with their node properties.
 
@@ -24,17 +27,12 @@ spark.read.format("org.neo4j.spark.DataSource")
 |39|[Person]|Doe|John|42
 |===
 
-There are two main approaches to read data from a Neo4j database via the connector:
-
-* The <<read-node, node>> approach using the `labels` option
-* The <<read-rel, relationship>> approach using the `relationship` option
-
-A third option is to use a xref:reading-cypher.adoc[custom Cypher query].
+If you need more flexibility, you can also run a xref:reading-cypher.adoc[custom Cypher query] using the `query` option.
 
 [[read-node]]
 == Node
 
-You can read single nodes by specifying one or more labels in the `labels` option:
+You can read nodes by specifying one or more labels in the `labels` option:
 
 .Single label
 [source,scala]
@@ -139,7 +137,7 @@ When reading data with this method, the DataFrame contains the following columns
 * `<relationshipType>`: relationship type
 * `rel.[property name]`: relationship properties
 
-Additional columns are added depending on the value of `relationship.nodes.map` option.
+Additional columns are added depending on the value of the `relationship.nodes.map` option:
 
 |===
 |`relationship.nodes.map` set to `false` (default)|`relationship.nodes.map` set to `true`
@@ -262,7 +260,7 @@ LIMIT <limit> <4>
 
 === Filtering
 
-You can use Spark to filter properties of the relationship, the source node, or the target node.
+You can use the `where` and `filter` functions in Spark to filter properties of the relationship, the source node, or the target node.
 The correct format of the filter depends on the value of `relationship.nodes.map` option.
 
 |===

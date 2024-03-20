@@ -47,7 +47,6 @@ include::example$scala/Quickstart.scala[]
 
 [.include-with-Python]
 =====
-Wrap multi-line code in parentheses
 [TIP]
 ======
 Wrap chained methods in parentheses to avoid syntax errors.
