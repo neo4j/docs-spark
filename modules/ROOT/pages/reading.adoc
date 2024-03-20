@@ -1,16 +1,24 @@
 = Reading from Neo4j
 :description: The chapter explains how to read data from a Neo4j database.
 
+// include::partial$sparksession.adoc[]
+
 There are two main approaches for reading data from a Neo4j database with the connector:
 
-* Read <<read-node, nodes>> using the `labels` option.
-* Read a <<read-rel, relationship>> with source and target nodes using the `relationship` option.
+* <<read-node, Read nodes>> using the `labels` option.
+* <<read-rel, Read a relationship>> with source and target nodes using the `relationship` option.
+
+If you need more flexibility, you can also run a xref:reading-cypher.adoc[custom Cypher query] using the `query` option.
+
+[[read-node]]
+== Read nodes
+
+You can read nodes by specifying one or more labels with the `labels` option.
 
 For example, given a graph with `Person` nodes, you can run the following code to get a DataFrame containing all `Person` nodes with their node properties.
 
-include::partial$sparksession.adoc[]
-
 .Basic read operation
+
 [source, scala]
 ----
 spark.read.format("org.neo4j.spark.DataSource")
@@ -27,34 +35,16 @@ spark.read.format("org.neo4j.spark.DataSource")
 |39|[Person]|Doe|John|42
 |===
 
-If you need more flexibility, you can also run a xref:reading-cypher.adoc[custom Cypher query] using the `query` option.
+You can specify multiple labels using the colon as a separator.
+The colon before the first label is optional.
 
-[[read-node]]
-== Node
-
-You can read nodes by specifying one or more labels in the `labels` option:
-
-.Single label
-[source,scala]
-----
-spark.read.format("org.neo4j.spark.DataSource")
-  .option("labels", "Person")
-  .load()
-----
-
-.Multiple labels
+.Multiple labels (without starting colon)
 [source,scala]
 ----
 spark.read.format("org.neo4j.spark.DataSource")
   .option("labels", "Person:Customer")
   .load()
 ----
-
-[NOTE]
-====
-A list of multiple labels can be specified either with or without a starting colon.
-For example, `Person:Customer` and `:Person:Customer` are considered the same.
-====
 
 === DataFrame columns
 
@@ -107,9 +97,9 @@ The following schema is created:
 |===
 
 [[read-rel]]
-== Relationship
+== Read a relationship
 
-You can read nodes connected by a relationship by specifying the relationship type, the source node labels, and the target node labels.
+You can read a relationship and its source and target nodes by specifying the relationship type, the source node labels, and the target node labels.
 
 [source, scala]
 ----
