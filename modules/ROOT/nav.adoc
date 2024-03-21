@@ -16,6 +16,7 @@ include::partial$dwh-list.adoc[]
 ** xref:reader-options.adoc[]
 * xref:writing.adoc[]
 ** xref:write-query.adoc[Cypher query]
+** xref:schema-optimization.adoc[]
 ** xref:writer-options.adoc[]
 * Using schemas
 ** xref:schema.adoc[Inferred schema]
