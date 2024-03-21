@@ -1,8 +1,6 @@
 = Data type mapping
 :description: This chapter provides a reference to type compatibility issues between Neo4j and Spark.
 
-== Background
-
 Neo4j and Cypher provide a link:https://neo4j.com/docs/java-reference/current/extending-neo4j/values-and-types/[type system]
 that describes how values are stored in the database, but these types do not always exactly match what Spark provides.
 
@@ -72,15 +70,14 @@ In some cases, there are data types that Neo4j provides that Spark does not have
 
 |`[Array of same type]`
 |`array[element]`
-|In Neo4j, arrays must be consistently typed (i.e., an array of all Float values). The inner Spark type matches the type mapping above.
+|In Neo4j, arrays must be consistently typed (for example, an array must contain only `Float` values). The inner Spark type matches the type mapping above.
 
 |===
 
 == Complex data types
 
-Spark doesn't natively support all Neo4j data types (i.e., link:https://neo4j.com/docs/cypher-manual/current/values-and-types/spatial/#spatial-values-point-type[`Point`], link:https://neo4j.com/docs/cypher-manual/current/values-and-types/temporal/#cypher-temporal-instants[`Time`], link:https://neo4j.com/docs/cypher-manual/current/values-and-types/temporal/#cypher-temporal-durations[`Duration`]). Such types are transformed into Struct types containing all the useful data.
-
-For complete details on type handling, consult the xref:types.adoc[Data type mapping between Neo4j and Spark].
+Spark does not natively support all Neo4j data types (for example link:{neo4j-docs-base-uri}/cypher-manual/current/values-and-types/spatial/#spatial-values-point-type[`Point`], link:{neo4j-docs-base-uri}/cypher-manual/current/values-and-types/temporal/#cypher-temporal-instants[`Time`], link:{neo4j-docs-base-uri}/cypher-manual/current/values-and-types/temporal/#cypher-temporal-durations[`Duration`]).
+Such types are transformed into `Struct` types containing all the useful data.
 
 .Complex data type conversion
 |===
