@@ -19,7 +19,7 @@ The following code inserts 10 nodes into Neo4j.
 Each node has two labels (`Person` and `Customer`) and four properties (`name`, `surname`, `age`, and `livesIn`).
 
 .Write example
-[source,scala]
+[source, scala, role=nocollapse]
 ----
 include::example$scala/WriteBasic.scala[tags=!setup]
 ----
@@ -32,10 +32,10 @@ The connector supports two save modes:
 * The `Append` mode builds a `CREATE` query.
 * The `Overwrite` (default) mode builds a `MERGE` query (requires the `node.keys` option).
 
-[[write-node]]
+[[write-nodes]]
 == Write nodes
 
-With the `labels` option, the connector writes an entire DataFrame as nodes in the Neo4j Database.
+With the `labels` option, the connector writes a DataFrame to the Neo4j database as a set of nodes with the given labels.
 
 The connector builds a `CREATE` or a `MERGE` Cypher query (depending on the <<save-mode, SaveMode>>) that uses the `UNWIND` clause to write a batch of rows (an `events` list with size defined by the `batch.size` option).
 
@@ -142,22 +142,18 @@ The connector flattens the `lives_in` column into three columns `lives_in.addres
 [[write-rel]]
 == Write a relationship
 
-You can write a DataFrame to Neo4j by specifying source, target nodes, and relationships.
+With the `relationship` option, the connector writes a DataFrame to the Neo4j database by specifying source, target nodes, and a relationship.
 
 [WARNING]
 ====
 To avoid deadlocks, always use a single partition (for example with `coalesce(1)`) before writing relationships to Neo4j.
 ====
 
-=== Overview
+=== Overview [TODO]
 
-Before diving into the actual process, let's clarify the vocabulary first. Since this method of writing data to Neo4j is more complex and few combinations of options can be used, let's spend more time on explaining it.
+The connector builds a Cypher query like the following:
 
-In theory you should take your dataset and move the columns around to create source and target nodes,
-eventually creating the specified relationships between them.
-
-This is a basic example of what would happen:
-[source,cypher]
+[source, cypher]
 ----
 UNWIND $events AS event
 CREATE (source:Person)
@@ -168,24 +164,33 @@ CREATE (source)-[rel:BOUGHT]->(target)
 SET rel += event.rel
 ----
 
+The way the actual query is built depends on a number of options.
+
+* <<save-mode, Save mode>>: defines whether the query uses a `CREATE` or a `MERGE` clause.
+* `relationship.save.strategy` defines the <<strategies, save strategy>> to use:
+** <<strategy-native, `Native`>>: You just need to specify the source node labels, the target node labels, and the relationship you want between them.
+** <<strategy-keys, `Keys`>>: In addition to source node labels, target node labels, and the relationship to create, you can also specify which columns should be written as nodes properties and as relationship properties.
+* `relationship.source.labels` and `relationship.target.labels` define the labels to assign to source and target nodes.
+* `relationship.source.save.mode`: <<node-save-modes>>
++
 The `CREATE` keyword for the source and target nodes can be replaced by `MERGE` or `MATCH`.
-To control this you can use the <<node-save-modes,Node save modes>>.
-
+To control this you can use the <<node-save-modes, Node save modes>>.
++
 You can set source and target nodes independently by using `relationship.source.save.mode` or `relationship.target.save.mode`.
-
++
 These options accept a case insensitive string as a value, that can be one of `ErrorIfExists`, `Overwrite`, `Append`;
 they work in the same same way as the <<write-node,Node save modes>>.
 
-When using `MATCH` or `MERGE`, you need to specify keys that identify the nodes.
+* `relationship.source.node.keys`:
+When using `MATCH` or `MERGE` for `relationship.source.save.mode`, you need to specify keys that identify the nodes.
 This is what the options `relationship.source.node.keys` and `relationship.target.node.keys`.
 More on this <<rel-specify-keys,here>>.
 
-The `CREATE` keyword for the relationship can be replaced by a `MERGE`.
-You can control this with <<save-mode,Save mode>>.
+Additionally, if the `relationship.save.strategy` is `keys`:
 
-You are also required to specify one of the two <<strategies,Save Strategies>>.
-This identifies which method is to be used to create the Cypher query
-and can have additional options available.
+* `relationship.properties` defines which DataFrame columns to write as relationship properties.
+* `relationship.source.node.properties` defines which DataFrame columns to write as source node properties.
+Defined as a comma-separated list of `key:value` pairs, where the key is the DataFrame column name, and the value is the node property name.
 
 [[strategies]]
 === Save strategies
@@ -402,8 +407,7 @@ musicDf.coalesce(1)
 You can specify four different modes for saving the nodes:
 
 * `Overwrite` mode performs a `MERGE` on that node.
-* `ErrorIfExists` mode performs a `CREATE` (not available for Spark 3).
-* `Append` mode performs a `CREATE` (not available for Spark 2.4).
+* `Append` mode performs a `CREATE`.
 * `Match` mode performs a `MATCH`.
 
 [NOTE]

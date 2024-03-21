@@ -51,6 +51,12 @@ The DataSource Writer has several options to connect and persist data into Neo4j
 |`native`
 |Yes
 
+|`relationship.nodes.map`
+|If it's set to `true`, `source` and `target` nodes are returned as Map<String, String>, otherwise we flatten the properties by returning
+every single node property as column prefixed by `source` or `target`
+|`false`
+|No
+
 |`relationship.source.labels`
 |Colon-separated list of labels that identify the *source* node
 |_(empty)_
