@@ -123,8 +123,8 @@ RETURN source, rel, target
 
 When reading data with this method, the DataFrame contains the following columns:
 
-* `<id>`: internal Neo4j ID
-* `<relationshipType>`: relationship type
+* `<rel.id>`: internal Neo4j ID
+* `<rel.type>`: relationship type
 * `rel.[property name]`: relationship properties
 
 Additional columns are added depending on the value of the `relationship.nodes.map` option:
@@ -133,10 +133,10 @@ Additional columns are added depending on the value of the `relationship.nodes.m
 |`relationship.nodes.map` set to `false` (default)|`relationship.nodes.map` set to `true`
 
 a|
-* `<sourceId>`: internal Neo4j ID of source node
-* `<sourceLabels>`: list of labels for source node
-* `<targetId>`: internal Neo4j ID of target node
-* `<targetLabels>`: list of labels for target node
+* `<source.id>`: internal Neo4j ID of source node
+* `<source.labels>`: list of labels for source node
+* `<target.id>`: internal Neo4j ID of target node
+* `<target.labels>`: list of labels for target node
 * `source.[property name]`: source node properties
 * `target.[property name]`: target node properties
 

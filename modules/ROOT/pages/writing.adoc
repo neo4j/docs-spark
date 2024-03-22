@@ -1,6 +1,8 @@
 = Writing to Neo4j
 
 :description: The chapters describes writing methods to a Neo4j database using Neo4j Spark connector.
+:table-header-code: Code
+:table-header-cypher: Equivalent Cypher query
 
 The following section covers the DataSource Writer and how to transfer the Spark dataset content into Neo4j.
 The connector provides batch writes to speed up the ingestion process, so if the process at some point fails, all the previous data are already persisted.
@@ -30,7 +32,7 @@ include::example$scala/WriteBasic.scala[tags=!setup]
 The connector supports two save modes:
 
 * The `Append` mode builds a `CREATE` query.
-* The `Overwrite` (default) mode builds a `MERGE` query (requires the `node.keys` option).
+* The `Overwrite` mode builds a `MERGE` query (requires the `node.keys` option).
 
 [[write-nodes]]
 == Write nodes
@@ -41,8 +43,9 @@ The connector builds a `CREATE` or a `MERGE` Cypher query (depending on the <<sa
 
 The code from the <<example, example>> results in a Cypher query like the following:
 
+[cols="1,1]
 |===
-|Code|Cypher query
+|{table-header-code}|{table-header-cypher}
 
 a|
 [source, scala]
@@ -74,8 +77,9 @@ For example, `"name:name,surname:surname"` is equivalent to `"name,surname"`.
 
 The same code using the `Overwrite` save mode results in a Cypher query like the following:
 
+[cols="1,1]
 |===
-|Code|Cypher query
+|{table-header-code}|{table-header-cypher}
 
 a|
 [source, scala]
@@ -149,7 +153,7 @@ With the `relationship` option, the connector writes a DataFrame to the Neo4j da
 To avoid deadlocks, always use a single partition (for example with `coalesce(1)`) before writing relationships to Neo4j.
 ====
 
-=== Overview [TODO]
+=== Overview
 
 The connector builds a Cypher query like the following:
 
@@ -166,12 +170,12 @@ SET rel += event.rel
 
 The way the actual query is built depends on a number of options.
 
-* <<save-mode, Save mode>>: defines whether the query uses a `CREATE` or a `MERGE` clause.
+* `mode` defines whether the query uses a `CREATE` or a `MERGE` clause (see <<save-mode, Save mode>>).
 * `relationship.save.strategy` defines the <<strategies, save strategy>> to use:
 ** <<strategy-native, `Native`>>: You just need to specify the source node labels, the target node labels, and the relationship you want between them.
 ** <<strategy-keys, `Keys`>>: In addition to source node labels, target node labels, and the relationship to create, you can also specify which columns should be written as nodes properties and as relationship properties.
-* `relationship.source.labels` and `relationship.target.labels` define the labels to assign to source and target nodes.
-* `relationship.source.save.mode`: <<node-save-modes>>
+* `relationship.{source,target}.labels` define the labels to assign to source and target nodes.
+* `relationship.{source,target}.save.mode`: <<node-save-modes>>
 +
 The `CREATE` keyword for the source and target nodes can be replaced by `MERGE` or `MATCH`.
 To control this you can use the <<node-save-modes, Node save modes>>.
@@ -181,9 +185,8 @@ You can set source and target nodes independently by using `relationship.source.
 These options accept a case insensitive string as a value, that can be one of `ErrorIfExists`, `Overwrite`, `Append`;
 they work in the same same way as the <<write-node,Node save modes>>.
 
-* `relationship.source.node.keys`:
-When using `MATCH` or `MERGE` for `relationship.source.save.mode`, you need to specify keys that identify the nodes.
-This is what the options `relationship.source.node.keys` and `relationship.target.node.keys`.
+* `relationship.{source,target}.node.keys`:
+When using `MATCH` or `MERGE` for `relationship.{source,target}.save.mode`, you need to specify keys that identify the nodes.
 More on this <<rel-specify-keys,here>>.
 
 Additionally, if the `relationship.save.strategy` is `keys`:
@@ -200,118 +203,155 @@ There are two strategies you can use to write relationships: <<strategy-native,N
 [[strategy-native]]
 ==== Native strategy
 
-The Native strategy is useful when you have a schema that conforms with the <<reading.adoc#rel-schema-no-map,Relationship read schema>>, and the `relationship.nodes.map` set to false.
-
-If you want to read relationship from a database, filter data, and write the result to another database, you can refer to the following example:
-
-[source,scala]
-----
-import org.apache.spark.sql.{SaveMode, SparkSession}
-
-val spark = SparkSession.builder().getOrCreate()
-
-val originalDf = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://allprod.host.com:7687")
-  .option("relationship", "BOUGHT")
-  .option("relationship.nodes.map", "false")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
-  .load()
-
-originalDf
-    .where("`target.price` > 2000")
-    .write
-    .format("org.neo4j.spark.DataSource")
-    .option("url", "neo4j://expensiveprod.host.com:7687")
-    .option("relationship", "SOLD")
-    .option("relationship.source.labels", ":Person:Rich")
-    .option("relationship.source.save.mode", "ErrorIfExists")
-    .option("relationship.target.labels", ":Product:Expensive")
-    .option("relationship.target.save.mode", "ErrorIfExists")
-    .save()
-----
-
-You just need to specify the source node labels, the target node labels, and the relationship you want between them.
-
-The generated query is the following:
-[source,cypher]
-----
-UNWIND $events AS event
-CREATE (source:Person:Rich)
-SET source = event.source
-CREATE (target:Product:Expensive)
-SET target = event.target
-CREATE (source)-[rel:BOUGHT]->(target)
-SET rel += event.rel
-----
-
-`event.source`, `event.target`, and `event.rel` contain the column described <<reading.adoc#rel-schema-columns,here>>.
+The Native strategy is useful when you have a schema that conforms with the <<reading.adoc#rel-schema-columns,Relationship read schema>> with the `relationship.nodes.map` option set to `false`.
+This means that the DataFrame must include at least one of the `rel.[property name]`, `source.[property name]`, or `target.[property name]` columns.
 
 [NOTE]
+====
+If the provided DataFrame schema doesn't conform to the required schema, meaning that none of the required columns is present,
+the write fails.
+====
+
+A good use case for this mode is transferring data from a database to another one.
+In fact, using the connector to xref:reading.adoc#read-rel[read a relationship] first, the resulting DataFrame has already the correct schema.
+
+[NOTE]
+====
 The default save mode for source and target nodes is `Match`.
 That means that the relationship can be created only if the nodes are already in your database.
 Look at <<node-save-modes,here>> for more information on node save modes.
+====
 
-When using `Overwrite` or `Match` node save mode, you should specify which keys should be used to identify the nodes.
-
-.The DataFrame we are working with
-|===
-|<rel.id>|<rel.type>|<source.id>|<source.labels>|source.id|source.fullName|<target.id>|<target.labels>|target.name|target.id|rel.quantity
-
-|4|BOUGHT|1|[Person]|1|John Doe|0|[Product]|Product 1|52|240
-|5|BOUGHT|3|[Person]|2|Jane Doe|2|[Product]|Product 2|53|145
-|===
-
-[source,scala]
+.Read + filter + write
+[source, scala, role=nocollapse]
 ----
-import org.apache.spark.sql.{SaveMode, SparkSession}
-
-val spark = SparkSession.builder().getOrCreate()
-
-// we read our DF from Neo4j using the relationship method
-val df = spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://first.host.com:7687")
-  .option("relationship", "BOUGHT")
+val originalDf = spark.read.format("org.neo4j.spark.DataSource")
+  .option("relationship", "PLAYS")
   .option("relationship.nodes.map", "false")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
+  .option("relationship.source.labels", "Musician")
+  .option("relationship.target.labels", "Instrument")
   .load()
 
-df.write
+originalDf
+    .where("`rel.experience` > 15")
+    .write
+    .mode("Append")
+    .format("org.neo4j.spark.DataSource")
+    .option("relationship", "PLAYS_WELL")
+    .option("relationship.source.labels", ":ExperiencedMusician")
+    .option("relationship.source.save.mode", "Append")
+    .option("relationship.target.labels", "Instrument")
+    .option("relationship.target.save.mode", "Append")
+    .save()
+----
+
+The code in the following example creates:
+
+* `:Musician` nodes with a `name` property
+* `:Instrument` nodes with a `name` property
+* `:PLAYS` relationships between `:Musician` and `:Instrument` nodes, with an `experience` property
+
+.Native strategy, `Append` node save mode
+[cols="1,1"]
+|===
+|{table-header-code}|{table-header-cypher}
+
+a|
+[source, scala, role=nocollapse]
+----
+val df = Seq(
+  (12, "John Bonham", "Drums"),
+  (19, "John Mayer", "Guitar"),
+  (32, "John Scofield", "Guitar"),
+  (15, "John Butler", "Guitar")
+).toDF("experience", "name", "instrument")
+
+df
+  // Rename column names representing
+  // node/relationships properties to add 
+  // "rel.", "source.", and "target."
+  .toDF("rel.experience", "source.name", "target.name")
+  .write
+  // Create new relationships
+  .mode("Append")
   .format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://second.host.com:7687")
-  .option("relationship", "SOLD")
-  .option("relationship.source.labels", ":Person:Rich")
-  .option("relationship.source.save.mode", "Overwrite")
-  .option("relationship.source.node.keys", "source.fullName:fullName")
-  .option("relationship.target.labels", ":Product:Expensive")
-  .option("relationship.target.save.mode", "Overwrite")
-  .option("relationship.target.node.keys", "target.id:id")
+  // Assign a type to the relationships
+  .option("relationship", "PLAYS")
+  // Create source nodes and assign them a label
+  .option("relationship.source.save.mode", "Append")
+  .option("relationship.source.labels", ":Musician")
+  // Create target nodes and assign them a label
+  .option("relationship.target.save.mode", "Append")
+  .option("relationship.target.labels", ":Instrument")
   .save()
 ----
 
-You must specify which columns of your DataFrame are being used as keys to match the nodes.
-You control this with the options `relationship.source.node.keys` and `relationship.target.node.keys`, specifying a comma-separated list of `key:value` pairs,
-where the key is the DataFrame column name, and the value is the node property name.
-
-The generated query is the following:
-[source,cypher]
+a|
+[source, cypher]
 ----
 UNWIND $events AS event
-MERGE (source:Person:Rich {fullName: event.source.fullName})
-SET source = event.source
-MERGE (target:Product:Expensive {id: event.target.id})
-SET target = event.target
-CREATE (source)-[rel:BOUGHT]->(target)
-SET rel += event.rel
+CREATE (source:Musician)
+SET source += event.source.properties
+CREATE (target:Instrument)
+SET target += event.target.properties
+CREATE (source)-[rel:PLAYS]->(target)
+SET rel += event.rel.properties
+----
+|===
+
+The same example, using `Overwrite` as a save mode for nodes and the `node.keys` option:
+
+.Native strategy, `Overwrite` node save mode
+[cols="1,1"]
+|===
+|{table-header-code}|{table-header-cypher}
+
+a|
+[source, scala, role=nocollapse]
+----
+val df = Seq(
+  (12, "John Bonham", "Drums"),
+  (19, "John Mayer", "Guitar"),
+  (32, "John Scofield", "Guitar"),
+  (15, "John Butler", "Guitar")
+).toDF("experience", "name", "instrument")
+
+df
+  // Rename column names representing
+  // node/relationships properties to add 
+  // "rel.", "source.", and "target."
+  .toDF("rel.experience", "source.name", "target.name")
+  .write
+  // Create new relationships
+  .mode("Append")
+  .format("org.neo4j.spark.DataSource")
+  // Assign a type to the relationships
+  .option("relationship", "PLAYS")
+  // Create source nodes and assign them a label
+  .option("relationship.source.save.mode", "Overwrite")
+  .option("relationship.source.labels", ":Musician")
+  // Node keys are mandatory for overwrite save mode
+  .option("relationship.source.node.keys", "source.name:name")
+  // Create target nodes and assign them a label
+  .option("relationship.target.save.mode", "Overwrite")
+  .option("relationship.target.labels", ":Instrument")
+  // Node keys are mandatory for overwrite save mode
+  .option("relationship.target.node.keys", "target.name:name")
+  .save()
 ----
 
-[NOTE]
-Remember that you can choose to `CREATE` or `MERGE` the relationship with the <<save-mode,Save mode>>.
-
-[NOTE]
-If the provided DataFrame schema doesn't conform to the required schema, meaning that none of the required columns is present,
-the write fails.
+a|
+[source, cypher]
+----
+UNWIND $events AS event
+MERGE (source:Musician {name: event.source.keys.name})
+SET source += event.source.properties
+MERGE (target:Instrument {name: event.target.keys.name})
+SET target += event.target.properties
+CREATE (source)-[rel:PLAYS]->(target)
+SET rel += event.rel.properties
+----
+|===
 
 [[strategy-keys]]
 ==== Keys strategy
