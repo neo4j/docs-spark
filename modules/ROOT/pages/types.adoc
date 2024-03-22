@@ -81,7 +81,7 @@ Such types are transformed into `Struct` types containing all the useful data.
 
 .Complex data type conversion
 |===
-|Type |Struct
+|Neo4j type |Spark `Struct`
 
 |Duration
 a|
