@@ -179,20 +179,3 @@ the correct data type from the examples that it sees.
 **Automatic sampling may be error prone and may produce incorrect results,
 particularly in cases where a single Neo4j property exists with several different data types.
 Consistent typing of properties is strongly recommended.**
-
-== How can I speed up writes to Neo4j?
-
-The Spark connector fundamentally writes data to Neo4j in batches. Neo4j is a transactional
-database, and all modifications are made within a transaction. Those transactions in turn
-have overhead.
-
-The two simplest ways of increasing write performance are the following:
-
-* You can increase the batch size (option `batch.size`). The larger the batch, the fewer transactions are executed to write all of your data, and the less transactional overhead is incurred.
-* Ensure that your Neo4j instance has ample free heap and properly sized page cache. Small heaps make you unable to commit large batches, which in turn slows overall import.
-
-[NOTE]
-For best performance, make sure you are familiar with the material in the link:https://neo4j.com/docs/operations-manual/current/performance/[Operations manual].
-
-It is important to keep in mind that Neo4j scales writes vertically and reads horizontally.  In
-the link:https://neo4j.com/docs/operations-manual/current/clustering/introduction/[Causal Cluster Model], only the cluster leader (1 machine) may accept writes. For this reason, focus on getting the best hardware and performance on your cluster leader to maximize write throughput.
