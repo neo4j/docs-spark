@@ -54,9 +54,3 @@ neo4j.authentication.bearer.token <token>
 All the authentication methods supported by the link:{neo4j-docs-base-uri}/java-manual/current/connect-advanced/#_authentication_methods[Neo4j Java Driver] (version 4.4 and higher) are supported.
 
 See the xref:configuration.adoc#_neo4j_driver_options[Neo4j driver options] for more details on authentication configuration.
-
-== Connecting to Aura
-
-Aura customers connecting from Databricks may encounter SSL handshake errors due to Databricks' custom Java security settings removing support for some encryption ciphers.
-
-See the Aura support article link:https://support.neo4j.com/s/article/1500003161121-Connecting-to-Aura-with-Databricks[Connecting to Aura with Databricks] for more information.
