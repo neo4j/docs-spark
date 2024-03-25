@@ -117,3 +117,138 @@ Struct(Array(
   ))
 ----
 |===
+
+== Map type
+
+When a column is a map, the connector tries to flatten it.
+For example, consider the following dataset:
+
+|===
+|id |name |lives_in
+
+|1
+|Andrea Santurbano
+|{address: 'Times Square, 1', city: 'NY', state: 'NY'}
+
+|2
+|Davide Fantuzzi
+|{address: 'Statue of Liberty, 10', city: 'NY', state: 'NY'}
+|===
+
+The connector flattens the `lives_in` column into three columns `lives_in.address`, `lives_in.city`, and `lives_in.state`:
+
+|===
+|id |name |lives_in.address |lives_in.city |lives_in.state
+
+|1
+|Andrea Santurbano
+|Times Square, 1
+|NY
+|NY
+
+|2
+|Davide Fantuzzi
+|Statue of Liberty, 10
+|NY
+|NY
+|===
+
+When a Dataframe column is a map, what we do internally is to flatten the map as Neo4j does not support this type for graph entity properties; so for a Spark job like this:
+
+[source,scala]
+----
+val data = Seq(
+  ("Foo", 1, Map("inner" -> Map("key" -> "innerValue"))),
+  ("Bar", 2, Map("inner" -> Map("key" -> "innerValue1"))),
+).toDF("id", "time", "table")
+
+data.write
+  .mode(SaveMode.Append)
+  .format(classOf[DataSource].getName)
+  .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
+  .option("labels", ":MyNodeWithFlattenedMap")
+  .save()
+----
+
+In Neo4j for the nodes with label `MyNodeWithFlattenedMap` you'll find this information stored:
+
+----
+MyNodeWithFlattenedMap {
+    id: 'Foo',
+    time: 1,
+    `table.inner.key`: 'innerValue'
+}
+MyNodeWithFlattenedMap {
+    id: 'Bar',
+    time: 1,
+    `table.inner.key`: 'innerValue1'
+}
+----
+
+Now you could fall into problematic situations like the following one:
+
+[source,scala]
+----
+val data = Seq(
+  ("Foo", 1, Map("key.inner" -> Map("key" -> "innerValue"), "key" -> Map("inner.key" -> "value"))),
+  ("Bar", 1, Map("key.inner" -> Map("key" -> "innerValue1"), "key" -> Map("inner.key" -> "value1"))),
+).toDF("id", "time", "table")
+data.write
+  .mode(SaveMode.Append)
+  .format(classOf[DataSource].getName)
+  .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
+  .option("labels", ":MyNodeWithFlattenedMap")
+  .save()
+----
+
+since the resulting flattened keys are duplicated, the Neo4j Spark will pick one of the associated value in a non-deterministic way.
+
+Because the information that we'll store into Neo4j will be this (consider that the order is not guaranteed):
+
+----
+MyNodeWithFlattenedMap {
+    id: 'Foo',
+    time: 1,
+    `table.key.inner.key`: 'innerValue' // but it could be `value` as the order is not guaranteed
+}
+MyNodeWithFlattenedMap {
+    id: 'Bar',
+    time: 1,
+    `table.key.inner.key`: 'innerValue1' // but it could be `value1` as the order is not guaranteed
+}
+----
+
+=== Group duplicated keys to array of values
+
+You can use the option `schema.map.group.duplicate.keys` to avoid this problem. The connector will group all the values with the same keys into an array. The default value for the option is `false`.
+In a scenario like this:
+
+[source,scala]
+----
+val data = Seq(
+  ("Foo", 1, Map("key.inner" -> Map("key" -> "innerValue"), "key" -> Map("inner.key" -> "value"))),
+  ("Bar", 1, Map("key.inner" -> Map("key" -> "innerValue1"), "key" -> Map("inner.key" -> "value1"))),
+).toDF("id", "time", "table")
+data.write
+  .mode(SaveMode.Append)
+  .format(classOf[DataSource].getName)
+  .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
+  .option("labels", ":MyNodeWithFlattenedMap")
+  .option("schema.map.group.duplicate.keys", true)
+  .save()
+----
+
+the output would be:
+
+----
+MyNodeWithFlattenedMap {
+    id: 'Foo',
+    time: 1,
+    `table.key.inner.key`: ['innerValue', 'value'] // the order is not guaranteed
+}
+MyNodeWithFlattenedMap {
+    id: 'Bar',
+    time: 1,
+    `table.key.inner.key`: ['innerValue1', 'value1'] // the order is not guaranteed
+}
+----
