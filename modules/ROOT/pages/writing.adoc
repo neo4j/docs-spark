@@ -14,7 +14,7 @@ There are two main approaches for writing data to a Neo4j database with the conn
 
 If you need more flexibility, you can also run a xref:write/query.adoc[custom Cypher query] using the `query` option.
 
-[example]
+[#example]
 == Example
 
 The following code inserts 10 nodes into Neo4j.
@@ -26,7 +26,7 @@ Each node has two labels (`Person` and `Customer`) and four properties (`name`, 
 include::example$scala/WriteBasic.scala[tags=!setup]
 ----
 
-[[save-mode]]
+[#save-mode]
 == Save mode
 
 The connector supports two save modes:
@@ -38,7 +38,7 @@ The connector supports two save modes:
 
 The type mapping between Spark DataFrames and Neo4j is summarized in the xref:types.adoc[] section.
 
-[[write-nodes]]
+[#write-nodes]
 == Write nodes
 
 With the `labels` option, the connector writes a DataFrame to the Neo4j database as a set of nodes with the given labels.
@@ -108,7 +108,7 @@ SET n += event.properties
 ----
 |===
 
-[[write-rel]]
+[#write-rel]
 == Write a relationship
 
 With the `relationship` option, the connector writes a DataFrame to the Neo4j database by specifying source, target nodes, and a relationship.
@@ -153,7 +153,7 @@ Additionally, if the `relationship.save.strategy` is `keys`:
 [#strategies]
 === Save strategies
 
-[[strategy-native]]
+[#strategy-native]
 ==== `native` strategy
 
 The `native` strategy is useful when the DataFrame schema conforms to the <<reading.adoc#rel-schema-columns,Relationship read schema>> with the `relationship.nodes.map` option set to `false`.
@@ -301,7 +301,7 @@ SET rel += event.rel.properties
 ----
 |===
 
-[[strategy-keys]]
+[#strategy-keys]
 ==== `keys` strategy
 
 The `keys` strategy gives more control on how relationships and nodes are written.
@@ -310,7 +310,7 @@ It does not require any specific schema for the DataFrame.
 As in the case of using the `native` strategy, you can specify node keys to identify nodes for the `Match` and `Overwrite` mode.
 In addition, you can also specify which columns to write as node and relationship properties.
 
-[[rel-specify-keys]]
+[#rel-specify-keys]
 .Specify node and relationships keys
 [cols="1,1"]
 |===
@@ -368,7 +368,7 @@ For example, if you have `.option("relationship.source.node.properties", "name:n
 `.option("relationship.source.node.properties", "name,email")`.
 Same applies for `relationship.source.node.keys` and `relationship.target.node.keys`.
 
-[[node-save-strategies]]
+[#node-save-strategies]
 === Node save strategies
 
 [NOTE]

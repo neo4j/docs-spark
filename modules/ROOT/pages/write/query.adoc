@@ -1,19 +1,17 @@
 [[write-query]]
 = Custom Cypher query
 
-In case you use the option `query`, the Spark Connector persists the entire Dataset by using the provided query.
-The nodes are sent to Neo4j in a batch of rows defined in the `batch.size` property, and your query is wrapped up in an `UNWIND $events AS event` statement.
+If you need more flexibility, you can use the `query` option to run a custom Cypher query.
+
+When you use the `query` option, the connector persists the entire DataFrame using the provided query.
+The nodes are sent to Neo4j in a batch of rows defined by the `batch.size` property, and the query is wrapped up in an `UNWIND $events AS event` statement.
+
 The `query` option supports both `CREATE` and `MERGE` clauses.
 
 Let's look at the following simple Spark program:
 
-[source,scala]
+[source, scala]
 ----
-import org.apache.spark.sql.{SaveMode, SparkSession}
-
-val spark = SparkSession.builder().getOrCreate()
-import spark.implicits._
-
 case class Person(name: String, surname: String, age: Int)
 
 // Create an example DataFrame
@@ -27,9 +25,6 @@ val query = "CREATE (n:Person {fullName: event.name + ' ' + event.surname})"
 
 df.write
   .format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://localhost:7687")
-  .option("authentication.basic.username", USERNAME)
-  .option("authentication.basic.password", PASSWORD)
   .option("query", query)
   .mode(SaveMode.Overwrite)
   .save()
@@ -37,17 +32,17 @@ df.write
 
 This generates the following query:
 
-[source,cypher]
+[source, cypher]
 ----
 UNWIND $events AS event
 CREATE (n:Person {fullName: event.name + ' ' + event.surname})
 ----
 
-Thus `events` is the batch created from your dataset.
+Here, `events` is the batch created from the dataset.
 
 == Considerations
 
-* You must always specify the <<save-mode>>.
+* You must always specify the xref:writing.adoc#save-mode[save mode].
 
 * You can use the `events` list in `WITH` statements as well.
 For example, you can replace the query in the previous example with the following:
@@ -89,6 +84,7 @@ The script option allows you to execute a series of preparation script before Sp
 Job execution. The result of the last query can be reused in combination with the
 `query` ingestion mode as it follows:
 
+[source, scala]
 ----
 val ds = Seq(SimplePerson("Andrea", "Santurbano")).toDS()
 
@@ -111,6 +107,7 @@ Before the import starts, the connector runs the content of the `script` option,
 and the result of the last query is injected into the `query`. At the end the full
 query executed by the connector while the data is being ingested is the following:
 
+[source, cypher]
 ----
 WITH $scriptResult AS scriptResult
 UNWIND $events AS event
