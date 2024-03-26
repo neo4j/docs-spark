@@ -1,31 +1,77 @@
-= Schema optimization operations
+= Schema optimization
 
-The Spark Connector supports schema optimization operations via:
+Although Neo4j does not enforce the use of a schema, adding indexes and constraints before writing data makes the writing process more efficient.
+When updating nodes or relationships, having constraints in place is also the best way to avoid duplicates.
 
-* indexes (deprecated);
-* constraints;
-* property type enforcement;
-* set of schema queries.
+// TODO remove
+// The Spark Connector supports the following schema optimizations:
+// 
+// * <<indexes>> label:deprecated[]
+// * Constraints on nodes
+// ** <<node-constraints-unique>>
+// ** <<node-constraints-key>>
+// ** Property existence constraints
+// ** Property type constraints
+// * Constraints on relationships
+// ** <<rel-constraints-unique>>
+// ** <<rel-constraints-key>>
+// ** Property existence constraints
+// ** Property type constraints
+// 
+// * <<indexes>> label:deprecated[]
+// * Property uniqueness constraints 
+// ** On <<node-constraints-unique, nodes>>
+// ** On <<rel-constraints-unique, relationships>>
+// * Key constraints
+// ** On <<node-constraints-key, nodes>>
+// ** On <<rel-constraints-key, relationships>>
+// * <<constraints-type>>
+// * <<constraints-existence>>
 
-To speed up the import itself that is executed *before* the import process starts.
+The connector provides the following options for schema optimization.
+
+[CAUTION]
+====
+The schema optimization options described here cannot be used with the `query` option.
+If you are using a xref:write/query.adoc[custom Cypher query], you need to create indexes and constraints manually using the xref:write/query.adoc#script-option[`script` option].
+====
 
 [NOTE]
 ====
-Starting from version **`5.3.0`**, the **`schema.optimization.type`** option is deprecated in favor of **`schema.optimization.node.keys`**, **`schema.optimization.relationship.keys`**, and **`schema.type.constraint`**.
+label:new[New in 5.3]
+
+The `schema.optimization.type` option is deprecated in favor of `schema.optimization.node.keys`, `schema.optimization.relationship.keys`, and `schema.optimization`.
 ====
 
-== `schema.optimization.type` (deprecated)
+.Schema optimization options
+[cols="4, 2, 1, 3"]
+|===
+|Option|Value|Default|Description
 
-You can set the optimization via `schema.optimization.type` option that works only if you are merging nodes and takes three values:
+|`schema.optimization.type` label:deprecated[Deprecated in 5.3]
+|One of `NONE`, `INDEX`, `NODE_CONSTRAINTS`
+|`NONE`
+|Creates <<indexes, indexes>> and <<node-constraints-unique, property uniqueness>> constraints on nodes.
 
-* `INDEX`: it creates only indexes on provided nodes.
-* `NODE_CONSTRAINTS`: it creates only indexes on provided nodes.
+|`schema.optimization.node.keys` label:new[New in 5.3]
+|One of `UNIQUE`, `KEY`, `NONE`
+|`NONE`
+|Creates <<node-constraints-unique, property uniqueness>> and <<node-constraints-key, key>> constraints on nodes using the properties defined by the `node.keys` option.
 
-[IMPORTANT]
-The `schema.optimization.type` option cannot be used with the `query` option.
-If you are using a <<write-query, custom Cypher query>>, you need to create indexes and constraints manually using the <<script-option, `script` option>>.
+|`schema.optimization.relationship.keys` label:new[New in 5.3]
+|One of `UNIQUE`, `KEY`, `NONE`
+|`NONE`
+|Creates <<rel-constraints-unique, property uniqueness>> and <<rel-constraints-key, key>> constraints on relationships using the properties defined by the `relationship.keys` option.
 
-=== Index creation
+|`schema.optimization` label:new[New in 5.3]
+|Comma-separated list of `TYPE`, `EXISTS`, `NONE`
+|`NONE`
+|Creates <<constraints-existence, property existence>> and <<constraints-type, property type>> constraints on both nodes and relationships, enforcing the type and non-nullability from the DataFrame schema.
+|===
+
+[#indexes]
+[role=label--deprecated]
+== Indexes on nodes
 
 The following example shows how to create indexes while you're creating nodes.
 
@@ -52,56 +98,13 @@ If the `node.keys` option were set to `"name,surname"` instead, the index name w
 
 The index is not recreated if it is already present.
 
-=== Constraint creation
+[#node-constraints-unique]
+== Node property uniqueness constraints
 
-Below you can see an example of how to create constraints while you're creating nodes.
-
-----
-ds.write
-      .format(classOf[DataSource].getName)
-      .mode(SaveMode.Overwrite)
-      .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
-      .option("labels", ":Person:Customer")
-      .option("node.keys", "surname")
-      .option("schema.optimization.type", "NODE_CONSTRAINTS")
-      .save()
-----
-
-Before the import starts, the code above creates the following schema query:
-
-----
-CREATE CONSTRAINT FOR (p:Person) REQUIRE (p.surname) IS UNIQUE
-----
-
-The name of the created constraint is `spark_NODE_CONSTRAINTS_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
-In this example, the name of the created constraint is `spark_NODE_CONSTRAINTS_Person_surname`.
-If the `node.keys` option were set to `"name,surname"` instead, the constraint name would be `spark_NODE_CONSTRAINTS_Person_name-surname`.
 *Take into consideration that the first label is used for the index creation.*
-
-
-== With constraints
-
-The connector allows to enforce the following constraints:
-
-.Allowed configuration
-|===
-|config |values |default |description
-
-|`schema.optimization.node.keys` |UNIQUE/KEY/NONE |NONE | Create the `UNIQUE` or `NODE KEY` constraint for the properties defined in the option `node.keys`
-|`schema.optimization.relationship.keys` |UNIQUE/KEY/NONE |false | Create the `UNIQUE` or `NODE KEY` constraint for the properties defined in the option `relationship.keys`
-|`schema.optimization` |TYPE/EXISTS/NONE |NONE | A comma separated list of values. Creates the type constraints for nodes/relationships enforcing the type and non-nullability from the DataFrame schema
-|===
-
-[NOTE]
-Please consider that if you define more than one label we use the *first* for creating constraints.
-
-=== Node constraints
-
-**Enforcing unique constraint**
 
 [NOTE]
 For a detailed description of how Neo4j handles unique constraints on nodes see the https://neo4j.com/docs/cypher-manual/current/constraints/#unique-node-property[Cypher documentation]
-
 
 Given the following example:
 
@@ -124,7 +127,13 @@ Under the hood the Spark connector will create the following constraint:
 CREATE CONSTRAINT `spark_NODE_UNIQUE-CONSTRAINT_Person_surname` IF NOT EXISTS FOR (e:Person) REQUIRE (e.surname) IS UNIQUE
 ----
 
-**Enforcing node key constraint**
+[NOTE]
+====
+Before version *5.3.0*, node property uniqueness constraints could be added with the `schema.optimization.type` option set to `NODE_CONSTRAINTS`.
+====
+
+[#node-constraints-key]
+== Node key constraints
 
 [NOTE]
 For a detailed description of how Neo4j handles node key constraints see the https://neo4j.com/docs/cypher-manual/current/constraints/#node-key[Cypher documentation]
@@ -150,9 +159,8 @@ Under the hood the Spark connector will create the following constraint:
 CREATE CONSTRAINT `spark_NODE_KEY-CONSTRAINT_Person_surname` IF NOT EXISTS FOR (e:Person) REQUIRE (e.surname) IS NODE KEY
 ----
 
-=== Relationship constraints
-
-**Enforcing unique constraint**
+[#rel-constraints-unique]
+== Relationship property uniqueness constraints
 
 [NOTE]
 For a detailed description of how Neo4j handles unique constraints on relationships see the official https://neo4j.com/docs/cypher-manual/current/constraints/#unique-relationship-property[Cypher documentation]
@@ -186,7 +194,8 @@ Under the hood the Spark connector will create the following constraint:
 CREATE CONSTRAINT `spark_RELATIONSHIP_UNIQUE-CONSTRAINT_MY_REL_foo-bar` IF NOT EXISTS FOR ()-[e:MY_REL]->() REQUIRE (e.foo, e.bar) IS UNIQUE
 ----
 
-**Enforcing relationship key constraint**
+[#rel-constraints-key]
+== Relationship key constraints
 
 [NOTE]
 For a detailed description of how Neo4j handles relationship key constraint see the official https://neo4j.com/docs/cypher-manual/current/constraints/#relationship-key[Cypher documentation]
@@ -220,7 +229,8 @@ Under the hood the Spark connector will create the following constraint:
 CREATE CONSTRAINT `spark_RELATIONSHIP_KEY-CONSTRAINT_MY_REL_foo-bar` IF NOT EXISTS FOR ()-[e:MY_REL]->() REQUIRE (e.foo, e.bar) IS RELATIONSHIP KEY
 ----
 
-=== Property type constraints
+[#constraints-type]
+== Property type constraints
 
 Since Neo4j 5.11 the database allows to create type constraints for node and relationship properties.
 In order to leverage this feature we added the option `schema.optimization` that will use the DataFrame schema in order to enforce the type.
@@ -256,12 +266,13 @@ For the arrays in particular we use the version without null elements as Neo4j d
 
 You can leverage this kind of schema enforcement with the value `TYPE`.
 
-=== Property existence constraints
+[#constraints-existence]
+== Property existence constraints
 
 Neo4j defines "property existence" as a synonym for NOT NULL condition.
 You can leverage this kind of schema enforcement with the value `EXISTS`, the connector will use the nullability of the DataFrame column to choose whether to apply or not the NOT NULL condition.
 
-==== Node Property type and existence constraints
+=== Node Property type and existence constraints
 
 Given the following example:
 
@@ -293,7 +304,7 @@ If the DataFrame schema says that the field is also NOT NULL the connector creat
 CREATE CONSTRAINT `spark_NODE-NOT_NULL-CONSTRAINT-Person-surname` IF NOT EXISTS FOR (e:Person) REQUIRE e.surname IS NOT NULL
 ----
 
-==== Relationship Property type and existence constraints
+=== Relationship Property type and existence constraints
 
 Given the following example:
 

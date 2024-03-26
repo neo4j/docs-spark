@@ -77,12 +77,12 @@ CREATE (n:Person {fullName: fullName})
 
 * Although a `RETURN` clause is not forbidden, adding one does not have any effect on the query result.
 
-[[script-option]]
-== Script option
+[#script-option]
+== `script` option
 
 The script option allows you to execute a series of preparation script before Spark
-Job execution. The result of the last query can be reused in combination with the
-`query` ingestion mode as it follows:
+Job execution.
+The result of the last query can be reused in combination with the `query` ingestion mode as it follows:
 
 [source, scala]
 ----
