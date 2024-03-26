@@ -252,3 +252,34 @@ MyNodeWithFlattenedMap {
     `table.key.inner.key`: ['innerValue1', 'value1'] // the order is not guaranteed
 }
 ----
+
+[#constraints]
+== Constraint type mapping
+
+.Spark to Cypher constraint type mapping
+|===
+|Spark type |Neo4j Type
+|BooleanType |BOOLEAN
+|StringType |STRING
+|IntegerType |INTEGER
+|LongType |INTEGER
+|FloatType |FLOAT
+|DoubleType |FLOAT
+|DateType |DATE
+|TimestampType |LOCAL DATETIME
+|Custom `pointType` as: Struct { type: string, srid: integer, x: double, y: double, z: double }| POINT
+|Custom `durationType` as: Struct { type: string, months: long, days: long, seconds: long, nanonseconds: integer, value: string }| DURATION
+|DataTypes.createArrayType(BooleanType, false) |LIST<BOOLEAN NOT NULL>
+|DataTypes.createArrayType(StringType, false) |LIST<STRING NOT NULL>
+|DataTypes.createArrayType(IntegerType, false) |LIST<INTEGER NOT NULL>
+|DataTypes.createArrayType(LongType, false) |LIST<INTEGER NOT NULL>
+|DataTypes.createArrayType(FloatType, false) |LIST<FLOAT NOT NULL>
+|DataTypes.createArrayType(DoubleType, false) |LIST<FLOAT NOT NULL>
+|DataTypes.createArrayType(DateType, false) |LIST<DATE NOT NULL>
+|DataTypes.createArrayType(TimestampType, false) |LIST<LOCAL DATETIME NOT NULL>
+|DataTypes.createArrayType(pointType, false) |LIST<POINT NOT NULL>
+|DataTypes.createArrayType(durationType, false) |LIST<DURATION NOT NULL>
+
+|===
+
+For the arrays in particular we use the version without null elements as Neo4j does not allow to have them in arrays.
