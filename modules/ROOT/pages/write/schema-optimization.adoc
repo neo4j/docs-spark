@@ -36,13 +36,6 @@ The schema optimization options described here cannot be used with the `query` o
 If you are using a xref:write/query.adoc[custom Cypher query], you need to create indexes and constraints manually using the xref:write/query.adoc#script-option[`script` option].
 ====
 
-[NOTE]
-====
-TODO: confirm
-
-Schema optimization only works with the `Overwrite` save mode.
-====
-
 [IMPORTANT]
 ====
 label:new[New in 5.3]
@@ -73,7 +66,7 @@ The `schema.optimization.type` option is deprecated in favor of `schema.optimiza
 |`schema.optimization` label:new[New in 5.3]
 |Comma-separated list of `TYPE`, `EXISTS`, `NONE`
 |`NONE`
-|Creates <<constraints-existence, property existence>> and <<constraints-type, property type>> constraints on both nodes and relationships, enforcing the type and non-nullability from the DataFrame schema.
+|Creates <<constraints-type-existence, property type and property existence>> constraints on both nodes and relationships, enforcing the type and non-nullability from the DataFrame schema.
 |===
 
 [#indexes]
@@ -151,6 +144,11 @@ With multiple labels, only the first label is used to create the index.
 You cannot create a uniqueness constraint on a node property if a key constraint already exists on the same property.
 ====
 
+[NOTE]
+====
+This schema optimization only works with the `Overwrite` save mode.
+====
+
 [IMPORTANT]
 ====
 Before version *5.3.0*, node property uniqueness constraints could be added with the `schema.optimization.type` option set to `NODE_CONSTRAINTS`.
@@ -190,6 +188,11 @@ CREATE CONSTRAINT `spark_NODE_KEY-CONSTRAINT_Person_name` IF NOT EXISTS FOR (e:P
 [NOTE]
 ====
 You cannot create a key constraint on a node property if a uniqueness constraint already exists on the same property.
+====
+
+[NOTE]
+====
+This schema optimization only works with the `Overwrite` save mode.
 ====
 
 [#rel-constraints-unique]
@@ -237,6 +240,11 @@ If not, the query will fail.
 [NOTE]
 ====
 You cannot create a uniqueness constraint on a relationship property if a key constraint already exists on the same property.
+====
+
+[NOTE]
+====
+This schema optimization only works with the `Overwrite` save mode.
 ====
 
 [#rel-constraints-key]
@@ -288,11 +296,27 @@ If not, the query will fail.
 You cannot create a key constraint on a relationship property if a uniqueness constraint already exists on the same property.
 ====
 
-[#constraints-type]
-== Property type constraints
+[NOTE]
+====
+This schema optimization only works with the `Overwrite` save mode.
+====
 
-Since Neo4j 5.11 the database allows to create type constraints for node and relationship properties.
-In order to leverage this feature we added the option `schema.optimization` that will use the DataFrame schema in order to enforce the type.
+[#constraints-type-existence]
+== Property type and property existence constraints
+
+Property type constraints ensure that a property have the required property type for all nodes with a specific label (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#node-property-type[node property type constraints]) or for all relationships with a specific type (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#relationship-property-type[relationship property type constraints]).
+
+The connector uses the DataFrame schema in order to enforce the type.
+
+Property existence constraints ensure that a property exists (`IS NOT NULL`) for all nodes with a specific label (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#node-property-existence[node property type constraints]) or for all relationships with a specific type (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#relationship-property-existence[relationship property type constraints]).
+
+The connector uses the nullability of the DataFrame column to choose whether to apply or not the `NOT NULL` condition.
+
+You can create property type constraints for both nodes and relationships by setting the `schema.optimization` option to `TYPE`.
+You can create property existence constraints for both nodes and relationships by setting the `schema.optimization` option to `EXISTS`.
+You can create both at the same time by setting the `schema.optimization` option to `TYPE,EXISTS`.
+The constraints are not recreated if it is already present.
+
 Internally the connector will use the following mapping:
 
 .Spark to Cypher constraint type mapping
@@ -323,47 +347,42 @@ Internally the connector will use the following mapping:
 
 For the arrays in particular we use the version without null elements as Neo4j does not allow to have them in arrays.
 
-You can leverage this kind of schema enforcement with the value `TYPE`.
+=== On nodes
 
-[#constraints-existence]
-== Property existence constraints
-
-Neo4j defines "property existence" as a synonym for NOT NULL condition.
-You can leverage this kind of schema enforcement with the value `EXISTS`, the connector will use the nullability of the DataFrame column to choose whether to apply or not the NOT NULL condition.
-
-=== Node Property type and existence constraints
-
-Given the following example:
-
+.Example
 [source, scala]
 ----
-    ds.write
-      .format("org.neo4j.spark.DataSource")
-      .mode(SaveMode.Overwrite)
-      .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
-      .option("labels", ":Person:Customer")
-      .option("node.keys", "surname")
-      .option("schema.optimization", "TYPE,EXISTS")
-      .save()
+df.write
+  .format("org.neo4j.spark.DataSource")
+  .mode(SaveMode.Overwrite)
+  .option("labels", ":Person:Customer")
+  .option("node.keys", "surname")
+  .option("schema.optimization", "TYPE,EXISTS")
+  .save()
 ----
 
-The connector will create, for each dataframe column a type constraint for the label `Person` according with the mapping table provided above.
+Before the writing process starts, the connector runs the following schema queries (one query for each DataFrame column):
 
-The constraint query looks like the following:
-
+.Schema query
 [source, cypher]
 ----
+CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-name` IF NOT EXISTS FOR (e:Person) REQUIRE e.name IS :: STRING
+
 CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-surname` IF NOT EXISTS FOR (e:Person) REQUIRE e.surname IS :: STRING
+
+CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-age` IF NOT EXISTS FOR (e:Person) REQUIRE e.age IS :: INTEGER
 ----
 
-If the DataFrame schema says that the field is also NOT NULL the connector creates an existence constraint as it follows:
+If a DataFrame column is not nullable, the connector runs additional schema queries.
+For example, if the `age` column is not nullable, the connector runs the following schema query:
 
+.Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_NODE-NOT_NULL-CONSTRAINT-Person-surname` IF NOT EXISTS FOR (e:Person) REQUIRE e.surname IS NOT NULL
+CREATE CONSTRAINT `spark_NODE-NOT_NULL-CONSTRAINT-Person-age` IF NOT EXISTS FOR (e:Person) REQUIRE e.age IS NOT NULL
 ----
 
-=== Relationship Property type and existence constraints
+=== On relationships TODO
 
 Given the following example:
 
