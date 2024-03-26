@@ -308,7 +308,7 @@ Property type constraints ensure that a property have the required property type
 
 The connector uses the DataFrame schema in order to enforce the type.
 
-Property existence constraints ensure that a property exists (`IS NOT NULL`) for all nodes with a specific label (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#node-property-existence[node property type constraints]) or for all relationships with a specific type (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#relationship-property-existence[relationship property type constraints]).
+Property existence constraints ensure that a property exists (`IS NOT NULL`) for all nodes with a specific label (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#node-property-existence[node property existence constraints]) or for all relationships with a specific type (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#relationship-property-existence[relationship property existence constraints]).
 
 The connector uses the nullability of the DataFrame column to choose whether to apply or not the `NOT NULL` condition.
 

@@ -9,7 +9,7 @@ The connector provides batch writes to speed up the ingestion process, so if the
 
 There are two main approaches for writing data to a Neo4j database with the connector:
 
-* <<write-node, Write nodes>> using the `labels` option.
+* <<write-nodes, Write nodes>> using the `labels` option.
 * <<write-rel, Write a relationship>> with source and target nodes using the `relationship` option.
 
 If you need more flexibility, you can also run a xref:write/query.adoc[custom Cypher query] using the `query` option.
