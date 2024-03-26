@@ -28,7 +28,7 @@ When updating nodes or relationships, having constraints in place is also the be
 // * <<constraints-type>>
 // * <<constraints-existence>>
 
-The connector provides the following options for schema optimization.
+The connector options for schema optimization are summarized below.
 
 [CAUTION]
 ====
@@ -37,6 +37,13 @@ If you are using a xref:write/query.adoc[custom Cypher query], you need to creat
 ====
 
 [NOTE]
+====
+TODO: confirm
+
+Schema optimization only works with the `Overwrite` save mode.
+====
+
+[IMPORTANT]
 ====
 label:new[New in 5.3]
 
@@ -51,7 +58,7 @@ The `schema.optimization.type` option is deprecated in favor of `schema.optimiza
 |`schema.optimization.type` label:deprecated[Deprecated in 5.3]
 |One of `NONE`, `INDEX`, `NODE_CONSTRAINTS`
 |`NONE`
-|Creates <<indexes, indexes>> and <<node-constraints-unique, property uniqueness>> constraints on nodes.
+|Creates <<indexes, indexes>> and <<node-constraints-unique, property uniqueness>> constraints on nodes using the properties defined by the `node.keys` option.
 
 |`schema.optimization.node.keys` label:new[New in 5.3]
 |One of `UNIQUE`, `KEY`, `NONE`
@@ -71,63 +78,80 @@ The `schema.optimization.type` option is deprecated in favor of `schema.optimiza
 
 [#indexes]
 [role=label--deprecated]
-== Indexes on nodes
+== Indexes on node properties
 
-The following example shows how to create indexes while you're creating nodes.
+link:https://neo4j.com/docs/cypher-manual/current/indexes/search-performance-indexes/overview/[Indexes] in Neo4j are often used to increase search performance.
 
-----
-ds.write
-      .format(classOf[DataSource].getName)
-      .mode(SaveMode.Overwrite)
-      .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
-      .option("labels", ":Person:Customer")
-      .option("node.keys", "surname")
-      .option("schema.optimization.type", "INDEX")
-      .save()
-----
-
-Before the import starts, the following schema query is being created:
-
-----
-CREATE INDEX ON :Person(surname)
-----
-
-The name of the created index is `spark_INDEX_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
-In this example, the name of the created index is `spark_INDEX_Person_surname`.
-If the `node.keys` option were set to `"name,surname"` instead, the index name would be `spark_INDEX_Person_name-surname`.
-
+You can create an index by setting the `schema.optimization.type` option to `INDEX`.
 The index is not recreated if it is already present.
+
+.Example
+[source, scala]
+----
+df.write
+  .format("org.neo4j.spark.DataSource")
+  .mode(SaveMode.Overwrite)
+  .option("labels", ":Person:Customer")
+  .option("node.keys", "surname")
+  .option("schema.optimization.type", "INDEX")
+  .save()
+----
+
+Before the writing process starts, the connector runs the following schema query:
+
+.Schema query
+[source, cypher]
+----
+CREATE INDEX spark_INDEX_Person_surname FOR (n:Person) ON (n.surname)
+----
+
+The format of the index name is `spark_INDEX_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
+
+[NOTE]
+====
+With multiple labels, only the first label is used to create the index.
+====
 
 [#node-constraints-unique]
 == Node property uniqueness constraints
 
-*Take into consideration that the first label is used for the index creation.*
+link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#unique-node-property[Node property uniqueness constraints] ensure that property values are unique for all nodes with a specific label.
+For property uniqueness constraints on multiple properties, the combination of the property values is unique.
 
-[NOTE]
-For a detailed description of how Neo4j handles unique constraints on nodes see the https://neo4j.com/docs/cypher-manual/current/constraints/#unique-node-property[Cypher documentation]
+You can create a constraint by setting the `schema.optimization.node.keys` option to `UNIQUE`.
+The constraint is not recreated if it is already present.
 
-Given the following example:
-
+.Example
 [source, scala]
 ----
-    ds.write
-      .format(classOf[DataSource].getName)
-      .mode(SaveMode.Overwrite)
-      .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
-      .option("labels", ":Person:Customer")
-      .option("node.keys", "surname")
-      .option("schema.optimization.node.keys", "UNIQUE")
-      .save()
+df.write
+  .format("org.neo4j.spark.DataSource")
+  .mode(SaveMode.Overwrite)
+  .option("labels", ":Person:Customer")
+  .option("node.keys", "name")
+  .option("schema.optimization.node.keys", "UNIQUE")
+  .save()
 ----
 
-Under the hood the Spark connector will create the following constraint:
+Before the writing process starts, the connector runs the following schema query:
 
+.Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_NODE_UNIQUE-CONSTRAINT_Person_surname` IF NOT EXISTS FOR (e:Person) REQUIRE (e.surname) IS UNIQUE
+CREATE CONSTRAINT `spark_NODE_UNIQUE-CONSTRAINT_Person_name` IF NOT EXISTS FOR (e:Person) REQUIRE (e.name) IS UNIQUE
 ----
 
 [NOTE]
+====
+With multiple labels, only the first label is used to create the index.
+====
+
+[NOTE]
+====
+You cannot create a uniqueness constraint on a node property if a key constraint already exists on the same property.
+====
+
+[IMPORTANT]
 ====
 Before version *5.3.0*, node property uniqueness constraints could be added with the `schema.optimization.type` option set to `NODE_CONSTRAINTS`.
 ====
@@ -135,99 +159,134 @@ Before version *5.3.0*, node property uniqueness constraints could be added with
 [#node-constraints-key]
 == Node key constraints
 
-[NOTE]
-For a detailed description of how Neo4j handles node key constraints see the https://neo4j.com/docs/cypher-manual/current/constraints/#node-key[Cypher documentation]
+link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#node-key[Node key constraints] ensure that, for a given node label and set of properties:
 
-Given the following example:
+* All the properties exist on all the nodes with that label.
+* The combination of the property values is unique.
 
+You can create a constraint by setting the `schema.optimization.node.keys` option to `KEY`.
+The constraint is not recreated if it is already present.
+
+.Example
 [source, scala]
 ----
-    ds.write
-      .format(classOf[DataSource].getName)
-      .mode(SaveMode.Overwrite)
-      .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
-      .option("labels", ":Person:Customer")
-      .option("node.keys", "surname")
-      .option("schema.optimization.node.keys", "KEY")
-      .save()
+df.write
+  .format("org.neo4j.spark.DataSource")
+  .mode(SaveMode.Overwrite)
+  .option("labels", ":Person:Customer")
+  .option("node.keys", "name")
+  .option("schema.optimization.node.keys", "KEY")
+  .save()
 ----
 
-Under the hood the Spark connector will create the following constraint:
+Before the writing process starts, the connector runs the following schema query:
 
+.Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_NODE_KEY-CONSTRAINT_Person_surname` IF NOT EXISTS FOR (e:Person) REQUIRE (e.surname) IS NODE KEY
+CREATE CONSTRAINT `spark_NODE_KEY-CONSTRAINT_Person_name` IF NOT EXISTS FOR (e:Person) REQUIRE (e.name) IS NODE KEY
 ----
+
+[NOTE]
+====
+You cannot create a key constraint on a node property if a uniqueness constraint already exists on the same property.
+====
 
 [#rel-constraints-unique]
 == Relationship property uniqueness constraints
 
-[NOTE]
-For a detailed description of how Neo4j handles unique constraints on relationships see the official https://neo4j.com/docs/cypher-manual/current/constraints/#unique-relationship-property[Cypher documentation]
+link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#unique-relationship-property[Relationship property uniqueness constraints] ensure that property values are unique for all relationships with a specific type.
+For property uniqueness constraints on multiple properties, the combination of the property values is unique.
 
-Given the following example:
+You can create a constraint by setting the `schema.optimization.relationship.keys` option to `UNIQUE`.
+The constraint is not recreated if it is already present.
 
+.Example
 [source, scala]
 ----
-    ds
-      .write
-      .mode(SaveMode.Overwrite)
-      .format(classOf[DataSource].getName)
-      .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
-      .option("relationship", "MY_REL")
-      .option("relationship.save.strategy", "keys")
-      .option("relationship.source.labels", ":NodeA")
-      .option("relationship.source.save.mode", "Overwrite")
-      .option("relationship.source.node.keys", "idSource:id")
-      .option("relationship.target.labels", ":NodeB")
-      .option("relationship.target.node.keys", "idTarget:id")
-      .option("relationship.target.save.mode", "Overwrite")
-      .option("schema.optimization.relationship.keys", "UNIQUE")
-      .option("relationship.keys", "foo,bar")
-      .save()
+df.write
+  .mode(SaveMode.Overwrite)
+  .format("org.neo4j.spark.DataSource")
+  .option("relationship", "PLAYS")
+  .option("relationship.save.strategy", "keys")
+  .option("relationship.source.labels", ":Musician")
+  .option("relationship.source.save.mode", "Overwrite")
+  .option("relationship.source.node.keys", "name:name")
+  .option("relationship.target.labels", ":Instrument")
+  .option("relationship.target.node.keys", "instrument:name")
+  .option("relationship.target.save.mode", "Overwrite")
+  .option("schema.optimization.relationship.keys", "UNIQUE")
+  .option("relationship.keys", "experience")
+  .save()
 ----
 
-Under the hood the Spark connector will create the following constraint:
+Before the writing process starts, the connector runs the following schema query:
 
+.Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_RELATIONSHIP_UNIQUE-CONSTRAINT_MY_REL_foo-bar` IF NOT EXISTS FOR ()-[e:MY_REL]->() REQUIRE (e.foo, e.bar) IS UNIQUE
+CREATE CONSTRAINT `spark_RELATIONSHIP_UNIQUE-CONSTRAINT_PLAYS_experience` IF NOT EXISTS FOR ()-[e:PLAYS]->() REQUIRE (e.experience) IS UNIQUE
 ----
+
+[IMPORTANT]
+====
+The source and target nodes must already have a uniqueness constraint on the keys.
+If not, the query will fail.
+====
+
+[NOTE]
+====
+You cannot create a uniqueness constraint on a relationship property if a key constraint already exists on the same property.
+====
 
 [#rel-constraints-key]
 == Relationship key constraints
 
-[NOTE]
-For a detailed description of how Neo4j handles relationship key constraint see the official https://neo4j.com/docs/cypher-manual/current/constraints/#relationship-key[Cypher documentation]
+link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#relationship-key[Relationship key constraints] ensure that, for a given relationship type and set of properties:
 
-Given the following example:
+* All the properties exist on all the relationships with that type.
+* The combination of the property values is unique.
 
+You can create a constraint by setting the `schema.optimization.relationship.keys` option to `KEY`.
+The constraint is not recreated if it is already present.
+
+.Example
 [source, scala]
 ----
-    ds
-      .write
-      .mode(SaveMode.Overwrite)
-      .format(classOf[DataSource].getName)
-      .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
-      .option("relationship", "MY_REL")
-      .option("relationship.save.strategy", "keys")
-      .option("relationship.source.labels", ":NodeA")
-      .option("relationship.source.save.mode", "Overwrite")
-      .option("relationship.source.node.keys", "idSource:id")
-      .option("relationship.target.labels", ":NodeB")
-      .option("relationship.target.node.keys", "idTarget:id")
-      .option("relationship.target.save.mode", "Overwrite")
-      .option("schema.optimization.relationship.keys", "KEY")
-      .option("relationship.keys", "foo,bar")
-      .save()
+df.write
+  .mode(SaveMode.Overwrite)
+  .format("org.neo4j.spark.DataSource")
+  .option("relationship", "PLAYS")
+  .option("relationship.save.strategy", "keys")
+  .option("relationship.source.labels", ":Musician")
+  .option("relationship.source.save.mode", "Overwrite")
+  .option("relationship.source.node.keys", "name:name")
+  .option("relationship.target.labels", ":Instrument")
+  .option("relationship.target.node.keys", "instrument:name")
+  .option("relationship.target.save.mode", "Overwrite")
+  .option("schema.optimization.relationship.keys", "KEY")
+  .option("relationship.keys", "experience")
+  .save()
 ----
 
-Under the hood the Spark connector will create the following constraint:
+Before the writing process starts, the connector runs the following schema query:
 
+.Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_RELATIONSHIP_KEY-CONSTRAINT_MY_REL_foo-bar` IF NOT EXISTS FOR ()-[e:MY_REL]->() REQUIRE (e.foo, e.bar) IS RELATIONSHIP KEY
+CREATE CONSTRAINT `spark_RELATIONSHIP_KEY-CONSTRAINT_PLAYS_experience` IF NOT EXISTS FOR ()-[e:PLAYS]->() REQUIRE (e.experience) IS RELATIONSHIP KEY
 ----
+
+[IMPORTANT]
+====
+The source and target nodes must already have a uniqueness constraint on the keys.
+If not, the query will fail.
+====
+
+[NOTE]
+====
+You cannot create a key constraint on a relationship property if a uniqueness constraint already exists on the same property.
+====
 
 [#constraints-type]
 == Property type constraints
@@ -279,7 +338,7 @@ Given the following example:
 [source, scala]
 ----
     ds.write
-      .format(classOf[DataSource].getName)
+      .format("org.neo4j.spark.DataSource")
       .mode(SaveMode.Overwrite)
       .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
       .option("labels", ":Person:Customer")
@@ -312,7 +371,7 @@ Given the following example:
 ----
     ds.write
       .mode(SaveMode.Overwrite)
-      .format(classOf[DataSource].getName)
+      .format("org.neo4j.spark.DataSource")
       .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
       .option("relationship", "MY_REL")
       .option("relationship.save.strategy", "keys")
