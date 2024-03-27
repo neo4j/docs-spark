@@ -2,30 +2,18 @@
 
 include::partial$sparksession.adoc[]
 
-With the `relationship` option, the connector writes a DataFrame to the Neo4j database by specifying source, target nodes, and a relationship.
+With the `relationship` option, the connector writes a Spark DataFrame to the Neo4j database by specifying source, target nodes, and a relationship.
 
 [WARNING]
 ====
 To avoid deadlocks, always use a single partition (for example with `coalesce(1)`) before writing relationships to Neo4j.
 ====
 
-The connector builds a Cypher query like the following:
+The connector builds a `CREATE` or a `MERGE` Cypher query (depending on the xref:writing.adoc#save-mode[save mode]) that uses the `UNWIND` clause to write a batch of rows (an `events` list with size defined by the `batch.size` option).
 
-[source, cypher]
-----
-UNWIND $events AS event
-CREATE (source:Person)
-SET source = event.source
-CREATE (target:Product)
-SET target = event.target
-CREATE (source)-[rel:BOUGHT]->(target)
-SET rel += event.rel
-----
+The rest of the query is built depending on a number of data source options.
 
-The `mode` defines whether the query uses a `CREATE` or a `MERGE` clause (see xref:writing.adoc#save-mode[save mode]).
-
-The way the actual query is built depends on a number of options.
-
+.Write options
 [cols="4, 3a, 3a, 1"]
 |===
 |Option |Description |Value |Default
@@ -42,7 +30,7 @@ The way the actual query is built depends on a number of options.
 and
 
 `relationship.target.save.mode`
-|Define the Source <<node-save-strategies, node save mode>>, and can be set independently for source and target nodes.
+|Define the <<node-save-modes, node save mode>>, and can be set independently for source and target nodes.
 |
 * `Match` mode performs a `MATCH`.
 * `Append` mode performs a `CREATE`.
@@ -65,8 +53,10 @@ Define the labels to assign to source and target nodes.
 and
 
 `relationship.target.node.keys`
-|When the <<node-save-strategies, node save mode>> is `Match` or `Overwrite`, defines keys that identify the nodes.
+|When the <<node-save-modes, node save mode>> is `Match` or `Overwrite`, defines key that identify the nodes.
 |Comma-separated list of `key:value` pairs.
+
+If `key` and `value` have the same value (for example `"name:name"`), you can omit one.
 |_(empty)_
 
 |`relationship.source.node.properties`
@@ -74,13 +64,17 @@ and
 and
 
 `relationship.target.node.properties`
-|When the <<strategies, save strategy>> is `keys`, defines which DataFrame columns to write as source/target node properties.
+|When the <<strategies, save strategy>> is `keys`, define which DataFrame columns to write as source/target node properties.
 |Comma-separated list of `key:value` pairs.
+
+If `key` and `value` have the same value (for example `"name:name"`), you can omit one.
 |_(empty)_
 
 |`relationship.properties`
 |When the <<strategies, save strategy>> is `keys`, defines which DataFrame columns to write as relationship properties.
 |Comma-separated list of `key:value` pairs.
+
+If `key` and `value` have the same value (for example `"name:name"`), you can omit one.
 |_(empty)_
 |===
 
@@ -90,7 +84,7 @@ and
 [#strategy-native]
 === `native` strategy
 
-The `native` strategy is useful when the DataFrame schema conforms to the <<reading.adoc#rel-schema-columns,Relationship read schema>> with the `relationship.nodes.map` option set to `false`.
+The `native` strategy requires the DataFrame to conform to the xref:read/relationship.adoc#rel-schema-columns[relationship read schema] with the `relationship.nodes.map` option set to `false`.
 The DataFrame must include at least one of the `rel.[property name]`, `source.[property name]`, or `target.[property name]` columns.
 
 A good use case for this mode is transferring data from a database to another one.
@@ -101,7 +95,10 @@ When you use the connector to xref:read/relationship.adoc[read a relationship], 
 If you use the connector to read data from a database and write data to a different database, you need to set the connection options xref:configuration.adoc#_multiple_connections[on each DataFrame] rather than on the Spark session.
 ====
 
-.Example of `native` strategy, `Append` mode for relationship, `Append` mode for source/target nodes
+The following example shows how to use the `native` strategy with the `Append` save mode both for the relationship and for source/target nodes.
+If run multiple times, it creates duplicate relationships and nodes.
+
+.Example
 [source, scala, role=nocollapse]
 ----
 // Columns representing node/relationships properties
@@ -144,11 +141,14 @@ SET rel += event.rel.properties
 [#strategy-keys]
 === `keys` strategy
 
-The `keys` strategy gives more control on how relationships and nodes are written.
-It does not require any specific schema for the DataFrame as you can specify which columns to write as node and relationship properties.
+The `keys` strategy gives more control on how relationships and source/target nodes are written.
+It does not require any specific schema for the DataFrame, and you can specify which columns to write as node and relationship properties.
+
+The following example shows how to use the `keys` strategy with the `Append` save mode both for the relationship and for source/target nodes.
+If run multiple times, it creates duplicate relationships and nodes.
 
 [#rel-specify-keys]
-.Example of `keys` strategy, `Append` mode for relationship, `Append` mode for source/target nodes
+.Example
 [source, scala, role=nocollapse]
 ----
 include::example$scala/write/BasicRelationship.scala[tags=code]
@@ -169,22 +169,17 @@ SET rel += event.rel.properties
 ----
 ====
 
-[NOTE]
-====
-If `key` and `value` are the same field you can specify one without the colon.
-For example, if you have `.option("relationship.source.node.properties", "name:name,email:email")`, you can also write
-`.option("relationship.source.node.properties", "name,email")`.
-Same applies for `relationship.source.node.keys` and `relationship.target.node.keys`.
-====
+[#node-save-modes]
+== Node save modes
 
-[#node-save-strategies]
-== Node save strategies
+The examples from the previous section use the `Append` mode for both relationships and nodes; this means that new relationships and new nodes are created every time the code is run.
 
-The examples from the previous section use the `Append` mode for both relationships and nodes; this means that, every time the code is run, new relationships and new nodes will be created.
+Node save modes different from `Append` have a different behaviour.
 
-Node save strategies different from `Append` can alter this behaviour.
+=== `Match` mode
 
-=== `Match` strategy
+The `Match` mode requires nodes with the selected labels and keys to already exist.
+The following example does not create any relationships if there are no matching nodes.
 
 .Match
 [source, scala, role=nocollapse]
@@ -234,7 +229,10 @@ SET rel += event.rel.properties
 ----
 ====
 
-=== `Overwrite` strategy
+=== `Overwrite` mode
+
+The `Overwrite` mode creates nodes with the selected labels and keys if they do not already exist.
+If run multiple times, the following example creates duplicate relationships but no duplicate nodes.
 
 .Overwrite
 [source, scala, role=nocollapse]
@@ -246,7 +244,7 @@ val df = Seq(
 
 df.write
   // Create new relationships
-  .mode("Append")
+  .mode("Overwrite")
   .format("org.neo4j.spark.DataSource")
   // Assign a type to the relationships
   .option("relationship", "BOUGHT")
@@ -286,7 +284,7 @@ SET rel += event.rel.properties
 ----
 ====
 
-[NOTE]
+[IMPORTANT]
 ====
-For `Overwrite` mode you *must have unique constraints on the keys*.
+Due to the concurrency of Spark jobs, when using the `Overwrite` mode you should use the xref:write/schema-optimization.adoc#node-constraints-unique[property uniqueness constraint] to guarantee node uniqueness.
 ====

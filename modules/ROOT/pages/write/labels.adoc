@@ -18,15 +18,18 @@ df.write
   .save()
 ----
 
-The code above results in the following Cypher query:
-
 .Equivalent Cypher query
+[%collapsible]
+====
 [source, cypher]
 ----
 UNWIND $events AS event
 CREATE (n:Person:Customer)
 SET n += event.properties
 ----
+====
+
+== Node keys
 
 With the `Overwrite` mode, you must specify the DataFrame columns to use as keys to match the nodes.
 The `node.keys` option takes a comma-separated list of `key:value` pairs, where the key is the DataFrame column name and the value is the node property name.
@@ -50,9 +53,9 @@ df.write
   .save()
 ----
 
-The code above results in the following Cypher query:
-
 .Equivalent Cypher query
+[%collapsible]
+====
 [source, cypher]
 ----
 UNWIND $events AS event
@@ -62,3 +65,9 @@ MERGE (n:Person:Customer {
 })
 SET n += event.properties
 ----
+====
+
+[IMPORTANT]
+====
+Due to the concurrency of Spark jobs, when using the `Overwrite` mode you should use the xref:write/schema-optimization.adoc#node-constraints-unique[property uniqueness constraint] to guarantee node uniqueness.
+====

@@ -117,7 +117,7 @@ See xref:write/query.adoc[] for more information and examples.
 [#save-mode]
 == Save mode
 
-Regardless of the write option, the connector supports two save modes:
+Regardless of the write option, the connector supports two save modes for the data source `mode()` method:
 
 * The `Append` mode creates new nodes or relationships by building a `CREATE` Cypher query.
 * The `Overwrite` mode creates or updates new nodes or relationships by building a `MERGE` Cypher query.
