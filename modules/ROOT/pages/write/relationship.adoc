@@ -118,16 +118,16 @@ val originalDf = spark.read.format("org.neo4j.spark.DataSource")
   .load()
 
 originalDf
-    .where("`rel.experience` > 15")
-    .write
-    .mode("Append")
-    .format("org.neo4j.spark.DataSource")
-    .option("relationship", "PLAYS_WELL")
-    .option("relationship.source.labels", ":ExperiencedMusician")
-    .option("relationship.source.save.mode", "Append")
-    .option("relationship.target.labels", "Instrument")
-    .option("relationship.target.save.mode", "Append")
-    .save()
+  .where("`rel.experience` > 15")
+  .write
+  .mode("Append")
+  .format("org.neo4j.spark.DataSource")
+  .option("relationship", "PLAYS_WELL")
+  .option("relationship.source.labels", ":ExperiencedMusician")
+  .option("relationship.source.save.mode", "Append")
+  .option("relationship.target.labels", "Instrument")
+  .option("relationship.target.save.mode", "Append")
+  .save()
 ----
 
 The code in the following example creates:
@@ -148,8 +148,7 @@ val df = Seq(
   (15, "John Butler", "Guitar")
 ).toDF("rel.experience", "source.name", "target.name")
 
-df
-  .write
+df.write
   // Create new relationships
   .mode("Append")
   .format("org.neo4j.spark.DataSource")
@@ -190,8 +189,7 @@ val df = Seq(
   (15, "John Butler", "Guitar")
 ).toDF("rel.experience", "source.name", "target.name")
 
-df
-  .write
+df.write
   // Create new relationships
   .mode("Append")
   .format("org.neo4j.spark.DataSource")
@@ -242,8 +240,7 @@ val df = Seq(
         (15, "John Butler", "Guitar")
     ).toDF("experience", "name", "instrument")
 
-df
-  .write
+df.write
   // Create new relationships
   .mode("Append")
   .format("org.neo4j.spark.DataSource")

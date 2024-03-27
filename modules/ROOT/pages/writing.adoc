@@ -10,12 +10,12 @@ The connector provides three options to write data to a Neo4j database.
 |Option|Description|Value|Default
 
 |`labels`
-|Use this if you only need to <<write-nodes, create or update nodes>> with their properties, or as a first step before adding relationships.
+|Use this if you only need to xref:write/labels.adoc[create or update nodes] with their properties, or as a first step before adding relationships.
 |Colon-separated list of node labels to create or update.
 |_(empty)_
 
 |`relationship`
-|Use this if you need to <<write-rel, create or update relationships>> along with their source and target nodes.
+|Use this if you need to xref:write/relationship.adoc[create or update relationships] along with their source and target nodes.
 |Relationship type to create or update.
 |_(empty)_
 
@@ -39,17 +39,83 @@ Regardless of the write option, the connector supports two save modes:
 
 The type mapping between Spark DataFrames and Neo4j is summarized in the xref:types.adoc[] section.
 
-[#example]
-== Basic example
+[#examples]
+== Basic examples
 
-The following code inserts 10 nodes into Neo4j.
-Each node has two labels (`Person` and `Customer`) and four properties (`name`, `surname`, `age`, and `livesIn`).
+=== `labels` option
 
-.Write example
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/WriteBasic.scala[tags=!setup]
+include::example$scala/write/BasicNodes.scala[tags=code]
 ----
+=====
+
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
+----
+include::example$python/write/basic_nodes.py[tags=code]
+----
+=====
+====
+
+Read the xref:write/labels.adoc[] section for more information and examples.
+
+=== `relationship` option
+
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
+----
+include::example$scala/write/BasicRelationship.scala[tags=code]
+----
+=====
+
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
+----
+include::example$python/write/basic_relationship.py[tags=code]
+----
+=====
+====
+
+Read the xref:write/relationship.adoc[] section for more information and examples.
+
+=== `query` option
+
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
+----
+include::example$scala/write/BasicQuery.scala[tags=code]
+----
+=====
+
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
+----
+include::example$python/write/basic_query.py[tags=code]
+----
+=====
+====
+
+Read the xref:write/query.adoc[] section for more information and examples.
 
 == Performance considerations
 
