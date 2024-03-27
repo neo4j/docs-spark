@@ -131,24 +131,67 @@ CREATE (source)-[rel:BOUGHT]->(target)
 SET rel += event.rel
 ----
 
+The `mode` defines whether the query uses a `CREATE` or a `MERGE` clause (see <<save-mode, save mode>>).
+
 The way the actual query is built depends on a number of options.
 
-* `mode` defines whether the query uses a `CREATE` or a `MERGE` clause (see <<save-mode, save mode>>).
-* `relationship.save.strategy` defines the <<strategies, save strategy>> to use:
-** The `native` strategy requires the DataFrame to use a specific schema.
-** The `keys` strategy is more flexible.
-* `relationship.{source,target}.save.mode` defines the way nodes are used, and can be set independently for source and target nodes:
-** `Match` mode performs a `MATCH`.
-** `Append` mode performs a `CREATE`.
-** `Overwrite` mode performs a `MERGE`.
-* `relationship.{source,target}.labels` define the labels to assign to source and target nodes.
-* `relationship.{source,target}.node.keys`:
-When using `Match` or `Overwrite` as the `relationship.{source,target}.save.mode`, you need to specify keys that identify the nodes.
+[cols="4, 3a, 3a, 1"]
+|===
+|Option |Description |Value |Default
 
-Additionally, if the `relationship.save.strategy` is `keys`:
+|`relationship.save.strategy`
+|Defines the <<strategies, save strategy>> to use.
+|
+* The `native` strategy requires the DataFrame to use a specific schema.
+* The `keys` strategy is more flexible.
+|`native`
 
-* `relationship.properties` defines which DataFrame columns to write as relationship properties.
-* `relationship.{source,target}.node.properties` is a comma-separated list of `key:value` pairs that maps DataFrame columns to node properties.
+|`relationship.source.save.mode`
+
+and
+
+`relationship.target.save.mode`
+|Define the Source <<node-save-strategies, node save mode>>, and can be set independently for source and target nodes.
+|
+* `Match` mode performs a `MATCH`.
+* `Append` mode performs a `CREATE`.
+* `Overwrite` mode performs a `MERGE`.
+|`Match`
+
+|`relationship.source.labels`
+
+and
+
+`relationship.target.labels`
+|*Required.*
+
+Define the labels to assign to source and target nodes.
+|Colon-separated list of labels.
+|_(empty)_
+
+|`relationship.source.node.keys`
+
+and
+
+`relationship.target.node.keys`
+|When the <<node-save-strategies, node save mode>> is `Match` or `Overwrite`, defines keys that identify the nodes.
+|Comma-separated list of key-value pairs.
+|_(empty)_
+
+|`relationship.properties`
+|When the <<strategies, save strategy>> is `keys`, defines which DataFrame columns to write as relationship properties.
+|Comma-separated list of `key:value` pairs that map DataFrame columns to relationship properties.
+|_(empty)_
+
+|`relationship.source.node.properties`
+
+and
+
+`relationship.target.node.properties`
+|When the <<strategies, save strategy>> is `keys`, defines which DataFrame columns to write as source/target properties.
+|Comma-separated list of `key:value` pairs that map DataFrame columns to node properties.
+|_(empty)_
+|===
 
 [#strategies]
 === Save strategies
