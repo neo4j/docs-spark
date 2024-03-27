@@ -15,19 +15,11 @@ spark = (
 # end::setup[]
 
 # tag::code[]
-from random import randint
-
-total = 10
-
 # Create example DataFrame
 df = spark.createDataFrame(
     [
-        {
-            "name": f"Andrea {i}",
-            "surname": f"Santurbano {i}",
-            "age": randint(0, 100),
-        }
-        for i in range(total)
+        {"name": "John", "surname": "Doe", "age": 42},
+        {"name": "Jane", "surname": "Doe", "age": 40},
     ]
 )
 

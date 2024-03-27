@@ -18,10 +18,22 @@ spark = (
 # Create example DataFrame
 df = spark.createDataFrame(
     [
-        {"name": "John Bonham", "instrument": "Drums", "experience": 12},
-        {"name": "John Mayer", "instrument": "Guitar", "experience": 19},
-        {"name": "John Scofield", "instrument": "Guitar", "experience": 32},
-        {"name": "John Butler", "instrument": "Guitar", "experience": 15},
+        {
+            "name": "John",
+            "surname": "Doe",
+            "customerID": 1,
+            "product": "Product 1",
+            "quantity": 200,
+            "order": "ABC100",
+        },
+        {
+            "name": "Jane",
+            "surname": "Doe",
+            "customerID": 2,
+            "product": "Product 1",
+            "quantity": 100,
+            "order": "ABC200",
+        },
     ]
 )
 
@@ -31,20 +43,20 @@ df = spark.createDataFrame(
     .mode("Append")
     .format("org.neo4j.spark.DataSource")
     # Assign a type to the relationships
-    .option("relationship", "PLAYS")
+    .option("relationship", "BOUGHT")
     # Use `keys` strategy
     .option("relationship.save.strategy", "keys")
-    .option("relationship.properties", "experience:experience")
+    .option("relationship.properties", "quantity")
     # Create source nodes and assign them a label
     .option("relationship.source.save.mode", "Append")
-    .option("relationship.source.labels", ":Musician")
+    .option("relationship.source.labels", ":Person")
     # Map the DataFrame columns to node properties
-    .option("relationship.source.node.properties", "name:name")
+    .option("relationship.source.node.properties", "name,surname,customerID:id")
     # Create target nodes and assign them a label
     .option("relationship.target.save.mode", "Append")
-    .option("relationship.target.labels", ":Instrument")
+    .option("relationship.target.labels", ":Product")
     # Map the DataFrame columns to node properties
-    .option("relationship.target.node.properties", "instrument:name")
+    .option("relationship.target.node.properties", "product:name")
     .save()
 )
 # end::code[]

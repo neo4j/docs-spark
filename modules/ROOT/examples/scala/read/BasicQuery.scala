@@ -16,7 +16,7 @@ val spark = SparkSession.builder
 // tag::code[]
 val query = """
   MATCH (n:Person)
-  RETURN id(n) AS id, n.name AS name
+  RETURN id(n) AS id, n.fullName AS name
 """
 
 val df = spark.read

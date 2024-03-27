@@ -17,7 +17,7 @@ val spark = SparkSession.builder
 case class Person(name: String, surname: String, age: Int)
 
 // Create an example DataFrame
-val df = Seq(
+val df = List(
   Person("John", "Doe", 42),
   Person("Jane", "Doe", 40)
 ).toDF()

@@ -17,7 +17,7 @@ spark = (
 # tag::code[]
 query = """
     MATCH (n:Person)
-    RETURN id(n) AS id, n.name AS name
+    RETURN id(n) AS id, n.fullName AS name
 """
 
 df = (

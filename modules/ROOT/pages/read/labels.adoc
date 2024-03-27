@@ -19,10 +19,10 @@ df.show()
 
 .Result
 |===
-|<id> |<labels> |surname |name |age
+|<id>|<labels>|surname|name|age
 
-|0|[Person]|Doe|Jane|40
-|39|[Person]|Doe|John|42
+|0|[Person, Customer]|Doe|Jane|40
+|39|[Person, Customer]|Doe|John|42
 |===
 
 You can specify multiple labels using the colon as a separator.
@@ -31,13 +31,23 @@ The colon before the first label is optional.
 .Multiple labels
 [source,scala]
 ----
-spark.read
+val df = spark.read
   .format("org.neo4j.spark.DataSource")
   // ":Person:Customer" and "Person:Customer"
   // are equivalent
   .option("labels", ":Person:Customer")
   .load()
+
+df.show()
 ----
+
+.Result
+|===
+|<id>|<labels>|surname|name|age
+
+|0|[Person, Customer]|Doe|Jane|40
+|39|[Person, Customer]|Doe|John|42
+|===
 
 == DataFrame columns
 
@@ -67,8 +77,8 @@ The schema is recreated from the flattened query result.
 
 [source, cypher]
 ----
-CREATE (p1:Person {age: 31, name: 'Jane Doe'}),
-    (p2:Person {name: 'John Doe', age: 33, location: null}),
+CREATE (p1:Person {age: 40, name: 'Jane Doe'}),
+    (p2:Person {name: 'John Doe', age: 42, location: null}),
     (p3:Person {age: 25, location: point({latitude: -37.659560, longitude: -68.178060})})
 ----
 

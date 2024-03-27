@@ -5,11 +5,14 @@ You can read a relationship and its source and target nodes by specifying the re
 
 [source, scala]
 ----
-spark.read.format("org.neo4j.spark.DataSource")
+val df = spark.read
+  .format("org.neo4j.spark.DataSource")
   .option("relationship", "BOUGHT")
   .option("relationship.source.labels", "Person")
   .option("relationship.target.labels", "Product")
   .load()
+
+df.show()
 ----
 
 The code above creates the following Cypher query:
@@ -53,84 +56,47 @@ Examples:
 .`relationship.nodes.map` set to `false`
 [source, scala]
 ----
-spark.read.format("org.neo4j.spark.DataSource")
+val df = spark.read
+  .format("org.neo4j.spark.DataSource")
   .option("relationship", "BOUGHT")
   .option("relationship.nodes.map", "false")
   .option("relationship.source.labels", "Person")
   .option("relationship.target.labels", "Product")
   .load()
-  .show()
+
+df.show()
 ----
 
 .Result
 |===
-|<rel.id>|<rel.type>|<source.id>|<source.labels>|source.id|source.fullName|<target.id>|<target.labels>|target.name|target.id|rel.quantity
+|<rel.id>|<rel.type>|<source.id>|<source.labels>|source.surname|source.name|source.id|<target.id>|<target.labels>|target.name|rel.order|rel.quantity
 
-|4|BOUGHT|1|[Person]|1|John Doe|0|[Product]|Product 1|52|240
-|5|BOUGHT|3|[Person]|2|Jane Doe|2|[Product]|Product 2|53|145
+|3189|BOUGHT|1100|[Person]|Doe|John|1|1040|[Product]|Product1|ABC100|200
+|3190|BOUGHT|1099|[Person]|Doe|Jane|2|1039|[Product]|Product1|ABC200|100
 |===
 
 .`relationship.nodes.map` set to `true`
 [source, scala]
 ----
-spark.read.format("org.neo4j.spark.DataSource")
+val df = spark.read
+  .format("org.neo4j.spark.DataSource")
   .option("relationship", "BOUGHT")
   .option("relationship.nodes.map", "true")
   .option("relationship.source.labels", "Person")
   .option("relationship.target.labels", "Product")
   .load()
-  .show()
+  
+// Use `false` to print the whole DataFrame
+df.show(false)
 ----
 
 .Result
-[cols="1,1,1,3,3"]
+[cols="2,2,3l,3l,2,2"]
 |===
-|<rel.id>|<rel.type>|rel.quantity|<source>|<target>
+|<rel.id>|<rel.type>|<source>|<target>|rel.order|rel.quantity
 
-|4
-|BOUGHT
-|240
-a|[.small]
-----
-{
-  "fullName": "John Doe",
-  "id": 1,
-  "<labels>: "[Person]",
-  "<id>": 1
-}
-----
-a|[.small]
-----
-{
-  "name": "Product 1",
-  "id": 52,
-  "<labels>: "[Product]",
-  "<id>": 0
-}
-----
-
-|4
-|BOUGHT
-|145
-a|[.small]
-----
-{
-  "fullName": "Jane Doe",
-  "id": 1,
-  "<labels>:
-  "[Person]",
-  "<id>": 3
-}
-----
-a|[.small]
-----
-{
-  "name": "Product 2",
-  "id": 53,
-  "<labels>: "[Product]",
-  "<id>": 2
-}
-----
+|3189|BOUGHT|{surname: "Doe", name: "John", id: 1, <labels>: ["Person"], <id>: 1100}|{name: "Product 1", <labels>: ["Product"], <id>: 1040}|ABC100|200
+|3190|BOUGHT|{surname: "Doe", name: "Jane", id: 2, <labels>: ["Person"], <id>: 1099}|{name: "Product 1", <labels>: ["Product"], <id>: 1039}|ABC200|100
 |===
 
 == Schema
@@ -181,8 +147,15 @@ val df = spark.read.format("org.neo4j.spark.DataSource")
   .option("relationship.target.labels", "Product")
   .load()
 
-df.where("`source.id` = 14 AND `target.id` = 16")
+df.where("`source.id` > 1").show()
 ----
+
+.Result
+|===
+|<rel.id>|<rel.type>|<source.id>|<source.labels>|source.surname|source.name|<target.id>|<target.labels>|target.name|rel.order|rel.quantity
+
+|3190|BOUGHT|1099|[Person]|Doe|Jane|2|1039|[Product]|Product1|ABC200|100
+|===
 
 .`relationship.nodes.map` set to `true`
 [source, scala]
@@ -194,5 +167,14 @@ val df = spark.read.format("org.neo4j.spark.DataSource")
   .option("relationship.target.labels", "Product")
   .load()
 
-df.where("`<source>`.`id` = '14' AND `<target>`.`id` = '16'")
+// Use `false` to print the whole DataFrame
+df.where("`<source>`.`id` > 1").show(false)
 ----
+
+.Result
+[cols="2,2,3l,3l,2,2"]
+|===
+|<rel.id>|<rel.type>|<source>|<target>|rel.order|rel.quantity
+
+|3190|BOUGHT|{surname: "Doe", name: "Jane", id: 2, <labels>: ["Person"], <id>: 1099}|{name: "Product 1", <labels>: ["Product"], <id>: 1039}|ABC200|100
+|===

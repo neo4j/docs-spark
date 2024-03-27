@@ -17,9 +17,9 @@ spark = (
 # tag::code[]
 df = (
     spark.read.format("org.neo4j.spark.DataSource")
-    .option("relationship", "PLAYS")
-    .option("relationship.source.labels", ":Musician")
-    .option("relationship.target.labels", ":Instrument")
+    .option("relationship", "BOUGHT")
+    .option("relationship.source.labels", "Person")
+    .option("relationship.target.labels", "Product")
     .load()
 )
 

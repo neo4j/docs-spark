@@ -14,22 +14,12 @@ val spark = SparkSession.builder
 // end::setup[]
 
 // tag::code[]
-import spark.implicits._
-import scala.util.Random
-
 case class Person(name: String, surname: String, age: Int)
 
-val total = 10
-val rand = Random
-val df = (1 to total)
-  .map(i => {
-    Person(
-      name = "Andrea " + i,
-      "Santurbano " + i,
-      rand.nextInt(100)
-    )
-  })
-  .toDF()
+val df = List(
+  Person("John", "Doe", 42),
+  Person("Jane", "Doe", 40)
+).toDF()
 
 df.write
   .format("org.neo4j.spark.DataSource")

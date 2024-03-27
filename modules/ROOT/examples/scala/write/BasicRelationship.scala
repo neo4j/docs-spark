@@ -15,31 +15,29 @@ val spark = SparkSession.builder
 
 // tag::code[]
 val df = Seq(
-  (12, "John Bonham", "Drums"),
-  (19, "John Mayer", "Guitar"),
-  (32, "John Scofield", "Guitar"),
-  (15, "John Butler", "Guitar")
-).toDF("experience", "name", "instrument")
+  ("John", "Doe", 1, "Product 1", 200, "ABC100"),
+  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
   // Create new relationships
   .mode("Append")
   .format("org.neo4j.spark.DataSource")
   // Assign a type to the relationships
-  .option("relationship", "PLAYS")
+  .option("relationship", "BOUGHT")
   // Use `keys` strategy
   .option("relationship.save.strategy", "keys")
-  .option("relationship.properties", "experience:experience")
+  .option("relationship.properties", "quantity")
   // Create source nodes and assign them a label
   .option("relationship.source.save.mode", "Append")
-  .option("relationship.source.labels", ":Musician")
+  .option("relationship.source.labels", ":Person")
   // Map the DataFrame columns to node properties
-  .option("relationship.source.node.properties", "name:name")
+  .option("relationship.source.node.properties", "name,surname,customerID:id")
   // Create target nodes and assign them a label
   .option("relationship.target.save.mode", "Append")
-  .option("relationship.target.labels", ":Instrument")
+  .option("relationship.target.labels", ":Product")
   // Map the DataFrame columns to node properties
-  .option("relationship.target.node.properties", "instrument:name")
+  .option("relationship.target.node.properties", "product:name")
   .save()
 // end::code[]
 
