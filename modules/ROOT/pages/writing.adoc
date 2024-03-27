@@ -4,18 +4,45 @@
 :table-header-code: Code
 :table-header-cypher: Equivalent Cypher query
 
-The following section covers the DataSource Writer and how to transfer the Spark dataset content into Neo4j.
-The connector provides batch writes to speed up the ingestion process, so if the process at some point fails, all the previous data are already persisted.
+The connector provides three options to write data to a Neo4j database.
 
-There are two main approaches for writing data to a Neo4j database with the connector:
+.Write options
+[cols="1, 2, 2, 1"]
+|===
+|Option|Description|Value|Default
 
-* <<write-nodes, Write nodes>> using the `labels` option.
-* <<write-rel, Write a relationship>> with source and target nodes using the `relationship` option.
+|`labels`
+|Use this if you only need to <<write-nodes, create or update nodes>> with their properties, or as a first step before adding relationships.
+|Colon-separated list of node labels to create or update.
+|_(empty)_
 
-If you need more flexibility, you can also run a xref:write/query.adoc[custom Cypher query] using the `query` option.
+|`relationship`
+|Use this if you need to <<write-rel, create or update relationships>> along with their source and target nodes.
+|Relationship type to create or update.
+|_(empty)_
+
+|`query`
+|Use this if you need more flexibility and know how to xref:write/query.adoc[write a Cypher query].
+|Cypher query with a `CREATE` or `MERGE` clause.
+|_(empty)_
+|===
+
+[#save-mode]
+== Save mode
+
+Regardless of the write option, the connector supports two save modes:
+
+* The `Append` mode creates new nodes or relationships by building a `CREATE` Cypher query.
+* The `Overwrite` mode creates or updates new nodes or relationships by building a `MERGE` Cypher query.
+** Requires the `node.keys` option when used with the `labels` option.
+** Requires the `relationship.source.node.keys` and `relationship.target.node.keys` when used with the `relationship` option.
+
+== Type mapping
+
+The type mapping between Spark DataFrames and Neo4j is summarized in the xref:types.adoc[] section.
 
 [#example]
-== Example
+== Basic example
 
 The following code inserts 10 nodes into Neo4j.
 Each node has two labels (`Person` and `Customer`) and four properties (`name`, `surname`, `age`, and `livesIn`).
@@ -25,18 +52,6 @@ Each node has two labels (`Person` and `Customer`) and four properties (`name`, 
 ----
 include::example$scala/WriteBasic.scala[tags=!setup]
 ----
-
-[#save-mode]
-== Save mode
-
-The connector supports two save modes:
-
-* The `Append` mode builds a `CREATE` query.
-* The `Overwrite` mode builds a `MERGE` query (requires the `node.keys` option).
-
-== Type mapping
-
-The type mapping between Spark DataFrames and Neo4j is summarized in the xref:types.adoc[] section.
 
 [#write-nodes]
 == Write nodes
@@ -142,8 +157,8 @@ The way the actual query is built depends on a number of options.
 |`relationship.save.strategy`
 |Defines the <<strategies, save strategy>> to use.
 |
-* The `native` strategy requires the DataFrame to use a specific schema.
-* The `keys` strategy is more flexible.
+* `native` requires the DataFrame to use a specific schema.
+* `keys` is more flexible.
 |`native`
 
 |`relationship.source.save.mode`

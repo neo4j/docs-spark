@@ -44,29 +44,29 @@ The `schema.optimization.type` option is deprecated in favor of `schema.optimiza
 ====
 
 .Schema optimization options
-[cols="4, 2, 1, 3"]
+[cols="4, 3, 2, 1"]
 |===
-|Option|Value|Default|Description
+|Option|Description|Value|Default
 
 |`schema.optimization.type` label:deprecated[Deprecated in 5.3]
+|Creates <<indexes, indexes>> and <<node-constraints-unique, property uniqueness>> constraints on nodes using the properties defined by the `node.keys` option.
 |One of `NONE`, `INDEX`, `NODE_CONSTRAINTS`
 |`NONE`
-|Creates <<indexes, indexes>> and <<node-constraints-unique, property uniqueness>> constraints on nodes using the properties defined by the `node.keys` option.
 
 |`schema.optimization.node.keys` label:new[New in 5.3]
+|Creates <<node-constraints-unique, property uniqueness>> and <<node-constraints-key, key>> constraints on nodes using the properties defined by the `node.keys` option.
 |One of `UNIQUE`, `KEY`, `NONE`
 |`NONE`
-|Creates <<node-constraints-unique, property uniqueness>> and <<node-constraints-key, key>> constraints on nodes using the properties defined by the `node.keys` option.
 
 |`schema.optimization.relationship.keys` label:new[New in 5.3]
+|Creates <<rel-constraints-unique, property uniqueness>> and <<rel-constraints-key, key>> constraints on relationships using the properties defined by the `relationship.keys` option.
 |One of `UNIQUE`, `KEY`, `NONE`
 |`NONE`
-|Creates <<rel-constraints-unique, property uniqueness>> and <<rel-constraints-key, key>> constraints on relationships using the properties defined by the `relationship.keys` option.
 
 |`schema.optimization` label:new[New in 5.3]
+|Creates <<constraints-type-existence, property type and property existence>> constraints on both nodes and relationships, enforcing the type and non-nullability from the DataFrame schema.
 |Comma-separated list of `TYPE`, `EXISTS`, `NONE`
 |`NONE`
-|Creates <<constraints-type-existence, property type and property existence>> constraints on both nodes and relationships, enforcing the type and non-nullability from the DataFrame schema.
 |===
 
 [#indexes]
