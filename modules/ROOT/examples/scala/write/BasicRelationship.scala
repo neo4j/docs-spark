@@ -27,7 +27,6 @@ df.write
   .option("relationship", "BOUGHT")
   // Use `keys` strategy
   .option("relationship.save.strategy", "keys")
-  .option("relationship.properties", "quantity")
   // Create source nodes and assign them a label
   .option("relationship.source.save.mode", "Append")
   .option("relationship.source.labels", ":Person")
@@ -38,6 +37,8 @@ df.write
   .option("relationship.target.labels", ":Product")
   // Map the DataFrame columns to node properties
   .option("relationship.target.node.properties", "product:name")
+  // Map the DataFrame columns to relationship properties
+  .option("relationship.properties", "quantity,order")
   .save()
 // end::code[]
 
