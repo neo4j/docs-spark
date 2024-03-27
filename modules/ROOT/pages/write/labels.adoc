@@ -1,11 +1,12 @@
-[#write-nodes]
 = Write nodes
+
+include::partial$sparksession.adoc[]
 
 With the `labels` option, the connector writes a DataFrame to the Neo4j database as a set of nodes with the given labels.
 
-The connector builds a `CREATE` or a `MERGE` Cypher query (depending on the <<save-mode, SaveMode>>) that uses the `UNWIND` clause to write a batch of rows (an `events` list with size defined by the `batch.size` option).
+The connector builds a `CREATE` or a `MERGE` Cypher query (depending on the xref:writing.adoc#save-mode[save mode]) that uses the `UNWIND` clause to write a batch of rows (an `events` list with size defined by the `batch.size` option).
 
-The code from the xref:writing.adoc#example[example] creates new nodes with the given labels.
+The code from the xref:writing.adoc#example-labels[example] creates new nodes with the given labels.
 
 .Append example
 [source, scala]

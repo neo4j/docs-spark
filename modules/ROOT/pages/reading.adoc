@@ -24,14 +24,15 @@ The connector provides three options to read data from a Neo4j database.
 |_(empty)_
 |===
 
-== Type mapping
-
-The type mapping between Spark DataFrames and Neo4j is summarized in the xref:types.adoc[] section.
-
 [#examples]
 == Basic examples
 
+include::partial$sparksession.adoc[]
+
+[#example-labels]
 === `labels` option
+
+Read the `:Person` nodes.
 
 [.tabbed-example]
 ====
@@ -54,9 +55,12 @@ include::example$python/read/basic_nodes.py[tags=code]
 =====
 ====
 
-Read the xref:read/labels.adoc[] section for more information and examples.
+See xref:read/labels.adoc[] for more information and examples.
 
+[#example-relationship]
 === `relationship` option
+
+Read the `:BOUGHT` relationship with its source and target nodes and its properties.
 
 [.tabbed-example]
 ====
@@ -79,9 +83,12 @@ include::example$python/read/basic_relationship.py[tags=code]
 =====
 ====
 
-Read the xref:read/relationship.adoc[] section for more information and examples.
+See xref:read/relationship.adoc[] for more information and examples.
 
+[#example-query]
 === `query` option
+
+Use a Cypher query to read data.
 
 [.tabbed-example]
 ====
@@ -104,10 +111,14 @@ include::example$python/read/basic_query.py[tags=code]
 =====
 ====
 
-Read the xref:read/query.adoc[] section for more information and examples.
+See xref:read/query.adoc[] for more information and examples.
+
+== Type mapping
+
+See xref:types.adoc[] for the full type mapping between Spark DataFrames and Neo4j.
 
 == Performance considerations
 
-If the schema is not specified, the Spark Connector uses sampling as explained in the xref:schema.adoc[] section.
+If the schema is not specified, the Spark Connector uses xref:schema.adoc[sampling].
 
 Since sampling is potentially an expensive operation, consider xref:schema-user.adoc[supplying your own schema].

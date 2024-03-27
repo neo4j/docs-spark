@@ -1,5 +1,6 @@
-[#write-rel]
 = Write a relationship
+
+include::partial$sparksession.adoc[]
 
 With the `relationship` option, the connector writes a DataFrame to the Neo4j database by specifying source, target nodes, and a relationship.
 
@@ -21,7 +22,7 @@ CREATE (source)-[rel:BOUGHT]->(target)
 SET rel += event.rel
 ----
 
-The `mode` defines whether the query uses a `CREATE` or a `MERGE` clause (see <<save-mode, save mode>>).
+The `mode` defines whether the query uses a `CREATE` or a `MERGE` clause (see xref:writing.adoc#save-mode[save mode]).
 
 The way the actual query is built depends on a number of options.
 

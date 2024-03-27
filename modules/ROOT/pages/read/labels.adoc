@@ -1,5 +1,6 @@
-[#read-node]
 = Read nodes
+
+include::partial$sparksession.adoc[]
 
 You can read nodes by specifying one or more labels with the `labels` option.
 

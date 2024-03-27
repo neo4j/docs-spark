@@ -25,24 +25,15 @@ The connector provides three options to write data to a Neo4j database.
 |_(empty)_
 |===
 
-[#save-mode]
-== Save mode
-
-Regardless of the write option, the connector supports two save modes:
-
-* The `Append` mode creates new nodes or relationships by building a `CREATE` Cypher query.
-* The `Overwrite` mode creates or updates new nodes or relationships by building a `MERGE` Cypher query.
-** Requires the `node.keys` option when used with the `labels` option.
-** Requires the `relationship.source.node.keys` and `relationship.target.node.keys` when used with the `relationship` option.
-
-== Type mapping
-
-The type mapping between Spark DataFrames and Neo4j is summarized in the xref:types.adoc[] section.
-
 [#examples]
 == Basic examples
 
+include::partial$sparksession.adoc[]
+
+[#example-labels]
 === `labels` option
+
+Write the `:Person` nodes.
 
 [.tabbed-example]
 ====
@@ -65,9 +56,12 @@ include::example$python/write/basic_nodes.py[tags=code]
 =====
 ====
 
-Read the xref:write/labels.adoc[] section for more information and examples.
+See xref:write/labels.adoc[] for more information and examples.
 
+[#example-relationship]
 === `relationship` option
+
+Write the `:BOUGHT` relationship with its source and target nodes and its properties.
 
 [.tabbed-example]
 ====
@@ -90,9 +84,12 @@ include::example$python/write/basic_relationship.py[tags=code]
 =====
 ====
 
-Read the xref:write/relationship.adoc[] section for more information and examples.
+See xref:write/relationship.adoc[] for more information and examples.
 
+[#example-query]
 === `query` option
+
+Use a Cypher query to write data.
 
 [.tabbed-example]
 ====
@@ -115,7 +112,21 @@ include::example$python/write/basic_query.py[tags=code]
 =====
 ====
 
-Read the xref:write/query.adoc[] section for more information and examples.
+See xref:write/query.adoc[] for more information and examples.
+
+[#save-mode]
+== Save mode
+
+Regardless of the write option, the connector supports two save modes:
+
+* The `Append` mode creates new nodes or relationships by building a `CREATE` Cypher query.
+* The `Overwrite` mode creates or updates new nodes or relationships by building a `MERGE` Cypher query.
+** Requires the `node.keys` option when used with the `labels` option.
+** Requires the `relationship.source.node.keys` and `relationship.target.node.keys` when used with the `relationship` option.
+
+== Type mapping
+
+See xref:types.adoc[] for the full type mapping between Spark DataFrames and Neo4j.
 
 == Performance considerations
 

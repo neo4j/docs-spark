@@ -1,5 +1,4 @@
-[[user-defined-schema]]
-= User defined schema
+= User-defined schema
 
 You can skip the automatic schema extraction process by providing a user defined schema using the `.schema()` method.
 

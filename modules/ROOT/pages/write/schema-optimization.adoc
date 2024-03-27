@@ -1,5 +1,7 @@
 = Schema optimization
 
+include::partial$sparksession.adoc[]
+
 Although Neo4j does not enforce the use of a schema, adding indexes and constraints before writing data makes the writing process more efficient.
 When updating nodes or relationships, having constraints in place is also the best way to avoid duplicates.
 

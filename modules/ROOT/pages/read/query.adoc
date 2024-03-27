@@ -1,5 +1,4 @@
-[[read-query]]
-= Custom Cypher query
+= Read with a Cypher query
 
 include::partial$sparksession.adoc[]
 

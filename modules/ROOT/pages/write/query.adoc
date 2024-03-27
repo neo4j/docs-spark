@@ -1,5 +1,6 @@
-[[write-query]]
-= Custom Cypher query
+= Write with a Cypher query
+
+include::partial$sparksession.adoc[]
 
 If you need more flexibility, you can use the `query` option to run a custom Cypher query.
 

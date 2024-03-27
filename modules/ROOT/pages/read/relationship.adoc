@@ -1,5 +1,6 @@
-[#read-rel]
 = Read a relationship
+
+include::partial$sparksession.adoc[]
 
 You can read a relationship and its source and target nodes by specifying the relationship type, the source node labels, and the target node labels.
 
