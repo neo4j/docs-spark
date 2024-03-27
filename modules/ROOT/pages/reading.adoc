@@ -1,299 +1,110 @@
 = Reading from Neo4j
 :description: The chapter explains how to read data from a Neo4j database.
 
-// include::partial$sparksession.adoc[]
+The connector provides three options to read data from a Neo4j database.
 
-There are two main approaches for reading data from a Neo4j database with the connector:
-
-* <<read-node, Read nodes>> using the `labels` option.
-* <<read-rel, Read a relationship>> with source and target nodes using the `relationship` option.
-
-If you need more flexibility, you can also run a xref:read/query.adoc[custom Cypher query] using the `query` option.
-
-[[read-node]]
-== Read nodes
-
-You can read nodes by specifying one or more labels with the `labels` option.
-
-For example, given a graph with `Person` nodes, you can run the following code to get a DataFrame containing all `Person` nodes with their node properties.
-
-.Basic read operation
-
-[source, scala]
-----
-spark.read.format("org.neo4j.spark.DataSource")
-  .option("labels", "Person")
-  .load()
-  .show()
-----
-
-.Result
+.Read options
+[cols="1, 2, 2, 1"]
 |===
-|<id> |<labels> |surname |name |age
+|Option|Description|Value|Default
 
-|0|[Person]|Doe|Jane|40
-|39|[Person]|Doe|John|42
+|`labels`
+|Use this if you only need to xref:read/labels.adoc[read nodes] with their properties.
+|Colon-separated list of node labels to read.
+|_(empty)_
+
+|`relationship`
+|Use this if you need to xref:read/relationship.adoc[read relationships] along with their source and target nodes.
+|Relationship type to read.
+|_(empty)_
+
+|`query`
+|Use this if you need more flexibility and know how to xref:read/query.adoc[write a Cypher query].
+|Cypher query with a `MATCH` clause.
+|_(empty)_
 |===
 
-You can specify multiple labels using the colon as a separator.
-The colon before the first label is optional.
+== Type mapping
 
-.Multiple labels (without starting colon)
-[source,scala]
+The type mapping between Spark DataFrames and Neo4j is summarized in the xref:types.adoc[] section.
+
+[#examples]
+== Basic examples
+
+=== `labels` option
+
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
 ----
-spark.read.format("org.neo4j.spark.DataSource")
-  .option("labels", "Person:Customer")
-  .load()
+include::example$scala/read/BasicNodes.scala[tags=code]
 ----
+=====
 
-=== DataFrame columns
-
-When reading data with this method, the resulting DataFrame contains as many columns as the number of node properties plus two additional columns:
-
-* `<id>`: internal Neo4j ID
-* `<labels>`: list of labels for each node
-
-=== Schema
-
-If the link:{neo4j-docs-base-uri}/apoc/current/[APOC library] is available on the Neo4j instance, the schema is retrieved via the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.nodeTypeProperties/[`apoc.meta.nodeTypeProperties`^] procedure.
-Otherwise, the following Cypher query is executed:
-
-[source, cypher]
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
 ----
-MATCH (n:<labels>) <1>
-RETURN n
-ORDER BY rand()
-LIMIT <limit> <2>
+include::example$python/read/basic_nodes.py[tags=code]
 ----
-<1> `<labels>` is the list of labels provided by the `labels` option.
-<2> `<limit>` is the value provided by the `schema.flatten.limit` option.
+=====
+====
 
-The schema is recreated from the flattened query result.
+Read the xref:read/labels.adoc[] section for more information and examples.
 
-==== Example
+=== `relationship` option
 
-[source, cypher]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
 ----
-CREATE (p1:Person {age: 31, name: 'Jane Doe'}),
-    (p2:Person {name: 'John Doe', age: 33, location: null}),
-    (p3:Person {age: 25, location: point({latitude: -37.659560, longitude: -68.178060})})
+include::example$scala/read/BasicRelationship.scala[tags=code]
 ----
+=====
 
-The following schema is created:
-
-|===
-|Field |Type
-
-|<id>|Int
-
-|<labels>|String[]
-
-|age|Int
-
-|name|String
-
-|location|Point
-
-|===
-
-[[read-rel]]
-== Read a relationship
-
-You can read a relationship and its source and target nodes by specifying the relationship type, the source node labels, and the target node labels.
-
-[source, scala]
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
 ----
-spark.read.format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
-  .load()
+include::example$python/read/basic_relationship.py[tags=code]
 ----
+=====
+====
 
-The code above creates the following Cypher query:
+Read the xref:read/relationship.adoc[] section for more information and examples.
 
-[source, cypher]
+=== `query` option
+
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
 ----
-MATCH (source:Person)-[rel:BOUGHT]->(target:Product)
-RETURN source, rel, target
+include::example$scala/read/BasicQuery.scala[tags=code]
 ----
+=====
 
-[[rel-schema-columns]]
-=== DataFrame columns
-
-When reading data with this method, the DataFrame contains the following columns:
-
-* `<rel.id>`: internal Neo4j ID
-* `<rel.type>`: relationship type
-* `rel.[property name]`: relationship properties
-
-Additional columns are added depending on the value of the `relationship.nodes.map` option:
-
-|===
-|`relationship.nodes.map` set to `false` (default)|`relationship.nodes.map` set to `true`
-
-a|
-* `<source.id>`: internal Neo4j ID of source node
-* `<source.labels>`: list of labels for source node
-* `<target.id>`: internal Neo4j ID of target node
-* `<target.labels>`: list of labels for target node
-* `source.[property name]`: source node properties
-* `target.[property name]`: target node properties
-
-a|
-* `source`: map of source node properties
-* `target`: map of target node properties
-|===
-
-Examples:
-
-[[rel-schema-no-map]]
-.`relationship.nodes.map` set to `false`
-[source, scala]
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
 ----
-spark.read.format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  .option("relationship.nodes.map", "false")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
-  .load()
-  .show()
+include::example$python/read/basic_query.py[tags=code]
 ----
+=====
+====
 
-.Result
-|===
-|<rel.id>|<rel.type>|<source.id>|<source.labels>|source.id|source.fullName|<target.id>|<target.labels>|target.name|target.id|rel.quantity
-
-|4|BOUGHT|1|[Person]|1|John Doe|0|[Product]|Product 1|52|240
-|5|BOUGHT|3|[Person]|2|Jane Doe|2|[Product]|Product 2|53|145
-|===
-
-.`relationship.nodes.map` set to `true`
-[source, scala]
-----
-spark.read.format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  .option("relationship.nodes.map", "true")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
-  .load()
-  .show()
-----
-
-.Result
-[cols="1,1,1,3,3"]
-|===
-|<rel.id>|<rel.type>|rel.quantity|<source>|<target>
-
-|4
-|BOUGHT
-|240
-a|[.small]
-----
-{
-  "fullName": "John Doe",
-  "id": 1,
-  "<labels>: "[Person]",
-  "<id>": 1
-}
-----
-a|[.small]
-----
-{
-  "name": "Product 1",
-  "id": 52,
-  "<labels>: "[Product]",
-  "<id>": 0
-}
-----
-
-|4
-|BOUGHT
-|145
-a|[.small]
-----
-{
-  "fullName": "Jane Doe",
-  "id": 1,
-  "<labels>:
-  "[Person]",
-  "<id>": 3
-}
-----
-a|[.small]
-----
-{
-  "name": "Product 2",
-  "id": 53,
-  "<labels>: "[Product]",
-  "<id>": 2
-}
-----
-|===
-
-=== Schema
-
-If the link:{neo4j-docs-base-uri}/apoc/current/[APOC library] is available on the Neo4j instance, the schema is retrieved via the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.relTypeProperties/[`apoc.meta.relTypeProperties`^] procedure.
-Otherwise, the following Cypher query is executed:
-
-[source, cypher]
-----
-MATCH (source:<source_labels>)-[rel:<relationship>]->(target:<target_labels>)  <1> <2> <3>
-RETURN rel
-ORDER BY rand()
-LIMIT <limit> <4>
-----
-<1> `<source_labels>` is the list of labels provided by `relationship.source.labels` option.
-<2> `<target_labels>` is the list of labels provided by `relationship.target.labels` option.
-<3> `<relationship>` is the list of labels provided by `relationship` option.
-<4> `<limit>` is the value provided via `schema.flatten.limit`.
-
-=== Filtering
-
-You can use the `where` and `filter` functions in Spark to filter properties of the relationship, the source node, or the target node.
-The correct format of the filter depends on the value of `relationship.nodes.map` option.
-
-|===
-|`relationship.nodes.map` set to `false` (default)|`relationship.nodes.map` set to `true`
-
-a|
-* ``\`source.[property]` `` for the source node properties
-* ``\`rel.[property]` `` for the relationship property
-* ``\`target.[property]` `` for the target node property
-
-a|
-* ``\`<source>`.\`[property]` `` for the source node map properties
-* ``\`<rel>`.\`[property]` `` for the relationship map property
-* ``\`<target>`.\`[property]` `` for the target node map property
-|===
-
-Examples:
-
-.`relationship.nodes.map` set to `false`
-[source, scala]
-----
-val df = spark.read.format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  .option("relationship.nodes.map", "false")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
-  .load()
-
-df.where("`source.id` = 14 AND `target.id` = 16")
-----
-
-.`relationship.nodes.map` set to `true`
-[source, scala]
-----
-val df = spark.read.format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  .option("relationship.nodes.map", "true")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
-  .load()
-
-df.where("`<source>`.`id` = '14' AND `<target>`.`id` = '16'")
-----
+Read the xref:read/query.adoc[] section for more information and examples.
 
 == Performance considerations
 

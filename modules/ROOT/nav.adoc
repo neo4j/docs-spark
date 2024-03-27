@@ -12,7 +12,9 @@ include::partial$dwh-list.adoc[]
 
 * *Operations*
 * xref:reading.adoc[]
-** xref:read/query.adoc[]
+** xref:read/labels.adoc[]
+** xref:read/relationship.adoc[]
+** xref:read/query.adoc[Run a Cypher query]
 ** xref:read/options.adoc[]
 * xref:writing.adoc[]
 ** xref:write/labels.adoc[]

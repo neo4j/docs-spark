@@ -1,0 +1,198 @@
+[#read-rel]
+= Read a relationship
+
+You can read a relationship and its source and target nodes by specifying the relationship type, the source node labels, and the target node labels.
+
+[source, scala]
+----
+spark.read.format("org.neo4j.spark.DataSource")
+  .option("relationship", "BOUGHT")
+  .option("relationship.source.labels", "Person")
+  .option("relationship.target.labels", "Product")
+  .load()
+----
+
+The code above creates the following Cypher query:
+
+[source, cypher]
+----
+MATCH (source:Person)-[rel:BOUGHT]->(target:Product)
+RETURN source, rel, target
+----
+
+[[rel-schema-columns]]
+== DataFrame columns
+
+When reading data with this method, the DataFrame contains the following columns:
+
+* `<rel.id>`: internal Neo4j ID
+* `<rel.type>`: relationship type
+* `rel.[property name]`: relationship properties
+
+Additional columns are added depending on the value of the `relationship.nodes.map` option:
+
+|===
+|`relationship.nodes.map` set to `false` (default)|`relationship.nodes.map` set to `true`
+
+a|
+* `<source.id>`: internal Neo4j ID of source node
+* `<source.labels>`: list of labels for source node
+* `<target.id>`: internal Neo4j ID of target node
+* `<target.labels>`: list of labels for target node
+* `source.[property name]`: source node properties
+* `target.[property name]`: target node properties
+
+a|
+* `source`: map of source node properties
+* `target`: map of target node properties
+|===
+
+Examples:
+
+[[rel-schema-no-map]]
+.`relationship.nodes.map` set to `false`
+[source, scala]
+----
+spark.read.format("org.neo4j.spark.DataSource")
+  .option("relationship", "BOUGHT")
+  .option("relationship.nodes.map", "false")
+  .option("relationship.source.labels", "Person")
+  .option("relationship.target.labels", "Product")
+  .load()
+  .show()
+----
+
+.Result
+|===
+|<rel.id>|<rel.type>|<source.id>|<source.labels>|source.id|source.fullName|<target.id>|<target.labels>|target.name|target.id|rel.quantity
+
+|4|BOUGHT|1|[Person]|1|John Doe|0|[Product]|Product 1|52|240
+|5|BOUGHT|3|[Person]|2|Jane Doe|2|[Product]|Product 2|53|145
+|===
+
+.`relationship.nodes.map` set to `true`
+[source, scala]
+----
+spark.read.format("org.neo4j.spark.DataSource")
+  .option("relationship", "BOUGHT")
+  .option("relationship.nodes.map", "true")
+  .option("relationship.source.labels", "Person")
+  .option("relationship.target.labels", "Product")
+  .load()
+  .show()
+----
+
+.Result
+[cols="1,1,1,3,3"]
+|===
+|<rel.id>|<rel.type>|rel.quantity|<source>|<target>
+
+|4
+|BOUGHT
+|240
+a|[.small]
+----
+{
+  "fullName": "John Doe",
+  "id": 1,
+  "<labels>: "[Person]",
+  "<id>": 1
+}
+----
+a|[.small]
+----
+{
+  "name": "Product 1",
+  "id": 52,
+  "<labels>: "[Product]",
+  "<id>": 0
+}
+----
+
+|4
+|BOUGHT
+|145
+a|[.small]
+----
+{
+  "fullName": "Jane Doe",
+  "id": 1,
+  "<labels>:
+  "[Person]",
+  "<id>": 3
+}
+----
+a|[.small]
+----
+{
+  "name": "Product 2",
+  "id": 53,
+  "<labels>: "[Product]",
+  "<id>": 2
+}
+----
+|===
+
+== Schema
+
+If the link:{neo4j-docs-base-uri}/apoc/current/[APOC library] is available on the Neo4j instance, the schema is retrieved via the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.relTypeProperties/[`apoc.meta.relTypeProperties`^] procedure.
+Otherwise, the following Cypher query is executed:
+
+[source, cypher]
+----
+MATCH (source:<source_labels>)-[rel:<relationship>]->(target:<target_labels>)  <1> <2> <3>
+RETURN rel
+ORDER BY rand()
+LIMIT <limit> <4>
+----
+<1> `<source_labels>` is the list of labels provided by `relationship.source.labels` option.
+<2> `<target_labels>` is the list of labels provided by `relationship.target.labels` option.
+<3> `<relationship>` is the list of labels provided by `relationship` option.
+<4> `<limit>` is the value provided via `schema.flatten.limit`.
+
+== Filtering
+
+You can use the `where` and `filter` functions in Spark to filter properties of the relationship, the source node, or the target node.
+The correct format of the filter depends on the value of `relationship.nodes.map` option.
+
+|===
+|`relationship.nodes.map` set to `false` (default)|`relationship.nodes.map` set to `true`
+
+a|
+* ``\`source.[property]` `` for the source node properties
+* ``\`rel.[property]` `` for the relationship property
+* ``\`target.[property]` `` for the target node property
+
+a|
+* ``\`<source>`.\`[property]` `` for the source node map properties
+* ``\`<rel>`.\`[property]` `` for the relationship map property
+* ``\`<target>`.\`[property]` `` for the target node map property
+|===
+
+Examples:
+
+.`relationship.nodes.map` set to `false`
+[source, scala]
+----
+val df = spark.read.format("org.neo4j.spark.DataSource")
+  .option("relationship", "BOUGHT")
+  .option("relationship.nodes.map", "false")
+  .option("relationship.source.labels", "Person")
+  .option("relationship.target.labels", "Product")
+  .load()
+
+df.where("`source.id` = 14 AND `target.id` = 16")
+----
+
+.`relationship.nodes.map` set to `true`
+[source, scala]
+----
+val df = spark.read.format("org.neo4j.spark.DataSource")
+  .option("relationship", "BOUGHT")
+  .option("relationship.nodes.map", "true")
+  .option("relationship.source.labels", "Person")
+  .option("relationship.target.labels", "Product")
+  .load()
+
+df.where("`<source>`.`id` = '14' AND `<target>`.`id` = '16'")
+----
