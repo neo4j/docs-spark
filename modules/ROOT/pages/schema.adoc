@@ -101,3 +101,84 @@ for (row <- result.asScala) {
   println(s"""Age is: ${row.getString(0).toLong}""")
 }
 ----
+
+== Schema considerations
+
+Neo4j does not have a fixed schema; individual properties can contain multiple differently typed values. Spark
+on the other hand tends to expect a fixed schema. For this reason, the connector contains a number of schema
+inference techniques that help ease this mapping. Paying close attention to how these features work can 
+explain different scenarios.
+
+The two core techniques are:
+
+* <<APOC>>
+* <<Automatic sampling>>
+
+=== APOC
+
+If your Neo4j installation has APOC installed, this approach is used by default. The stored procedures within APOC allow inspection of the
+metadata in your graph and provide information such as the type of relationship properties and the universe of possible properties attached to a given node label.
+
+You may try these calls by yourself on your Neo4j database if you wish, simply execute:
+
+```cypher
+CALL apoc.meta.nodeTypeProperties();
+CALL apoc.meta.relTypeProperties();
+```
+
+Inspect the results.  These results are how the Neo4j Connector for Apache Spark represents the metadata of nodes and relationships read into DataFrames.
+
+This approach uses a configurable sampling technique that looks through many (but not all) instances in the database to build a profile of the valid
+values that exist within properties.  If the schema that is produced is not what is expected, take care to inspect the underlying data to ensure it has a consistent
+property set across all nodes of a label, or investigate tuning the sampling approach.
+
+==== Tune parameters
+
+You can tune the configuration parameters of the https://neo4j.com/labs/apoc/4.1/database-introspection/meta/[two APOC procedures]
+via the `option` method as it follows:
+
+```scala
+ss.read
+      .format(classOf[DataSource].getName)
+      .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
+      .option("labels", "Product")
+      .option("apoc.meta.nodeTypeProperties", """{"sample": 10}""")
+      .load
+```
+
+or
+
+```scala
+ss.read
+      .format(classOf[DataSource].getName)
+      .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
+      .option("relationship", "BOUGHT")
+      .option("relationship.source.labels", "Product")
+      .option("relationship.target.labels", "Person")
+      .option("apoc.meta.relTypeProperties", """{"sample": 10}""")
+      .load
+```
+
+For both procedures you can pass all the supported parameters except for:
+
+* `includeLabels` for `apoc.meta.nodeTypeProperties`, because you use the labels defined in
+the `labels` option.
+* `includeRels` for `apoc.meta.relTypeProperties`, because you use the one defined in
+the `relationship` option.
+
+===== Fine tuning
+
+As these two procedures sample the graph to extract the metadata necessary for building the <<Tables for labels>>,
+in most real-world scenarios, it is crucial to tune the sampling parameters properly because using of them
+can be expensive and impact the performance of your extraction job.
+
+=== Automatic sampling
+
+In some installations and environments, the key APOC calls above are not available.
+In these cases, the connector automatically samples the first few records and infers
+the correct data type from the examples that it sees.
+
+[NOTE]
+**Automatic sampling may be error prone and may produce incorrect results,
+particularly in cases where a single Neo4j property exists with several different data types.
+Consistent typing of properties is strongly recommended.**
