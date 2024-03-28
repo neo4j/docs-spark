@@ -1,11 +1,10 @@
-= Performance tuning
+= Parameter tuning
 
 To get the best possible performance reading from (and particularly writing to) Neo4j, make sure you've gone
 through this checklist:
 
 . <<batch-size>>
 . <<neo4j-memory>>
-. <<indexes>>
 . <<parallelism>>
 . <<sampling>>
 
@@ -43,20 +42,6 @@ advice is given on how to size the heap and page cache of the server.  What's im
 * Heap affects how big transactions can get.  The bigger the heap, the larger the batch size you can use.
 * Page cache affects how much of your database stays resident in RAM at any given time. Page caches which
 are much smaller than your database cause performance to suffer.
-
-[#indexes]
-== Use the correct indexes and constraints
-
-At the Neo4j Cypher level, it's very common to use the Spark connector in a way that generates `MERGE` queries.
-In Neo4j, this looks up a node by some 'key' and then creates it only if it does not already exist.
-
-[NOTE]
-**It is strongly recommended to assert indexes or constraints on any graph property that you use as part of
-`node.keys`, `relationship.source.node.keys`, `relationship.target.node.keys` or other similar key options.**
-
-A common source of poor performance is to write Spark code that generates `MERGE` Cypher, or otherwise tries
-to look data up in Neo4j without the appropriate database indexes. In this case, the Neo4j server ends up looking
-through much more data than necessary to satisfy the query, and performance suffers.
 
 [#parallelism]
 == Tune the parallelism

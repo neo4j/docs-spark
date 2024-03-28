@@ -22,14 +22,15 @@ include::partial$dwh-list.adoc[]
 ** xref:write/query.adoc[]
 ** xref:write/schema-optimization.adoc[]
 ** xref:write/options.adoc[]
-* Using schemas
+* Managing schemas
 ** xref:schema.adoc[Inferred schema]
 ** xref:schema-user.adoc[]
+* Improving performance
+** xref:performance/modeling.adoc[]
+** xref:performance/tuning.adoc[]
+** xref:performance/spark.adoc[]
 * xref:gds.adoc[]
 * xref:streaming.adoc[]
-* xref:performance.adoc[]
-** xref:architecture.adoc[]
-** xref:considerations.adoc[]
 
 * *Reference*
 * xref:data-modeling.adoc[]

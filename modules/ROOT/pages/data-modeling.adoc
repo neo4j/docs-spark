@@ -58,5 +58,5 @@ The graph structure is decomposed into three tables.
 
 To have this decomposition you can use two strategies that allow to extract metadata from your graph:
 
-* xref:performance.adoc#_apoc[APOC]
-* xref:performance.adoc#_automatic_sampling[Automatic sampling]
+* APOC
+* Automatic sampling
