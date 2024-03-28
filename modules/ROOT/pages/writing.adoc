@@ -30,6 +30,11 @@ The connector provides three data source options to write data to a Neo4j databa
 
 include::partial$sparksession.adoc[]
 
+[TIP]
+====
+You can run the xref:reading.adoc#examples[read examples] for each option to check the data after writing.
+====
+
 [#example-labels]
 === `labels` option
 

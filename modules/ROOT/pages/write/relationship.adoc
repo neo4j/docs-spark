@@ -1,4 +1,4 @@
-= Write a relationship
+= Write relationships
 
 include::partial$sparksession.adoc[]
 

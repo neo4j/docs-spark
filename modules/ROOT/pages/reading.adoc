@@ -29,6 +29,11 @@ The connector provides three data source options to read data from a Neo4j datab
 
 include::partial$sparksession.adoc[]
 
+[TIP]
+====
+You can run the xref:writing.adoc#examples[write examples] for each option to have some example data to read.
+====
+
 [#example-labels]
 === `labels` option
 

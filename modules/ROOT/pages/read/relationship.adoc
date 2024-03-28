@@ -1,4 +1,4 @@
-= Read a relationship
+= Read relationships
 
 include::partial$sparksession.adoc[]
 
