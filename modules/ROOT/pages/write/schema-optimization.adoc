@@ -83,11 +83,16 @@ The index is not recreated if it is already present.
 .Example
 [source, scala]
 ----
+val df = List(
+  "Product 1",
+  "Product 2",
+).toDF("name")
+
 df.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.Overwrite)
-  .option("labels", ":Person:Customer")
-  .option("node.keys", "surname")
+  .option("labels", ":Product")
+  .option("node.keys", "name")
   .option("schema.optimization.type", "INDEX")
   .save()
 ----
@@ -97,7 +102,7 @@ Before the writing process starts, the connector runs the following schema query
 .Schema query
 [source, cypher]
 ----
-CREATE INDEX spark_INDEX_Person_surname FOR (n:Person) ON (n.surname)
+CREATE INDEX spark_INDEX_Product_name FOR (n:Product) ON (n.name)
 ----
 
 The format of the index name is `spark_INDEX_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
@@ -119,10 +124,15 @@ The constraint is not recreated if it is already present.
 .Example
 [source, scala]
 ----
+val df = List(
+  "Product 1",
+  "Product 2",
+).toDF("name")
+
 df.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.Overwrite)
-  .option("labels", ":Person:Customer")
+  .option("labels", ":Product")
   .option("node.keys", "name")
   .option("schema.optimization.node.keys", "UNIQUE")
   .save()
@@ -170,10 +180,15 @@ The constraint is not recreated if it is already present.
 .Example
 [source, scala]
 ----
+val df = List(
+  "Product 1",
+  "Product 2",
+).toDF("name")
+
 df.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.Overwrite)
-  .option("labels", ":Person:Customer")
+  .option("labels", ":Product")
   .option("node.keys", "name")
   .option("schema.optimization.node.keys", "KEY")
   .save()
@@ -209,19 +224,27 @@ The constraint is not recreated if it is already present.
 .Example
 [source, scala]
 ----
+val df = Seq(
+  ("John", "Doe", 1, "Product 1", 200, "ABC100"),
+  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+).toDF("name", "surname", "customerID", "product", "quantity", "order")
+
 df.write
-  .mode(SaveMode.Overwrite)
+  .mode("Overwrite")
   .format("org.neo4j.spark.DataSource")
-  .option("relationship", "PLAYS")
+  .option("relationship", "BOUGHT")
   .option("relationship.save.strategy", "keys")
-  .option("relationship.source.labels", ":Musician")
   .option("relationship.source.save.mode", "Overwrite")
-  .option("relationship.source.node.keys", "name:name")
-  .option("relationship.target.labels", ":Instrument")
-  .option("relationship.target.node.keys", "instrument:name")
+  .option("relationship.source.labels", ":Person")
+  .option("relationship.source.node.properties", "name,surname,customerID:id")
+  .option("relationship.source.node.keys", "customerID:id")
   .option("relationship.target.save.mode", "Overwrite")
+  .option("relationship.target.labels", ":Product")
+  .option("relationship.target.node.properties", "product:name")
+  .option("relationship.target.node.keys", "product:name")
+  .option("relationship.properties", "quantity,order")
   .option("schema.optimization.relationship.keys", "UNIQUE")
-  .option("relationship.keys", "experience")
+  .option("relationship.keys", "order")
   .save()
 ----
 
@@ -230,14 +253,15 @@ Before the writing process starts, the connector runs the following schema query
 .Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_RELATIONSHIP_UNIQUE-CONSTRAINT_PLAYS_experience` IF NOT EXISTS FOR ()-[e:PLAYS]->() REQUIRE (e.experience) IS UNIQUE
+CREATE CONSTRAINT `spark_RELATIONSHIP_UNIQUE-CONSTRAINT_BOUGHT_order` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE (e.order) IS UNIQUE
 ----
 
-[IMPORTANT]
-====
-The source and target nodes must already have a uniqueness constraint on the keys.
-If not, the query will fail.
-====
+// TODO remove
+// [IMPORTANT]
+// ====
+// The source and target nodes must already have a uniqueness constraint on the keys.
+// If not, the query will fail.
+// ====
 
 [NOTE]
 ====
@@ -263,19 +287,27 @@ The constraint is not recreated if it is already present.
 .Example
 [source, scala]
 ----
+val df = Seq(
+  ("John", "Doe", 1, "Product 1", 200, "ABC100"),
+  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+).toDF("name", "surname", "customerID", "product", "quantity", "order")
+
 df.write
-  .mode(SaveMode.Overwrite)
+  .mode("Overwrite")
   .format("org.neo4j.spark.DataSource")
-  .option("relationship", "PLAYS")
+  .option("relationship", "BOUGHT")
   .option("relationship.save.strategy", "keys")
-  .option("relationship.source.labels", ":Musician")
   .option("relationship.source.save.mode", "Overwrite")
-  .option("relationship.source.node.keys", "name:name")
-  .option("relationship.target.labels", ":Instrument")
-  .option("relationship.target.node.keys", "instrument:name")
+  .option("relationship.source.labels", ":Person")
+  .option("relationship.source.node.properties", "name,surname,customerID:id")
+  .option("relationship.source.node.keys", "customerID:id")
   .option("relationship.target.save.mode", "Overwrite")
+  .option("relationship.target.labels", ":Product")
+  .option("relationship.target.node.properties", "product:name")
+  .option("relationship.target.node.keys", "product:name")
+  .option("relationship.properties", "quantity,order")
   .option("schema.optimization.relationship.keys", "KEY")
-  .option("relationship.keys", "experience")
+  .option("relationship.keys", "order")
   .save()
 ----
 
@@ -361,17 +393,25 @@ CREATE CONSTRAINT `spark_NODE-NOT_NULL-CONSTRAINT-Person-age` IF NOT EXISTS FOR 
 .Example
 [source, scala]
 ----
+val df = Seq(
+  ("John", "Doe", 1, "Product 1", 200, "ABC100"),
+  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+).toDF("name", "surname", "customerID", "product", "quantity", "order")
+
 df.write
-  .mode(SaveMode.Overwrite)
+  .mode("Overwrite")
   .format("org.neo4j.spark.DataSource")
-  .option("relationship", "PLAYS")
+  .option("relationship", "BOUGHT")
   .option("relationship.save.strategy", "keys")
-  .option("relationship.source.labels", ":Musician")
   .option("relationship.source.save.mode", "Overwrite")
-  .option("relationship.source.node.keys", "name:name")
-  .option("relationship.target.labels", ":Instrument")
-  .option("relationship.target.node.keys", "instrument:name")
+  .option("relationship.source.labels", ":Person")
+  .option("relationship.source.node.properties", "name,surname,customerID:id")
+  .option("relationship.source.node.keys", "customerID:id")
   .option("relationship.target.save.mode", "Overwrite")
+  .option("relationship.target.labels", ":Product")
+  .option("relationship.target.node.properties", "product:name")
+  .option("relationship.target.node.keys", "product:name")
+  .option("relationship.properties", "quantity,order")
   .option("schema.optimization", "TYPE,EXISTS")
   .save()
 ----
@@ -381,11 +421,17 @@ Before the writing process starts, the connector runs the following schema queri
 .Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_RELATIONSHIP-TYPE-CONSTRAINT-PLAYS-experience` IF NOT EXISTS FOR ()-[e:PLAYS]->() REQUIRE e.experience IS :: STRING
+CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-name` IF NOT EXISTS FOR (e:Person) REQUIRE e.name IS :: STRING
 
-CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Musician-name` IF NOT EXISTS FOR (e:Musician) REQUIRE e.name IS :: STRING
+CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-surname` IF NOT EXISTS FOR (e:Person) REQUIRE e.surname IS :: STRING
 
-CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Instrument-name` IF NOT EXISTS FOR (e:Instrument) REQUIRE e.name IS :: STRING
+CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-id` IF NOT EXISTS FOR (e:Person) REQUIRE e.id IS :: INTEGER
+
+CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Product-name` IF NOT EXISTS FOR (e:Product) REQUIRE e.name IS :: STRING
+
+CREATE CONSTRAINT `spark_RELATIONSHIP-TYPE-CONSTRAINT-BOUGHT-quantity` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE e.quantity IS :: INTEGER
+
+CREATE CONSTRAINT `spark_RELATIONSHIP-TYPE-CONSTRAINT-BOUGHT-order` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE e.order IS :: STRING
 ----
 
 If a DataFrame column is not nullable, the connector runs additional schema queries.
@@ -393,5 +439,7 @@ For example, if the `experience` column is not nullable, the connector runs the 
 
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_RELATIONSHIP-NOT_NULL-CONSTRAINT-PLAYS-experience` IF NOT EXISTS FOR ()-[e:PLAYS]->() REQUIRE e.experience IS NOT NULL
+CREATE CONSTRAINT `spark_NODE-NOT_NULL-CONSTRAINT-Person-id` IF NOT EXISTS FOR (e:Person) REQUIRE e.id IS NOT NULL
+
+CREATE CONSTRAINT `spark_RELATIONSHIP-NOT_NULL-CONSTRAINT-BOUGHT-quantity` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE e.quantity IS NOT NULL
 ----
