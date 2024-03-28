@@ -32,7 +32,6 @@ include::partial$dwh-list.adoc[]
 * xref:streaming.adoc[]
 
 * *Reference*
-* xref:data-modeling.adoc[]
 * xref:types.adoc[]
 * xref:configuration.adoc[]
 * xref:faq.adoc[]

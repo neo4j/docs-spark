@@ -9,16 +9,15 @@ Based on the Spark DataSource API, the connector supports all the programming la
 
 == Graphs and DataFrames
 
-By default, the connector uses the _Tables for Labels_ approach to convert Neo4j graphs into Spark table-based DataFrames and vice versa.
-
+The connector uses _schema inference_ to convert Neo4j graphs into Spark table-based DataFrames.
 For example, consider a graph with the following schema:
 
 image::example-graph.svg["Example graph"]
 
-The connector interprets the graph as two tables for `Customer` and `Product` nodes and one table for the `BOUGHT` relationship between them, with any node or relationship properties as columns on their respective table.
+The connector creates a DataFrame with `:Customer` and `:Product` nodes connected by the `BOUGHT` relationship, along with any node or relationship properties.
 The xref:read/schema.adoc[] section shows a more detailed example of this process, while the xref:types.adoc[] section shows how data types are mapped between Neo4j and Spark.
 
-The connector supports custom Cypher queries as well, both for xref:read/query.adoc[reading] and for xref:write/query.adoc[writing] data.
+The connector supports writing DataFrames to Neo4j as well, and custom Cypher queries both for xref:read/query.adoc[reading] and for xref:write/query.adoc[writing] data.
 
 == Compatibility
 
@@ -31,11 +30,6 @@ It supports both the Community and the Enterprise Edition.
 The connector currently supports Spark 3.0+ with Scala 2.12 and Scala 2.13.
 
 == Training
-
-[CAUTION]
-====
-TODO: Remove this section?
-====
 
 If you want an introduction on the Neo4j Connector for Apache Spark, take a look at the training that Andrea Santurbano
 presented at NODES2020.

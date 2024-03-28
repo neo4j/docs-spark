@@ -266,13 +266,6 @@ Before the writing process starts, the connector runs the following schema query
 CREATE CONSTRAINT `spark_RELATIONSHIP_KEY-CONSTRAINT_BOUGHT_order` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE (e.order) IS RELATIONSHIP KEY
 ----
 
-// TODO
-// [IMPORTANT]
-// ====
-// The source and target nodes must already have a uniqueness constraint on the keys.
-// If not, the query will fail.
-// ====
-
 Notes:
 
 * The constraint is not recreated if already present.
