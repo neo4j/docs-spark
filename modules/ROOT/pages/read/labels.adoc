@@ -2,16 +2,32 @@
 
 include::partial$sparksession.adoc[]
 
-You can read nodes by specifying one or more labels with the `labels` option.
+With the `labels` option, the connector reads data from the Neo4j database as a set of nodes with the given labels.
 
-For example, given a graph with `Person` nodes, you can run the following code to get a DataFrame containing all `Person` nodes with their node properties.
+The connector builds a `MATCH` Cypher query that uses the `UNWIND` clause to read a batch of rows (an `events` list with size defined by the `batch.size` option).
 
-.Basic read operation
+The code from the xref:reading.adoc#example-labels[example] reads the `:Person` nodes with their node properties into a DataFrame.
 
-[source, scala]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
 ----
 include::example$scala/read/BasicLabels.scala[tags=code]
 ----
+=====
+
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
+----
+include::example$python/read/basic_labels.py[tags=code]
+----
+=====
+====
 
 .Result
 |===

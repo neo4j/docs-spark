@@ -8,11 +8,26 @@ The connector builds a `CREATE` or a `MERGE` Cypher query (depending on the xref
 
 The code from the xref:writing.adoc#example-labels[example] creates new nodes with the `:Person` label.
 
-.Append example
-[source, scala]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
 ----
 include::example$scala/write/BasicLabels.scala[tags=code]
 ----
+=====
+
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
+----
+include::example$python/write/basic_labels.py[tags=code]
+----
+=====
+====
 
 .Equivalent Cypher query
 [%collapsible]
