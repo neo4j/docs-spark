@@ -2,7 +2,7 @@
 
 :description: The chapters describes writing methods to a Neo4j database using Neo4j Spark connector.
 
-The connector provides three options to write data to a Neo4j database.
+The connector provides three data source options to write data to a Neo4j database.
 
 .Write options
 [cols="1, 2, 2, 1"]
@@ -26,7 +26,7 @@ The connector provides three options to write data to a Neo4j database.
 |===
 
 [#examples]
-== Basic examples
+== Examples
 
 include::partial$sparksession.adoc[]
 
@@ -42,7 +42,7 @@ Write the `:Person` nodes.
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/write/BasicNodes.scala[tags=code]
+include::example$scala/write/BasicLabels.scala[tags=code]
 ----
 =====
 
@@ -51,7 +51,7 @@ include::example$scala/write/BasicNodes.scala[tags=code]
 .Example
 [source, python, role=nocollapse]
 ----
-include::example$python/write/basic_nodes.py[tags=code]
+include::example$python/write/basic_labels.py[tags=code]
 ----
 =====
 ====

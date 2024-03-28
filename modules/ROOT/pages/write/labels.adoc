@@ -11,7 +11,7 @@ The code from the xref:writing.adoc#example-labels[example] creates new nodes wi
 .Append example
 [source, scala]
 ----
-include::example$scala/write/BasicNodes.scala[tags=code]
+include::example$scala/write/BasicLabels.scala[tags=code]
 ----
 
 .Equivalent Cypher query

@@ -1,7 +1,7 @@
 = Reading from Neo4j
 :description: The chapter explains how to read data from a Neo4j database.
 
-The connector provides three options to read data from a Neo4j database.
+The connector provides three data source options to read data from a Neo4j database.
 
 .Read options
 [cols="1, 2, 2, 1"]
@@ -25,7 +25,7 @@ The connector provides three options to read data from a Neo4j database.
 |===
 
 [#examples]
-== Basic examples
+== Examples
 
 include::partial$sparksession.adoc[]
 
@@ -41,7 +41,7 @@ Read the `:Person` nodes.
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/read/BasicNodes.scala[tags=code]
+include::example$scala/read/BasicLabels.scala[tags=code]
 ----
 =====
 
@@ -50,7 +50,7 @@ include::example$scala/read/BasicNodes.scala[tags=code]
 .Example
 [source, python, role=nocollapse]
 ----
-include::example$python/read/basic_nodes.py[tags=code]
+include::example$python/read/basic_labels.py[tags=code]
 ----
 =====
 ====

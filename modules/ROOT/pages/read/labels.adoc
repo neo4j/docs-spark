@@ -10,7 +10,7 @@ For example, given a graph with `Person` nodes, you can run the following code t
 
 [source, scala]
 ----
-include::example$scala/read/BasicNodes.scala[tags=code]
+include::example$scala/read/BasicLabels.scala[tags=code]
 ----
 
 .Result
