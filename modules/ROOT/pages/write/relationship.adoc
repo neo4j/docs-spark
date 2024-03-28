@@ -53,7 +53,7 @@ Define the labels to assign to source and target nodes.
 and
 
 `relationship.target.node.keys`
-|When the <<node-save-modes, node save mode>> is `Match` or `Overwrite`, defines key that identify the nodes.
+|When the <<node-save-modes, node save mode>> is `Match` or `Overwrite`, define the node keys that identify the nodes.
 |Comma-separated list of `key:value` pairs.
 
 If `key` and `value` have the same value (for example `"name:name"`), you can omit one.
@@ -81,6 +81,8 @@ If `key` and `value` have the same value (for example `"name:name"`), you can om
 [#strategies]
 == Save strategies
 
+The save strategy defines the way the connector maps the DataFrame schema to Neo4j nodes and relationships.
+
 [#strategy-native]
 === `native` strategy
 
@@ -105,7 +107,7 @@ If run multiple times, it creates duplicate relationships and nodes.
 // must use the "rel.", "source.", or "target." prefix
 val df = Seq(
   ("John", "Doe", 1, "Product 1", 200, "ABC100"),
-  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+  ("Jane", "Doe", 2, "Product 2", 100, "ABC200")
 ).toDF("source.name", "source.surname", "source.id", "target.name", "rel.quantity", "rel.order")
 
 df.write
@@ -116,7 +118,7 @@ df.write
   .option("relationship", "BOUGHT")
   // Create source nodes and assign them a label
   .option("relationship.source.save.mode", "Append")
-  .option("relationship.source.labels", ":Person")
+  .option("relationship.source.labels", ":Customer")
   // Create target nodes and assign them a label
   .option("relationship.target.save.mode", "Append")
   .option("relationship.target.labels", ":Product")
@@ -129,7 +131,7 @@ df.write
 [source, cypher]
 ----
 UNWIND $events AS event
-CREATE (source:Person)
+CREATE (source:Customer)
 SET source += event.source.properties
 CREATE (target:Product)
 SET target += event.target.properties
@@ -160,7 +162,7 @@ include::example$scala/write/BasicRelationship.scala[tags=code]
 [source, cypher]
 ----
 UNWIND $events AS event
-CREATE (source:Person)
+CREATE (source:Customer)
 SET source += event.source.properties
 CREATE (target:Product)
 SET target += event.target.properties
@@ -179,6 +181,8 @@ Node save modes different from `Append` have a different behaviour.
 === `Match` mode
 
 The `Match` mode requires nodes with the selected labels and keys to already exist.
+This mode requires both the `relationship.source.node.keys` and the `relationship.target.node.keys` options.
+
 The following example does not create any relationships if there are no matching nodes.
 
 .Match
@@ -186,7 +190,7 @@ The following example does not create any relationships if there are no matching
 ----
 val df = Seq(
   ("John", "Doe", 1, "Product 1", 200, "ABC100"),
-  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+  ("Jane", "Doe", 2, "Product 2", 100, "ABC200")
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
@@ -199,7 +203,7 @@ df.write
   .option("relationship.save.strategy", "keys")
   // Overwrite source nodes and assign them a label
   .option("relationship.source.save.mode", "Match")
-  .option("relationship.source.labels", ":Person")
+  .option("relationship.source.labels", ":Customer")
   // Map the DataFrame columns to node properties
   .option("relationship.source.node.properties", "name,surname,customerID:id")
   // Node keys are mandatory for overwrite save mode
@@ -222,7 +226,7 @@ df.write
 [source, cypher]
 ----
 UNWIND $events AS event
-MATCH (source:Person {id: event.source.keys.id})
+MATCH (source:Customer {id: event.source.keys.id})
 MATCH (target:Product {name: event.target.keys.name})
 CREATE (source)-[rel:BOUGHT]->(target)
 SET rel += event.rel.properties
@@ -232,6 +236,8 @@ SET rel += event.rel.properties
 === `Overwrite` mode
 
 The `Overwrite` mode creates nodes with the selected labels and keys if they do not already exist.
+This mode requires both the `relationship.source.node.keys` and the `relationship.target.node.keys` options.
+
 If run multiple times, the following example creates duplicate relationships but no duplicate nodes.
 
 .Overwrite
@@ -239,7 +245,7 @@ If run multiple times, the following example creates duplicate relationships but
 ----
 val df = Seq(
   ("John", "Doe", 1, "Product 1", 200, "ABC100"),
-  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+  ("Jane", "Doe", 2, "Product 2", 100, "ABC200")
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
@@ -252,7 +258,7 @@ df.write
   .option("relationship.save.strategy", "keys")
   // Overwrite source nodes and assign them a label
   .option("relationship.source.save.mode", "Overwrite")
-  .option("relationship.source.labels", ":Person")
+  .option("relationship.source.labels", ":Customer")
   // Map the DataFrame columns to node properties
   .option("relationship.source.node.properties", "name,surname,customerID:id")
   // Node keys are mandatory for overwrite save mode
@@ -275,7 +281,7 @@ df.write
 [source, cypher]
 ----
 UNWIND $events AS event
-MERGE (source:Person {id: event.source.keys.id})
+MERGE (source:Customer {id: event.source.keys.id})
 SET source += event.source.properties
 MERGE (target:Product {name: event.target.keys.name})
 SET target += event.target.properties

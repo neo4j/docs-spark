@@ -6,23 +6,22 @@ You can read a relationship and its source and target nodes by specifying the re
 
 [source, scala]
 ----
-val df = spark.read
-  .format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
-  .load()
-
-df.show()
+include::example$scala/read/BasicRelationship.scala[tags=code]
 ----
 
-The code above creates the following Cypher query:
-
+.Equivalent Cypher query
+[%collapsible]
+====
 [source, cypher]
 ----
-MATCH (source:Person)-[rel:BOUGHT]->(target:Product)
-RETURN source, rel, target
+MATCH (source:Customer)
+MATCH (target:Product)
+MATCH (source)-[rel:BOUGHT]->(target)
+RETURN ...
 ----
+
+The exact `RETURN` clause depends on the value of the `relationship.nodes.map` option.
+====
 
 [[rel-schema-columns]]
 == DataFrame columns
@@ -60,9 +59,10 @@ Examples:
 val df = spark.read
   .format("org.neo4j.spark.DataSource")
   .option("relationship", "BOUGHT")
+  // It can be omitted, since `false` is the default
   .option("relationship.nodes.map", "false")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
+  .option("relationship.source.labels", ":Customer")
+  .option("relationship.target.labels", ":Product")
   .load()
 
 df.show()
@@ -72,8 +72,8 @@ df.show()
 |===
 |<rel.id>|<rel.type>|<source.id>|<source.labels>|source.surname|source.name|source.id|<target.id>|<target.labels>|target.name|rel.order|rel.quantity
 
-|3189|BOUGHT|1100|[Person]|Doe|John|1|1040|[Product]|Product1|ABC100|200
-|3190|BOUGHT|1099|[Person]|Doe|Jane|2|1039|[Product]|Product1|ABC200|100
+|3189|BOUGHT|1100|[Customer]|Doe|John|1|1040|[Product]|Product1|ABC100|200
+|3190|BOUGHT|1099|[Customer]|Doe|Jane|2|1039|[Product]|Product1|ABC200|100
 |===
 
 .`relationship.nodes.map` set to `true`
@@ -83,8 +83,8 @@ val df = spark.read
   .format("org.neo4j.spark.DataSource")
   .option("relationship", "BOUGHT")
   .option("relationship.nodes.map", "true")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
+  .option("relationship.source.labels", ":Customer")
+  .option("relationship.target.labels", ":Product")
   .load()
   
 // Use `false` to print the whole DataFrame
@@ -96,8 +96,8 @@ df.show(false)
 |===
 |<rel.id>|<rel.type>|<source>|<target>|rel.order|rel.quantity
 
-|3189|BOUGHT|{surname: "Doe", name: "John", id: 1, <labels>: ["Person"], <id>: 1100}|{name: "Product 1", <labels>: ["Product"], <id>: 1040}|ABC100|200
-|3190|BOUGHT|{surname: "Doe", name: "Jane", id: 2, <labels>: ["Person"], <id>: 1099}|{name: "Product 1", <labels>: ["Product"], <id>: 1039}|ABC200|100
+|3189|BOUGHT|{surname: "Doe", name: "John", id: 1, <labels>: ["Customer"], <id>: 1100}|{name: "Product 1", <labels>: ["Product"], <id>: 1040}|ABC100|200
+|3190|BOUGHT|{surname: "Doe", name: "Jane", id: 2, <labels>: ["Customer"], <id>: 1099}|{name: "Product 2", <labels>: ["Product"], <id>: 1039}|ABC200|100
 |===
 
 == Schema
@@ -144,8 +144,8 @@ Examples:
 val df = spark.read.format("org.neo4j.spark.DataSource")
   .option("relationship", "BOUGHT")
   .option("relationship.nodes.map", "false")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
+  .option("relationship.source.labels", ":Customer")
+  .option("relationship.target.labels", ":Product")
   .load()
 
 df.where("`source.id` > 1").show()
@@ -155,7 +155,7 @@ df.where("`source.id` > 1").show()
 |===
 |<rel.id>|<rel.type>|<source.id>|<source.labels>|source.surname|source.name|<target.id>|<target.labels>|target.name|rel.order|rel.quantity
 
-|3190|BOUGHT|1099|[Person]|Doe|Jane|2|1039|[Product]|Product1|ABC200|100
+|3190|BOUGHT|1099|[Customer]|Doe|Jane|2|1039|[Product]|Product 2|ABC200|100
 |===
 
 .`relationship.nodes.map` set to `true`
@@ -164,8 +164,8 @@ df.where("`source.id` > 1").show()
 val df = spark.read.format("org.neo4j.spark.DataSource")
   .option("relationship", "BOUGHT")
   .option("relationship.nodes.map", "true")
-  .option("relationship.source.labels", "Person")
-  .option("relationship.target.labels", "Product")
+  .option("relationship.source.labels", ":Customer")
+  .option("relationship.target.labels", ":Product")
   .load()
 
 // Use `false` to print the whole DataFrame
@@ -177,5 +177,5 @@ df.where("`<source>`.`id` > 1").show(false)
 |===
 |<rel.id>|<rel.type>|<source>|<target>|rel.order|rel.quantity
 
-|3190|BOUGHT|{surname: "Doe", name: "Jane", id: 2, <labels>: ["Person"], <id>: 1099}|{name: "Product 1", <labels>: ["Product"], <id>: 1039}|ABC200|100
+|3190|BOUGHT|{surname: "Doe", name: "Jane", id: 2, <labels>: ["Customer"], <id>: 1099}|{name: "Product 2", <labels>: ["Product"], <id>: 1039}|ABC200|100
 |===

@@ -30,7 +30,7 @@ df = spark.createDataFrame(
             "name": "Jane",
             "surname": "Doe",
             "customerID": 2,
-            "product": "Product 1",
+            "product": "Product 2",
             "quantity": 100,
             "order": "ABC200",
         },
@@ -48,7 +48,7 @@ df = spark.createDataFrame(
     .option("relationship.save.strategy", "keys")
     # Create source nodes and assign them a label
     .option("relationship.source.save.mode", "Append")
-    .option("relationship.source.labels", ":Person")
+    .option("relationship.source.labels", ":Customer")
     # Map the DataFrame columns to node properties
     .option("relationship.source.node.properties", "name,surname,customerID:id")
     # Create target nodes and assign them a label

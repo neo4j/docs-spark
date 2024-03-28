@@ -18,8 +18,8 @@ spark = (
 df = (
     spark.read.format("org.neo4j.spark.DataSource")
     .option("relationship", "BOUGHT")
-    .option("relationship.source.labels", "Person")
-    .option("relationship.target.labels", "Product")
+    .option("relationship.source.labels", ":Customer")
+    .option("relationship.target.labels", ":Product")
     .load()
 )
 

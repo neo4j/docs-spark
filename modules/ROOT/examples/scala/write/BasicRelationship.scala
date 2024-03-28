@@ -16,7 +16,7 @@ val spark = SparkSession.builder
 // tag::code[]
 val df = Seq(
   ("John", "Doe", 1, "Product 1", 200, "ABC100"),
-  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+  ("Jane", "Doe", 2, "Product 2", 100, "ABC200")
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
@@ -29,7 +29,7 @@ df.write
   .option("relationship.save.strategy", "keys")
   // Create source nodes and assign them a label
   .option("relationship.source.save.mode", "Append")
-  .option("relationship.source.labels", ":Person")
+  .option("relationship.source.labels", ":Customer")
   // Map the DataFrame columns to node properties
   .option("relationship.source.node.properties", "name,surname,customerID:id")
   // Create target nodes and assign them a label
