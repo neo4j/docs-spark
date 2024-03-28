@@ -5,31 +5,6 @@ include::partial$sparksession.adoc[]
 Although Neo4j does not enforce the use of a schema, adding indexes and constraints before writing data makes the writing process more efficient.
 When updating nodes or relationships, having constraints in place is also the best way to avoid duplicates.
 
-// TODO remove
-// The Spark Connector supports the following schema optimizations:
-// 
-// * <<indexes>> label:deprecated[]
-// * Constraints on nodes
-// ** <<node-constraints-unique>>
-// ** <<node-constraints-key>>
-// ** Property existence constraints
-// ** Property type constraints
-// * Constraints on relationships
-// ** <<rel-constraints-unique>>
-// ** <<rel-constraints-key>>
-// ** Property existence constraints
-// ** Property type constraints
-// 
-// * <<indexes>> label:deprecated[]
-// * Property uniqueness constraints 
-// ** On <<node-constraints-unique, nodes>>
-// ** On <<rel-constraints-unique, relationships>>
-// * Key constraints
-// ** On <<node-constraints-key, nodes>>
-// ** On <<rel-constraints-key, relationships>>
-// * <<constraints-type>>
-// * <<constraints-existence>>
-
 The connector options for schema optimization are summarized below.
 
 [CAUTION]
@@ -78,7 +53,6 @@ The `schema.optimization.type` option is deprecated in favor of `schema.optimiza
 link:https://neo4j.com/docs/cypher-manual/current/indexes/search-performance-indexes/overview/[Indexes] in Neo4j are often used to increase search performance.
 
 You can create an index by setting the `schema.optimization.type` option to `INDEX`.
-The index is not recreated if it is already present.
 
 .Example
 [source, scala]
@@ -107,10 +81,10 @@ CREATE INDEX spark_INDEX_Product_name FOR (n:Product) ON (n.name)
 
 The format of the index name is `spark_INDEX_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
 
-[NOTE]
-====
-With multiple labels, only the first label is used to create the index.
-====
+Notes:
+
+* The index is not recreated if already present.
+* With multiple labels, only the first label is used to create the index.
 
 [#node-constraints-unique]
 == Node property uniqueness constraints
@@ -119,7 +93,6 @@ link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#unique-node-proper
 For property uniqueness constraints on multiple properties, the combination of the property values is unique.
 
 You can create a constraint by setting the `schema.optimization.node.keys` option to `UNIQUE`.
-The constraint is not recreated if it is already present.
 
 .Example
 [source, scala]
@@ -146,20 +119,12 @@ Before the writing process starts, the connector runs the following schema query
 CREATE CONSTRAINT `spark_NODE_UNIQUE-CONSTRAINT_Person_name` IF NOT EXISTS FOR (e:Person) REQUIRE (e.name) IS UNIQUE
 ----
 
-[NOTE]
-====
-With multiple labels, only the first label is used to create the index.
-====
+Notes:
 
-[NOTE]
-====
-You cannot create a uniqueness constraint on a node property if a key constraint already exists on the same property.
-====
-
-[NOTE]
-====
-This schema optimization only works with the `Overwrite` save mode.
-====
+* The constraint is not recreated if already present.
+* With multiple labels, only the first label is used to create the index.
+* You cannot create a uniqueness constraint on a node property if a key constraint already exists on the same property.
+* This schema optimization only works with the `Overwrite` save mode.
 
 [IMPORTANT]
 ====
@@ -175,7 +140,6 @@ link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#node-key[Node key 
 * The combination of the property values is unique.
 
 You can create a constraint by setting the `schema.optimization.node.keys` option to `KEY`.
-The constraint is not recreated if it is already present.
 
 .Example
 [source, scala]
@@ -202,15 +166,11 @@ Before the writing process starts, the connector runs the following schema query
 CREATE CONSTRAINT `spark_NODE_KEY-CONSTRAINT_Person_name` IF NOT EXISTS FOR (e:Person) REQUIRE (e.name) IS NODE KEY
 ----
 
-[NOTE]
-====
-You cannot create a key constraint on a node property if a uniqueness constraint already exists on the same property.
-====
+Notes:
 
-[NOTE]
-====
-This schema optimization only works with the `Overwrite` save mode.
-====
+* The constraint is not recreated if already present.
+* You cannot create a key constraint on a node property if a uniqueness constraint already exists on the same property.
+* This schema optimization only works with the `Overwrite` save mode.
 
 [#rel-constraints-unique]
 == Relationship property uniqueness constraints
@@ -219,7 +179,6 @@ link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#unique-relationshi
 For property uniqueness constraints on multiple properties, the combination of the property values is unique.
 
 You can create a constraint by setting the `schema.optimization.relationship.keys` option to `UNIQUE`.
-The constraint is not recreated if it is already present.
 
 .Example
 [source, scala]
@@ -256,22 +215,11 @@ Before the writing process starts, the connector runs the following schema query
 CREATE CONSTRAINT `spark_RELATIONSHIP_UNIQUE-CONSTRAINT_BOUGHT_order` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE (e.order) IS UNIQUE
 ----
 
-// TODO remove
-// [IMPORTANT]
-// ====
-// The source and target nodes must already have a uniqueness constraint on the keys.
-// If not, the query will fail.
-// ====
+Notes:
 
-[NOTE]
-====
-You cannot create a uniqueness constraint on a relationship property if a key constraint already exists on the same property.
-====
-
-[NOTE]
-====
-This schema optimization only works with the `Overwrite` save mode.
-====
+* The constraint is not recreated if already present.
+* You cannot create a uniqueness constraint on a relationship property if a key constraint already exists on the same property.
+* This schema optimization only works with the `Overwrite` save mode.
 
 [#rel-constraints-key]
 == Relationship key constraints
@@ -282,7 +230,6 @@ link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#relationship-key[R
 * The combination of the property values is unique.
 
 You can create a constraint by setting the `schema.optimization.relationship.keys` option to `KEY`.
-The constraint is not recreated if it is already present.
 
 .Example
 [source, scala]
@@ -319,39 +266,37 @@ Before the writing process starts, the connector runs the following schema query
 CREATE CONSTRAINT `spark_RELATIONSHIP_KEY-CONSTRAINT_PLAYS_experience` IF NOT EXISTS FOR ()-[e:PLAYS]->() REQUIRE (e.experience) IS RELATIONSHIP KEY
 ----
 
-[IMPORTANT]
-====
-The source and target nodes must already have a uniqueness constraint on the keys.
-If not, the query will fail.
-====
+// TODO
+// [IMPORTANT]
+// ====
+// The source and target nodes must already have a uniqueness constraint on the keys.
+// If not, the query will fail.
+// ====
 
-[NOTE]
-====
-You cannot create a key constraint on a relationship property if a uniqueness constraint already exists on the same property.
-====
+Notes:
 
-[NOTE]
-====
-This schema optimization only works with the `Overwrite` save mode.
-====
+* The constraint is not recreated if already present.
+* You cannot create a key constraint on a relationship property if a uniqueness constraint already exists on the same property.
+* This schema optimization only works with the `Overwrite` save mode.
 
 [#constraints-type-existence]
 == Property type and property existence constraints
 
 Property type constraints ensure that a property have the required property type for all nodes with a specific label (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#node-property-type[node property type constraints]) or for all relationships with a specific type (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#relationship-property-type[relationship property type constraints]).
 
-The connector uses the DataFrame schema in order to enforce the type.
-
 Property existence constraints ensure that a property exists (`IS NOT NULL`) for all nodes with a specific label (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#node-property-existence[node property existence constraints]) or for all relationships with a specific type (link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#relationship-property-existence[relationship property existence constraints]).
 
-The connector uses the nullability of the DataFrame column to choose whether to apply or not the `NOT NULL` condition.
+The connector uses the DataFrame schema to enforce types (with the mapping described in the xref:types.adoc#constraints[Data type mapping]) and the `nullable` flags of each column to determine whether to enforce existence.
 
-You can create property type constraints for both nodes and relationships by setting the `schema.optimization` option to `TYPE`.
-You can create property existence constraints for both nodes and relationships by setting the `schema.optimization` option to `EXISTS`.
-You can create both at the same time by setting the `schema.optimization` option to `TYPE,EXISTS`.
-The constraints are not recreated if they are already present.
+You can create:
 
-The connector use the mapping described in the xref:types.adoc#constraints[Data type mapping] section.
+* Property type constraints for both nodes and relationships by setting the `schema.optimization` option to `TYPE`.
+* Property existence constraints for both nodes and relationships by setting the `schema.optimization` option to `EXISTS`.
+* Both at the same time by setting the `schema.optimization` option to `TYPE,EXISTS`.
+
+Notes:
+
+* The constraints are not recreated if already present.
 
 === On nodes
 
