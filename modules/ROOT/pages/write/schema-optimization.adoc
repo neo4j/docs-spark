@@ -55,7 +55,7 @@ link:https://neo4j.com/docs/cypher-manual/current/indexes/search-performance-ind
 You can create an index by setting the `schema.optimization.type` option to `INDEX`.
 
 .Example
-[source, scala]
+[source, scala, role=nocollapse]
 ----
 val df = List(
   "Product 1",
@@ -95,7 +95,7 @@ For property uniqueness constraints on multiple properties, the combination of t
 You can create a constraint by setting the `schema.optimization.node.keys` option to `UNIQUE`.
 
 .Example
-[source, scala]
+[source, scala, role=nocollapse]
 ----
 val df = List(
   "Product 1",
@@ -142,7 +142,7 @@ link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#node-key[Node key 
 You can create a constraint by setting the `schema.optimization.node.keys` option to `KEY`.
 
 .Example
-[source, scala]
+[source, scala, role=nocollapse]
 ----
 val df = List(
   "Product 1",
@@ -181,11 +181,11 @@ For property uniqueness constraints on multiple properties, the combination of t
 You can create a constraint by setting the `schema.optimization.relationship.keys` option to `UNIQUE`.
 
 .Example
-[source, scala]
+[source, scala, role=nocollapse]
 ----
 val df = Seq(
   ("John", "Doe", 1, "Product 1", 200, "ABC100"),
-  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+  ("Jane", "Doe", 2, "Product 2", 100, "ABC200")
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
@@ -194,7 +194,7 @@ df.write
   .option("relationship", "BOUGHT")
   .option("relationship.save.strategy", "keys")
   .option("relationship.source.save.mode", "Overwrite")
-  .option("relationship.source.labels", ":Person")
+  .option("relationship.source.labels", ":Customer")
   .option("relationship.source.node.properties", "name,surname,customerID:id")
   .option("relationship.source.node.keys", "customerID:id")
   .option("relationship.target.save.mode", "Overwrite")
@@ -232,11 +232,11 @@ link:{neo4j-docs-base-uri}/cypher-manual/current/constraints/#relationship-key[R
 You can create a constraint by setting the `schema.optimization.relationship.keys` option to `KEY`.
 
 .Example
-[source, scala]
+[source, scala, role=nocollapse]
 ----
 val df = Seq(
   ("John", "Doe", 1, "Product 1", 200, "ABC100"),
-  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+  ("Jane", "Doe", 2, "Product 2", 100, "ABC200")
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
@@ -245,7 +245,7 @@ df.write
   .option("relationship", "BOUGHT")
   .option("relationship.save.strategy", "keys")
   .option("relationship.source.save.mode", "Overwrite")
-  .option("relationship.source.labels", ":Person")
+  .option("relationship.source.labels", ":Customer")
   .option("relationship.source.node.properties", "name,surname,customerID:id")
   .option("relationship.source.node.keys", "customerID:id")
   .option("relationship.target.save.mode", "Overwrite")
@@ -263,7 +263,7 @@ Before the writing process starts, the connector runs the following schema query
 .Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_RELATIONSHIP_KEY-CONSTRAINT_PLAYS_experience` IF NOT EXISTS FOR ()-[e:PLAYS]->() REQUIRE (e.experience) IS RELATIONSHIP KEY
+CREATE CONSTRAINT `spark_RELATIONSHIP_KEY-CONSTRAINT_BOUGHT_order` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE (e.order) IS RELATIONSHIP KEY
 ----
 
 // TODO
@@ -301,12 +301,12 @@ Notes:
 === On nodes
 
 .Example
-[source, scala]
+[source, scala, role=nocollapse]
 ----
 df.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.Overwrite)
-  .option("labels", ":Person:Customer")
+  .option("labels", ":Person")
   .option("node.keys", "surname")
   .option("schema.optimization", "TYPE,EXISTS")
   .save()
@@ -336,11 +336,11 @@ CREATE CONSTRAINT `spark_NODE-NOT_NULL-CONSTRAINT-Person-age` IF NOT EXISTS FOR 
 === On relationships
 
 .Example
-[source, scala]
+[source, scala, role=nocollapse]
 ----
 val df = Seq(
   ("John", "Doe", 1, "Product 1", 200, "ABC100"),
-  ("Jane", "Doe", 2, "Product 1", 100, "ABC200")
+  ("Jane", "Doe", 2, "Product 2", 100, "ABC200")
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
@@ -349,7 +349,7 @@ df.write
   .option("relationship", "BOUGHT")
   .option("relationship.save.strategy", "keys")
   .option("relationship.source.save.mode", "Overwrite")
-  .option("relationship.source.labels", ":Person")
+  .option("relationship.source.labels", ":Customer")
   .option("relationship.source.node.properties", "name,surname,customerID:id")
   .option("relationship.source.node.keys", "customerID:id")
   .option("relationship.target.save.mode", "Overwrite")
@@ -366,11 +366,11 @@ Before the writing process starts, the connector runs the following schema queri
 .Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-name` IF NOT EXISTS FOR (e:Person) REQUIRE e.name IS :: STRING
+CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Customer-name` IF NOT EXISTS FOR (e:Customer) REQUIRE e.name IS :: STRING
 
-CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-surname` IF NOT EXISTS FOR (e:Person) REQUIRE e.surname IS :: STRING
+CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Customer-surname` IF NOT EXISTS FOR (e:Customer) REQUIRE e.surname IS :: STRING
 
-CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-id` IF NOT EXISTS FOR (e:Person) REQUIRE e.id IS :: INTEGER
+CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Customer-id` IF NOT EXISTS FOR (e:Customer) REQUIRE e.id IS :: INTEGER
 
 CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Product-name` IF NOT EXISTS FOR (e:Product) REQUIRE e.name IS :: STRING
 
@@ -384,7 +384,7 @@ For example, if the `experience` column is not nullable, the connector runs the 
 
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_NODE-NOT_NULL-CONSTRAINT-Person-id` IF NOT EXISTS FOR (e:Person) REQUIRE e.id IS NOT NULL
+CREATE CONSTRAINT `spark_NODE-NOT_NULL-CONSTRAINT-Customer-id` IF NOT EXISTS FOR (e:Customer) REQUIRE e.id IS NOT NULL
 
 CREATE CONSTRAINT `spark_RELATIONSHIP-NOT_NULL-CONSTRAINT-BOUGHT-quantity` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE e.quantity IS NOT NULL
 ----
