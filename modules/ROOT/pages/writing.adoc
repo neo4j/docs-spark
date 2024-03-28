@@ -140,6 +140,6 @@ df.select(df("name"), df("surname"))
   .write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.Append)
-  .option("labels", ":Person:Customer")
+  .option("labels", ":Person:Employee")
   .save()
 ----

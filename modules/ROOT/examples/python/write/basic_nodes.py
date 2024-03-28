@@ -26,7 +26,7 @@ df = spark.createDataFrame(
 (
     df.write.format("org.neo4j.spark.DataSource")
     .mode("Append")
-    .option("labels", ":Person:Customer")
+    .option("labels", ":Person")
     .save()
 )
 # end::code[]

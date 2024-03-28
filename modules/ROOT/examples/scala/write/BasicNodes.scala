@@ -24,7 +24,7 @@ val df = List(
 df.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.Append)
-  .option("labels", ":Person:Customer")
+  .option("labels", ":Person")
   .save()
 // end::code[]
 

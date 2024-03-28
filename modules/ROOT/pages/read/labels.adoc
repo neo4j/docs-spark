@@ -10,45 +10,30 @@ For example, given a graph with `Person` nodes, you can run the following code t
 
 [source, scala]
 ----
-val df = spark.read
-  .format("org.neo4j.spark.DataSource")
-  .option("labels", ":Person")
-  .load()
-  
-df.show()
+include::example$scala/read/BasicNodes.scala[tags=code]
 ----
 
 .Result
 |===
 |<id>|<labels>|surname|name|age
 
-|0|[Person, Customer]|Doe|Jane|40
-|39|[Person, Customer]|Doe|John|42
+|0|[Person]|Doe|Jane|40
+|39|[Person]|Doe|John|42
 |===
 
-You can specify multiple labels using the colon as a separator.
+You can read nodes with multiple labels using the colon as a separator.
 The colon before the first label is optional.
 
-.Multiple labels
+.Read nodes with multiple labels
 [source,scala]
 ----
 val df = spark.read
   .format("org.neo4j.spark.DataSource")
-  // ":Person:Customer" and "Person:Customer"
+  // ":Person:Employee" and "Person:Employee"
   // are equivalent
-  .option("labels", ":Person:Customer")
+  .option("labels", ":Person:Employee")
   .load()
-
-df.show()
 ----
-
-.Result
-|===
-|<id>|<labels>|surname|name|age
-
-|0|[Person, Customer]|Doe|Jane|40
-|39|[Person, Customer]|Doe|John|42
-|===
 
 == DataFrame columns
 

@@ -6,16 +6,12 @@ With the `labels` option, the connector writes a DataFrame to the Neo4j database
 
 The connector builds a `CREATE` or a `MERGE` Cypher query (depending on the xref:writing.adoc#save-mode[save mode]) that uses the `UNWIND` clause to write a batch of rows (an `events` list with size defined by the `batch.size` option).
 
-The code from the xref:writing.adoc#example-labels[example] creates new nodes with the given labels.
+The code from the xref:writing.adoc#example-labels[example] creates new nodes with the `:Person` label.
 
 .Append example
 [source, scala]
 ----
-df.write
-  .format("org.neo4j.spark.DataSource")
-  .mode(SaveMode.Append)
-  .option("labels", ":Person:Customer")
-  .save()
+include::example$scala/write/BasicNodes.scala[tags=code]
 ----
 
 .Equivalent Cypher query
@@ -24,10 +20,25 @@ df.write
 [source, cypher]
 ----
 UNWIND $events AS event
-CREATE (n:Person:Customer)
+CREATE (n:Person)
 SET n += event.properties
 ----
 ====
+
+You can write nodes with multiple labels using the colon as a separator.
+The colon before the first label is optional.
+
+.Create nodes with multiple labels
+[source, scala]
+----
+df.write
+  .format("org.neo4j.spark.DataSource")
+  .mode(SaveMode.Append)
+  // ":Person:Employee" and "Person:Employee"
+  // are equivalent
+  .option("labels", ":Person:Employee")
+  .save()
+----
 
 == Node keys
 
@@ -48,7 +59,7 @@ The same code using the `Overwrite` save mode:
 df.write
   .format("org.neo4j.spark.DataSource")
   .mode(SaveMode.Overwrite)
-  .option("labels", ":Person:Customer")
+  .option("labels", ":Person")
   .option("node.keys", "name,surname")
   .save()
 ----
@@ -59,7 +70,7 @@ df.write
 [source, cypher]
 ----
 UNWIND $events AS event
-MERGE (n:Person:Customer {
+MERGE (n:Person {
   name: event.keys.name, 
   surname: event.keys.surname
 })

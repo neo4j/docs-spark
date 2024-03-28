@@ -116,7 +116,7 @@ Before the writing process starts, the connector runs the following schema query
 .Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_NODE_UNIQUE-CONSTRAINT_Person_name` IF NOT EXISTS FOR (e:Person) REQUIRE (e.name) IS UNIQUE
+CREATE CONSTRAINT `spark_NODE_UNIQUE-CONSTRAINT_Product_name` IF NOT EXISTS FOR (e:Product) REQUIRE (e.name) IS UNIQUE
 ----
 
 Notes:
@@ -163,7 +163,7 @@ Before the writing process starts, the connector runs the following schema query
 .Schema query
 [source, cypher]
 ----
-CREATE CONSTRAINT `spark_NODE_KEY-CONSTRAINT_Person_name` IF NOT EXISTS FOR (e:Person) REQUIRE (e.name) IS NODE KEY
+CREATE CONSTRAINT `spark_NODE_KEY-CONSTRAINT_Product_name` IF NOT EXISTS FOR (e:Product) REQUIRE (e.name) IS NODE KEY
 ----
 
 Notes:
