@@ -7,7 +7,7 @@ The Neo4j Connector for Apache Spark provides integration between Neo4j and Apac
 You can use the connector to process and transfer data between Neo4j and other platforms such as xref:databricks.adoc[Databricks] and several xref:dwh.adoc[data warehouses].
 Based on the Spark DataSource API, the connector supports all the programming languages that Spark supports.
 
-== Graphs and tables
+== Graphs and DataFrames
 
 By default, the connector uses the _Tables for Labels_ approach to convert Neo4j graphs into Spark table-based DataFrames and vice versa.
 
@@ -16,7 +16,7 @@ For example, consider a graph with the following schema:
 image::example-graph.svg["Example graph"]
 
 The connector interprets the graph as two tables for `Customer` and `Product` nodes and one table for the `BOUGHT` relationship between them, with any node or relationship properties as columns on their respective table.
-The xref:data-modeling.adoc[] section shows a more detailed example of this process, while the xref:types.adoc[] section shows how data types are mapped between Neo4j and Spark.
+The xref:read/schema.adoc[] section shows a more detailed example of this process, while the xref:types.adoc[] section shows how data types are mapped between Neo4j and Spark.
 
 The connector supports custom Cypher queries as well, both for xref:read/query.adoc[reading] and for xref:write/query.adoc[writing] data.
 

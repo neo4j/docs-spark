@@ -53,50 +53,9 @@ val df = spark.read
 
 == DataFrame columns
 
-When reading data with this method, the resulting DataFrame contains as many columns as the number of node properties plus two additional columns:
+The resulting DataFrame contains as many columns as the number of node properties plus two additional columns:
 
 * `<id>`: internal Neo4j ID
 * `<labels>`: list of labels for each node
 
-== Schema
-
-If the link:{neo4j-docs-base-uri}/apoc/current/[APOC library] is available on the Neo4j instance, the schema is retrieved via the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.nodeTypeProperties/[`apoc.meta.nodeTypeProperties`^] procedure.
-Otherwise, the following Cypher query is executed:
-
-[source, cypher]
-----
-MATCH (n:<labels>) <1>
-RETURN n
-ORDER BY rand()
-LIMIT <limit> <2>
-----
-<1> `<labels>` is the list of labels provided by the `labels` option.
-<2> `<limit>` is the value provided by the `schema.flatten.limit` option.
-
-The schema is recreated from the flattened query result.
-
-=== Example
-
-[source, cypher]
-----
-CREATE (p1:Person {age: 40, name: 'Jane Doe'}),
-    (p2:Person {name: 'John Doe', age: 42, location: null}),
-    (p3:Person {age: 25, location: point({latitude: -37.659560, longitude: -68.178060})})
-----
-
-The following schema is created:
-
-|===
-|Field |Type
-
-|<id>|Int
-
-|<labels>|String[]
-
-|age|Int
-
-|name|String
-
-|location|Point
-
-|===
+The schema for the node property columns is inferred as explained in xref:read/schema.adoc[].

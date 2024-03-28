@@ -100,22 +100,7 @@ df.show(false)
 |3190|BOUGHT|{surname: "Doe", name: "Jane", id: 2, <labels>: ["Customer"], <id>: 1099}|{name: "Product 2", <labels>: ["Product"], <id>: 1039}|ABC200|100
 |===
 
-== Schema
-
-If the link:{neo4j-docs-base-uri}/apoc/current/[APOC library] is available on the Neo4j instance, the schema is retrieved via the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.relTypeProperties/[`apoc.meta.relTypeProperties`^] procedure.
-Otherwise, the following Cypher query is executed:
-
-[source, cypher]
-----
-MATCH (source:<source_labels>)-[rel:<relationship>]->(target:<target_labels>)  <1> <2> <3>
-RETURN rel
-ORDER BY rand()
-LIMIT <limit> <4>
-----
-<1> `<source_labels>` is the list of labels provided by `relationship.source.labels` option.
-<2> `<target_labels>` is the list of labels provided by `relationship.target.labels` option.
-<3> `<relationship>` is the list of labels provided by `relationship` option.
-<4> `<limit>` is the value provided via `schema.flatten.limit`.
+The schema for the node and relationship property columns is inferred as explained in xref:read/schema.adoc[].
 
 == Filtering
 

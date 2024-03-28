@@ -1,0 +1,31 @@
+= User-defined schema
+
+You can skip the automatic schema extraction process by providing a user defined schema using the `.schema()` method.
+
+.Using user defined schema
+[source,scala]
+----
+import org.apache.spark.sql.types.{DataTypes, StructType, StructField}
+import org.apache.spark.sql.{SaveMode, SparkSession}
+
+val spark = SparkSession.builder().getOrCreate()
+
+(spark.read.format("org.neo4j.spark.DataSource")
+  .option("url", "neo4j://localhost:7687")
+  .option("authentication.basic.username", "neo4j")
+  .option("authentication.basic.password", "letmein!")
+  .schema(StructType(Array(StructField("id", DataTypes.StringType), StructField("name", DataTypes.StringType))))
+  .option("query", "MATCH (n:Person) WITH n LIMIT 2 RETURN id(n) as id, n.name as name")
+  .load()
+  .show())
+----
+
+.Result of the above code
+|===
+|id |name
+
+|"0"|"John Doe"
+|"1"|"Jane Doe"
+|===
+
+In this way you have total control over the schema.
