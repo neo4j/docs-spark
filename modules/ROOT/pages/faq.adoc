@@ -1,12 +1,9 @@
 [#faq]
-= Neo4j Connector for Apache Spark FAQ
+= FAQ and troubleshooting
 
-== What is the license for this connector?
+== General questions
 
-The source code is offered under the terms of the Apache 2.0 open source license.  You are free
-to download, modify, and redistribute the connector; however, Neo4j support applies only to official builds provided by Neo4j.
-
-== Is this software connected to Morpheus or Cypher for Apache Spark (CAPS)?
+=== Is this software connected to Morpheus or Cypher for Apache Spark (CAPS)?
 
 No. There is no shared code or approach between the two, and they take very different approaches. Cypher for Apache Spark/Morpheus took the approach of providing an interpreter
 that could execute Cypher queries within the Spark environment, and provided a native graph representation for Spark.  
@@ -14,12 +11,7 @@ By contrast, this connector does not provide that
 functionality and focuses on doing reads and writes back and forth between Neo4j and Spark. Via this connector, all Cypher code is executed strictly within Neo4j. The Spark
 environment operates in terms of DataFrames as it always did, and this connector does not provide graph API primitives for Spark.
 
-== Can this connector be used for pre-processing of data and loading it into Neo4j?
-
-Yes. This connector enables Spark to be used as a good method of loading data directly into Neo4j. See xref:architecture.adoc[the architecture section] for a detailed discussion of
-Normalized loading vs. Cypher destructuring and guidance on different approaches for how to do performant data loads into Neo4j.
-
-== How can I speed up writes to Neo4j?
+=== How can I speed up writes to Neo4j?
 
 The Spark connector fundamentally writes data to Neo4j in batches. Neo4j is a transactional
 database, and all modifications are made within a transaction. Those transactions in turn
@@ -36,7 +28,19 @@ For best performance, make sure you are familiar with the material in the link:h
 It is important to keep in mind that Neo4j scales writes vertically and reads horizontally.  In
 the link:https://neo4j.com/docs/operations-manual/current/clustering/introduction/[Causal Cluster Model], only the cluster leader (1 machine) may accept writes. For this reason, focus on getting the best hardware and performance on your cluster leader to maximize write throughput.
 
-== My writes are failing due to Deadlock Exceptions. What should I do?
+=== Why are the returned columns not in the same order as I specified in the query?
+
+Unfortunately, this is a known issue and is there for Neo4j 3.x and Neo4j 4.0.
+From Neo4j 4.1 onwards, you get the same order as it's specified in the return statement.
+
+=== Where can I get help?
+
+link:https://community.neo4j.com/[The Neo4j Community] site is a great place to ask questions, talk with other users who use the connector, and get help from Neo4j experts.
+You can also write in the https://discord.com/invite/neo4j[Neo4j Discord channel].
+
+== Errors
+
+=== My writes are failing due to Deadlock Exceptions. What should I do?
 
 In some cases, Neo4j rejects write transactions due to a deadlock exception that you may see in the stacktrace.
 
@@ -50,7 +54,7 @@ exceptions can result and a transaction fails.
 In general, the solution is to repartition the DataFrame before writing it to Neo4j, to avoid
 multiple partitioned writes from locking the same nodes and relationships.
 
-== I am getting a cast error like _UTF8String cannot be cast to Long_. What is the solution?
+=== I am getting a cast error like _UTF8String cannot be cast to Long_. What is the solution?
 
 You might be getting an error like the following one or similar, with different types:
 
@@ -65,12 +69,7 @@ and needs each column always to have its own type.
 
 You can read more <<quickstart.adoc#read-known-problem, here>>.
 
-== Why are the returned columns not in the same order as I specified in the query?
-
-Unfortunately, this is a known issue and is there for Neo4j 3.x and Neo4j 4.0.
-From Neo4j 4.1 onwards, you get the same order as it's specified in the return statement.
-
-== I am getting an error _TableProvider implementation org.neo4j.spark.DataSource cannot be written with ErrorIfExists mode, please use Append or Overwrite modes instead_. What should I do?
+=== I am getting an error _TableProvider implementation org.neo4j.spark.DataSource cannot be written with ErrorIfExists mode, please use Append or Overwrite modes instead_. What should I do?
 
 If you are getting this error while trying to write to Neo4j, be aware that the current version of the connector
 doesn't support `*SaveMode.ErrorIfExists*` on Spark 3,
@@ -79,7 +78,7 @@ So please, change the save mode to one of `SaveMode.Append` or `SaveMode.Overwri
 
 We are working to fully support all the save modes on Spark 3.
 
-== I am getting errors _NoClassDefFoundError_ or _ClassNotFoundException_. What should I do?
+=== I am getting errors _NoClassDefFoundError_ or _ClassNotFoundException_. What should I do?
 
 You may get one of the following types of error:
 
@@ -97,13 +96,17 @@ This means that your Spark version doesn't match the Spark version on the connec
 Refer to xref:overview.adoc#_spark_and_scala_compatibility[this page] to know which version you need.
 
 [[graph-already-exists]]
-== I am getting an error _Failed to invoke procedure gds.graph.create.cypher: Caused by: java.lang.IllegalArgumentException: A graph with name [name] already exists_. What should I do?
+=== I am getting an error _Failed to invoke procedure gds.graph.create.cypher: Caused by: java.lang.IllegalArgumentException: A graph with name [name] already exists_. What should I do?
 
 This might happen when creating a new graph using the GDS library.
 The issue here is that the query is run the first time to extract the DataFrame schema and then is run again to get the data.
 
 To avoid this issue you can use the xref:quickstart.adoc#user-defined-schema[user defined schema] approach.
 
-== Where can I get help?
+== Databricks setup
 
-link:https://community.neo4j.com/[The Neo4j Community] site is a great place to ask questions, talk with other users who use the connector, and get help from Neo4j experts
+=== I am getting an SSL handshake error while connecting to Aura.
+
+Aura customers connecting from Databricks may encounter SSL handshake errors due to Databricks' custom Java security settings removing support for some encryption ciphers.
+
+See the Aura support article link:https://support.neo4j.com/s/article/1500003161121-Connecting-to-Aura-with-Databricks[Connecting to Aura with Databricks] for more information.

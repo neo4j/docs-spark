@@ -1,5 +1,4 @@
-= Using with Neo4j Graph Data Science
-
+= Data science with Neo4j GDS
 :description: This chapter provides an information on using the Neo4j Connector for Apache Spark with Neo4j Graph Data Science.
 
 link:{url-neo4j-product-gds-lib}[Neo4j Graph Data Science (GDS)] lets data scientists benefit from powerful graph algorithms. It provides unsupervised machine learning (ML) methods and heuristics that learn and describe the topology of your graph. GDS includes hardened graph algorithms with enterprise features, like deterministic seeding for consistent results and reproducible ML workflows.
@@ -18,7 +17,8 @@ All of the link:{url-neo4j-gds-manual}[functionality of GDS^] is used by issuing
 accessible via Spark, because the Neo4j Connector for Apache Spark can issue Cypher queries and read their results back.  This combination means
 that you can use Neo4j and GDS as a graph co-processor in an existing ML workflow that you may implement in Apache Spark.
 
-== GDS first-class support label:new[Introduced in 5.1]
+[role=label--new-5.1]
+== GDS first-class support
 
 Neo4j Spark Connector provides first-class support to Graph Data Science library let's see how it works.
 
@@ -32,21 +32,42 @@ Immagine that we want to replicate the example for the Page Rank algorithm
 detailed link:{url-neo4j-gds-manual}algorithms/page-rank/#algorithms-page-rank-examples[here in the GDS manual^].
 The related Spark example looks like the following (we assume that the data is already in Neo4j).
 
-1. Create the projection graph: The following Python code will project a graph using a native projection and store it in the graph catalog under the name 'myGraph'.
+1. Create the projection graph: The following Python code will project a graph using a native projection and store it in the graph catalog under the name `myGraph`.
 
-[source,python]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+[source, scala]
 ----
-    # we'll assume that `spark` variable is already present
-    spark.read.format("org.neo4j.spark.DataSource") \
-      .option("url", "neo4j://localhost:7687") \
-      .option("gds", "gds.graph.project") \
-      .option("gds.graphName", "myGraph") \
-      .option("gds.nodeProjection", "Page") \
-      .option("gds.relationshipProjection", "LINKS") \
-      .option("gds.configuration.relationshipProperties", "weight") \
-      .load() \
-      .show(truncate=False)
+spark.read.format("org.neo4j.spark.DataSource")
+  .option("gds", "gds.graph.project")
+  .option("gds.graphName", "myGraph")
+  .option("gds.nodeProjection", "Page")
+  .option("gds.relationshipProjection", "LINKS")
+  .option("gds.configuration.relationshipProperties", "weight")
+  .load()
+  .show(false)
 ----
+=====
+
+[.include-with-Python]
+=====
+[source, python]
+----
+(
+  spark.read.format("org.neo4j.spark.DataSource")
+  .option("gds", "gds.graph.project")
+  .option("gds.graphName", "myGraph")
+  .option("gds.nodeProjection", "Page")
+  .option("gds.relationshipProjection", "LINKS")
+  .option("gds.configuration.relationshipProperties", "weight")
+  .load()
+  .show(truncate=False)
+)
+----
+=====
+====
 
 which will show a result like this:
 
@@ -61,17 +82,36 @@ which will show a result like this:
 [start=2]
 . Estimate the cost of the algorithm: With the following Python code we will estimate the cost of running the algorithm using the estimate procedure
 
-[source,python]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+[source, scala]
 ----
-    # we'll assume that `spark` variable is already present
-    spark.read.format("org.neo4j.spark.DataSource") \
-      .option("url", "neo4j://localhost:7687") \
-      .option("gds", "gds.pageRank.stream") \
-      .option("gds.graphName", "myGraph") \
-      .option("gds.configuration.concurrency", "2") \
-      .load() \
-      .show(truncate=False)
+spark.read.format("org.neo4j.spark.DataSource")
+  .option("gds", "gds.pageRank.stream.estimate")
+  .option("gds.graphName", "myGraph")
+  .option("gds.configuration.concurrency", "2")
+  .load()
+  .show(false)
 ----
+=====
+
+[.include-with-Python]
+=====
+[source, python]
+----
+(
+  spark.read.format("org.neo4j.spark.DataSource")
+  .option("gds", "gds.pageRank.stream")
+  .option("gds.graphName", "myGraph")
+  .option("gds.configuration.concurrency", "2")
+  .load()
+  .show(truncate=False)
+)
+----
+=====
+====
 
 which will show a result like this:
 
@@ -86,19 +126,39 @@ which will show a result like this:
 [start=3]
 . Compute the algorithm: The following Python code will return the Page Rank computation  without modifying the graph
 
-[source,python]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+[source, scala]
 ----
-    # we'll assume that `spark` variable is already present
-    # we save the dataframe in the `pr_df` variable as we'll reuse it later
-    pr_df = spark.read.format("org.neo4j.spark.DataSource") \
-      .option("url", "neo4j://localhost:7687") \
-      .option("gds", "gds.pageRank.stream") \
-      .option("gds.graphName", "myGraph") \
-      .option("gds.configuration.concurrency", "2") \
-      .load()
+val pr_df = spark.read.format("org.neo4j.spark.DataSource")
+  .option("gds", "gds.pageRank.stream")
+  .option("gds.graphName", "myGraph")
+  .option("gds.configuration.concurrency", "2")
+  .load()
 
-    pr_df.show(truncate=False)
+pr_df.show(false)
 ----
+=====
+
+[.include-with-Python]
+=====
+[source, python]
+----
+# We save the dataframe in the `pr_df` variable as we'll reuse it later
+pr_df = (
+  spark.read.format("org.neo4j.spark.DataSource")
+  .option("gds", "gds.pageRank.stream")
+  .option("gds.graphName", "myGraph")
+  .option("gds.configuration.concurrency", "2")
+  .load()
+)
+
+pr_df.show(truncate=False)
+----
+=====
+====
 
 which will show a result like this:
 
@@ -119,7 +179,7 @@ which will show a result like this:
 
 As you can see, we have now only the two columns `nodeId` and `score`, let's see how you can enrich your nodes with the score.
 
-[start=5]
+[start=4]
 . Enrich nodes with the score: the following Python code will enrich the nodes with the score
 
 [source,python]

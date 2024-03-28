@@ -1,0 +1,102 @@
+= Read nodes
+
+include::partial$sparksession.adoc[]
+
+With the `labels` option, the connector reads data from the Neo4j database as a set of nodes with the given labels.
+
+The connector builds a `MATCH` Cypher query that uses the `UNWIND` clause to read a batch of rows (an `events` list with size defined by the `batch.size` option).
+
+The code from the xref:reading.adoc#example-labels[example] reads the `:Person` nodes with their node properties into a DataFrame.
+
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
+----
+include::example$scala/read/BasicLabels.scala[tags=code]
+----
+=====
+
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
+----
+include::example$python/read/basic_labels.py[tags=code]
+----
+=====
+====
+
+.Result
+|===
+|<id>|<labels>|surname|name|age
+
+|0|[Person]|Doe|Jane|40
+|39|[Person]|Doe|John|42
+|===
+
+You can read nodes with multiple labels using the colon as a separator.
+The colon before the first label is optional.
+
+.Read nodes with multiple labels
+[source,scala]
+----
+val df = spark.read
+  .format("org.neo4j.spark.DataSource")
+  // ":Person:Employee" and "Person:Employee"
+  // are equivalent
+  .option("labels", ":Person:Employee")
+  .load()
+----
+
+== DataFrame columns
+
+When reading data with this method, the resulting DataFrame contains as many columns as the number of node properties plus two additional columns:
+
+* `<id>`: internal Neo4j ID
+* `<labels>`: list of labels for each node
+
+== Schema
+
+If the link:{neo4j-docs-base-uri}/apoc/current/[APOC library] is available on the Neo4j instance, the schema is retrieved via the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.nodeTypeProperties/[`apoc.meta.nodeTypeProperties`^] procedure.
+Otherwise, the following Cypher query is executed:
+
+[source, cypher]
+----
+MATCH (n:<labels>) <1>
+RETURN n
+ORDER BY rand()
+LIMIT <limit> <2>
+----
+<1> `<labels>` is the list of labels provided by the `labels` option.
+<2> `<limit>` is the value provided by the `schema.flatten.limit` option.
+
+The schema is recreated from the flattened query result.
+
+=== Example
+
+[source, cypher]
+----
+CREATE (p1:Person {age: 40, name: 'Jane Doe'}),
+    (p2:Person {name: 'John Doe', age: 42, location: null}),
+    (p3:Person {age: 25, location: point({latitude: -37.659560, longitude: -68.178060})})
+----
+
+The following schema is created:
+
+|===
+|Field |Type
+
+|<id>|Int
+
+|<labels>|String[]
+
+|age|Int
+
+|name|String
+
+|location|Point
+
+|===
