@@ -47,7 +47,7 @@ Write the `:Person` nodes.
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/write/BasicLabels.scala[tags=code]
+include::example$scala/BasicLabels.scala[tags=code-write]
 ----
 =====
 
@@ -75,7 +75,7 @@ Write the `:BOUGHT` relationship with its source and target nodes and its proper
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/write/BasicRelationship.scala[tags=code]
+include::example$scala/BasicRelationship.scala[tags=code-write]
 ----
 =====
 
@@ -103,7 +103,7 @@ Use a Cypher query to write data.
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/write/BasicQuery.scala[tags=code]
+include::example$scala/BasicQuery.scala[tags=code-write]
 ----
 =====
 

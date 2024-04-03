@@ -6,7 +6,7 @@ You can read a relationship and its source and target nodes by specifying the re
 
 [source, scala]
 ----
-include::example$scala/read/BasicRelationship.scala[tags=code]
+include::example$scala/BasicRelationship.scala[tags=code-read]
 ----
 
 .Equivalent Cypher query

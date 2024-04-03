@@ -15,7 +15,7 @@ The code from the xref:writing.adoc#example-labels[example] creates new nodes wi
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/write/BasicLabels.scala[tags=code]
+include::example$scala/BasicLabels.scala[tags=code-write]
 ----
 =====
 

@@ -15,7 +15,7 @@ The code from the xref:reading.adoc#example-labels[example] reads the `:Person` 
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/read/BasicLabels.scala[tags=code]
+include::example$scala/BasicLabels.scala[tags=code-read]
 ----
 =====
 

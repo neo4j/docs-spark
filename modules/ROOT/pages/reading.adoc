@@ -46,7 +46,7 @@ Read the `:Person` nodes.
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/read/BasicLabels.scala[tags=code]
+include::example$scala/BasicLabels.scala[tags=code-read]
 ----
 =====
 
@@ -74,7 +74,7 @@ Read the `:BOUGHT` relationship with its source and target nodes and its propert
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/read/BasicRelationship.scala[tags=code]
+include::example$scala/BasicRelationship.scala[tags=code-read]
 ----
 =====
 
@@ -102,7 +102,7 @@ Use a Cypher query to read data.
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/read/BasicQuery.scala[tags=code]
+include::example$scala/BasicQuery.scala[tags=code-read]
 ----
 =====
 

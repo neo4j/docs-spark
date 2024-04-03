@@ -13,20 +13,38 @@ val spark = SparkSession.builder
   .getOrCreate()
 // end::setup[]
 
-// tag::code[]
+// tag::code-write[]
 case class Person(name: String, surname: String, age: Int)
 
-val df = List(
+// Create an example DataFrame
+val queryDF = List(
   Person("John", "Doe", 42),
   Person("Jane", "Doe", 40)
 ).toDF()
 
-df.write
+// Define the Cypher query to use in the write
+val writeQuery = "CREATE (n:Person {fullName: event.name + ' ' + event.surname})"
+
+queryDF.write
   .format("org.neo4j.spark.DataSource")
-  .mode(SaveMode.Append)
-  .option("labels", ":Person")
+  .option("query", writeQuery)
+  .mode(SaveMode.Overwrite)
   .save()
-// end::code[]
+// end::code-write[]
+
+// tag::code-read[]
+val readQuery = """
+  MATCH (n:Person)
+  RETURN id(n) AS id, n.fullName AS name
+"""
+
+val df = spark.read
+  .format("org.neo4j.spark.DataSource")
+  .option("query", readQuery)
+  .load()
+
+df.show()
+// end::code-read[]
 
 // tag::check[]
 // TODO: add read query to check

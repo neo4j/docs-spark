@@ -13,16 +13,29 @@ val spark = SparkSession.builder
   .getOrCreate()
 // end::setup[]
 
-// tag::code[]
+// tag::code-write[]
+case class Person(name: String, surname: String, age: Int)
+
+val peopleDF = List(
+  Person("John", "Doe", 42),
+  Person("Jane", "Doe", 40)
+).toDF()
+
+peopleDF.write
+  .format("org.neo4j.spark.DataSource")
+  .mode(SaveMode.Append)
+  .option("labels", ":Person")
+  .save()
+// end::code-write[]
+
+// tag::code-read[]
 val df = spark.read
   .format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  .option("relationship.source.labels", ":Customer")
-  .option("relationship.target.labels", ":Product")
+  .option("labels", ":Person")
   .load()
 
 df.show()
-// end::code[]
+// end::code-read[]
 
 // tag::check[]
 // TODO: add read query to check

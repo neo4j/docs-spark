@@ -153,7 +153,7 @@ If run multiple times, it creates duplicate relationships and nodes.
 .Example
 [source, scala, role=nocollapse]
 ----
-include::example$scala/write/BasicRelationship.scala[tags=code]
+include::example$scala/BasicRelationship.scala[tags=code-write]
 ----
 
 .Equivalent Cypher query

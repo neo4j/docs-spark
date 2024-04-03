@@ -13,13 +13,13 @@ val spark = SparkSession.builder
   .getOrCreate()
 // end::setup[]
 
-// tag::code[]
-val df = Seq(
+// tag::code-write[]
+val relDF = Seq(
   ("John", "Doe", 1, "Product 1", 200, "ABC100"),
   ("Jane", "Doe", 2, "Product 2", 100, "ABC200")
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
-df.write
+relDF.write
   // Create new relationships
   .mode("Append")
   .format("org.neo4j.spark.DataSource")
@@ -40,7 +40,18 @@ df.write
   // Map the DataFrame columns to relationship properties
   .option("relationship.properties", "quantity,order")
   .save()
-// end::code[]
+// end::code-write[]
+
+// tag::code-read[]
+val df = spark.read
+  .format("org.neo4j.spark.DataSource")
+  .option("relationship", "BOUGHT")
+  .option("relationship.source.labels", ":Customer")
+  .option("relationship.target.labels", ":Product")
+  .load()
+
+df.show()
+// end::code-read[]
 
 // tag::check[]
 // TODO: add read query to check
