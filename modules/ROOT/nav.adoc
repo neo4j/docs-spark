@@ -1,5 +1,6 @@
 * xref::overview.adoc[Project overview]
 * xref::quickstart.adoc[Quickstart]
+* xref::databricks.adoc[]
 * xref::configuration.adoc[Neo4j Spark Connector options and configuration]
 * xref::reading.adoc[Reading from Neo4j]
 * xref::writing.adoc[Writing to Neo4j]
