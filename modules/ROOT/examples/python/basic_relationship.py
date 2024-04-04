@@ -14,9 +14,9 @@ spark = (
 )
 # end::setup[]
 
-# tag::code[]
+# tag::code-write[]
 # Create example DataFrame
-df = spark.createDataFrame(
+relDF = spark.createDataFrame(
     [
         {
             "name": "John",
@@ -38,7 +38,7 @@ df = spark.createDataFrame(
 )
 
 (
-    df.write
+    relDF.write
     # Create new relationships
     .mode("Append")
     .format("org.neo4j.spark.DataSource")
@@ -60,7 +60,19 @@ df = spark.createDataFrame(
     .option("relationship.properties", "quantity,order")
     .save()
 )
-# end::code[]
+# end::code-write[]
+
+# tag::code-read[]
+df = (
+    spark.read.format("org.neo4j.spark.DataSource")
+    .option("relationship", "BOUGHT")
+    .option("relationship.source.labels", ":Customer")
+    .option("relationship.target.labels", ":Product")
+    .load()
+)
+
+df.show()
+# end::code-read[]
 
 # tag::check[]
 # TODO: add read query to check

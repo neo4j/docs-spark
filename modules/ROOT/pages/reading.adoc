@@ -55,7 +55,7 @@ include::example$scala/BasicLabels.scala[tags=code-read]
 .Example
 [source, python, role=nocollapse]
 ----
-include::example$python/read/basic_labels.py[tags=code]
+include::example$python/basic_labels.py[tags=code-read]
 ----
 =====
 ====
@@ -83,7 +83,7 @@ include::example$scala/BasicRelationship.scala[tags=code-read]
 .Example
 [source, python, role=nocollapse]
 ----
-include::example$python/read/basic_relationship.py[tags=code]
+include::example$python/basic_relationship.py[tags=code-read]
 ----
 =====
 ====
@@ -111,7 +111,7 @@ include::example$scala/BasicQuery.scala[tags=code-read]
 .Example
 [source, python, role=nocollapse]
 ----
-include::example$python/read/basic_query.py[tags=code]
+include::example$python/basic_query.py[tags=code-read]
 ----
 =====
 ====

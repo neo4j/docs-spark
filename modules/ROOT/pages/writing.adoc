@@ -56,7 +56,7 @@ include::example$scala/BasicLabels.scala[tags=code-write]
 .Example
 [source, python, role=nocollapse]
 ----
-include::example$python/write/basic_labels.py[tags=code]
+include::example$python/basic_labels.py[tags=code-write]
 ----
 =====
 ====
@@ -84,7 +84,7 @@ include::example$scala/BasicRelationship.scala[tags=code-write]
 .Example
 [source, python, role=nocollapse]
 ----
-include::example$python/write/basic_relationship.py[tags=code]
+include::example$python/basic_relationship.py[tags=code-write]
 ----
 =====
 ====
@@ -112,7 +112,7 @@ include::example$scala/BasicQuery.scala[tags=code-write]
 .Example
 [source, python, role=nocollapse]
 ----
-include::example$python/write/basic_query.py[tags=code]
+include::example$python/basic_query.py[tags=code-write]
 ----
 =====
 ====

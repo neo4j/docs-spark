@@ -14,17 +14,32 @@ spark = (
 )
 # end::setup[]
 
-# tag::code[]
+# tag::code-write[]
+# Create example DataFrame
+peopleDF = spark.createDataFrame(
+    [
+        {"name": "John", "surname": "Doe", "age": 42},
+        {"name": "Jane", "surname": "Doe", "age": 40},
+    ]
+)
+
+(
+    peopleDF.write.format("org.neo4j.spark.DataSource")
+    .mode("Append")
+    .option("labels", ":Person")
+    .save()
+)
+# end::code-write[]
+
+# tag::code-read[]
 df = (
     spark.read.format("org.neo4j.spark.DataSource")
-    .option("relationship", "BOUGHT")
-    .option("relationship.source.labels", ":Customer")
-    .option("relationship.target.labels", ":Product")
+    .option("labels", ":Person")
     .load()
 )
 
 df.show()
-# end::code[]
+# end::code-read[]
 
 # tag::check[]
 # TODO: add read query to check
