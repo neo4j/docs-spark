@@ -39,7 +39,7 @@ You can set the Spark configuration on the cluster you are running your notebook
 . Select the *Advanced Options* toggle under *Configuration*.
 . Select the *Spark* tab.
 
-For example, you can add Neo4j authentication configuration in the text area as follows:
+For example, you can add Neo4j Bearer authentication configuration in the text area as follows:
 
 .Bearer authentication example
 [source]
