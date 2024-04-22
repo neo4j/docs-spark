@@ -17,7 +17,7 @@ Shared access modes are not currently supported.
 . Once the cluster is available, open its page and select the *Libraries* tab.
 . Select *Install new* and select *Maven* as the library source.
 . Install the connector using either of the following methods:
-* Copy the coordinates from the xref:overview.adoc#_spark_and_scala_compatibility[overview page] (for example `org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3`).
+* Copy the coordinates from the xref:overview.adoc#_spark_and_scala_compatibility[overview page] (for example `org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3`) and select *Install*.
 * Select *Search Packages* and search the connector on Maven Central (*not* on Spark Packages).
 
 +
@@ -49,8 +49,81 @@ neo4j.authentication.type bearer
 neo4j.authentication.bearer.token <token>
 ----
 
+[CAUTION]
+====
+Databricks advises against storing secrets such as passwords and tokens in plain text.
+A secure alternative is to use <<secrets, secrets>> instead.
+====
+
 == Authentication methods
 
 All the authentication methods supported by the link:{neo4j-docs-base-uri}/java-manual/current/connect-advanced/#_authentication_methods[Neo4j Java Driver] (version 4.4 and higher) are supported.
 
 See the xref:configuration.adoc#_neo4j_driver_options[Neo4j driver options] for more details on authentication configuration.
+
+[#secrets]
+== Set up secrets
+
+You can link:https://docs.databricks.com/en/security/secrets/index.html[add secrets] to your environment using the Secrets API via the Databricks CLI.
+If you use a Databricks runtime version 15.0 or above, you can add secrets directly link:https://docs.databricks.com/en/dev-tools/cli/install.html#run-the-databricks-cli-from-within-a-databricks-workspace[from a notebook terminal].
+
+After setting secrets up, you can access them from a Databricks notebook using the link:https://docs.databricks.com/en/dev-tools/databricks-utils.html#dbutils-secrets[Databricks Utilities (`dbutils`)].
+For example, given a `neo4j` scope and the `username` and `password` secrets, you can do the following in a Python notebook:
+
+[source, python]
+----
+from pyspark.sql import SparkSession
+
+url = "neo4j+s://xxxxxxxx.databases.neo4j.io"
+username = dbutils.secrets.get(scope="neo4j", key="username")
+password = dbutils.secrets.get(scope="neo4j", key="password")
+
+spark = (
+    SparkSession.builder.config("neo4j.url", url)
+    .config("neo4j.authentication.basic.username", username)
+    .config("neo4j.authentication.basic.password", password)
+    .getOrCreate()
+)
+----
+
+== Delta tables
+
+You can use the Spark connector to read from and write to Delta tables from a Databricks notebook.
+This does not require any additional setup.
+
+.Basic Python notebook example
+[source, python, role=nocollapse]
+----
+# Create example DataFrame
+peopleDF = spark.createDataFrame(
+    [
+        {"name": "John", "surname": "Doe", "age": 42},
+        {"name": "Jane", "surname": "Doe", "age": 40},
+    ]
+)
+
+# Write the DataFrame to a Delta table
+
+peopleDF.write.saveAsTable("example_table")
+
+# Read the Delta table to a different DataFrame
+
+tableDF = spark.read.table("example_table")
+
+# Write the DataFrame to Neo4j
+(
+    tableDF
+    .write.format("org.neo4j.spark.DataSource")
+    .mode("Append")
+    .option("labels", ":Person")
+    .save()
+)
+
+# Read the nodes with `:Person` label from Neo4j
+(
+    spark.read.format("org.neo4j.spark.DataSource")
+    .option("labels", ":Person")
+    .load()
+    .show()
+)
+----
