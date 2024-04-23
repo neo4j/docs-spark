@@ -1,4 +1,4 @@
-= Databricks setup
+= Databricks quickstart
 
 include::partial$third-party.adoc[]
 
@@ -68,7 +68,7 @@ You can link:https://docs.databricks.com/en/security/secrets/index.html[add secr
 If you use a Databricks runtime version 15.0 or above, you can add secrets directly link:https://docs.databricks.com/en/dev-tools/cli/install.html#run-the-databricks-cli-from-within-a-databricks-workspace[from a notebook terminal].
 
 After setting secrets up, you can access them from a Databricks notebook using the link:https://docs.databricks.com/en/dev-tools/databricks-utils.html#dbutils-secrets[Databricks Utilities (`dbutils`)].
-For example, given a `neo4j` scope and the `username` and `password` secrets, you can do the following in a Python notebook:
+For example, given a `neo4j` scope and the `username` and `password` secrets for basic authentication, you can do the following in a Python notebook:
 
 [source, python]
 ----
@@ -91,39 +91,79 @@ spark = (
 You can use the Spark connector to read from and write to Delta tables from a Databricks notebook.
 This does not require any additional setup.
 
-.Basic Python notebook example
+=== Read Delta tables and write to Neo4j
+
+[WARNING]
+====
+To avoid deadlocks, always use a single partition (with `coalesce(1)` or `repartition(1)`) before writing relationships to Neo4j.
+====
+
+The following example shows how to read a Delta table and write its data as nodes and relationships in Neo4j.
+
+[%collapsible]
+.Content of the Delta table
+====
+The example assumes that a Delta table `customers_products_example` exists and contains the following data about customers and products:
+
+[%header]
+.`customers_products_example` table
+|===
+|name|surname|customerID|  product|quantity| order
+|John|    Doe|         1|Product 1|     200|ABC100
+|Jane|    Doe|         2|Product 2|     100|ABC200
+|===
+====
+
 [source, python, role=nocollapse]
 ----
-# Create example DataFrame
-peopleDF = spark.createDataFrame(
-    [
-        {"name": "John", "surname": "Doe", "age": 42},
-        {"name": "Jane", "surname": "Doe", "age": 40},
-    ]
-)
+# Read the Delta table into a DataFrame
+relDF = spark.read.table("customers_products_example")
 
-# Write the DataFrame to a Delta table
-
-peopleDF.write.saveAsTable("example_table")
-
-# Read the Delta table to a different DataFrame
-
-tableDF = spark.read.table("example_table")
-
-# Write the DataFrame to Neo4j
+# Write the table to Neo4j using the
+# `relationship` write option
 (
-    tableDF
-    .write.format("org.neo4j.spark.DataSource")
+    relDF
+    # Use a single partition
+    .coalesce(1)
+    .write
+    # Create new relationships
     .mode("Append")
-    .option("labels", ":Person")
+    .format("org.neo4j.spark.DataSource")
+    # Assign a type to the relationships
+    .option("relationship", "BOUGHT")
+    # Use `keys` strategy
+    .option("relationship.save.strategy", "keys")
+    # Create source nodes and assign them a label
+    .option("relationship.source.save.mode", "Append")
+    .option("relationship.source.labels", ":Customer")
+    # Map DataFrame columns to source node properties
+    .option("relationship.source.node.properties", "name,surname,customerID:id")
+    # Create target nodes and assign them a label
+    .option("relationship.target.save.mode", "Append")
+    .option("relationship.target.labels", ":Product")
+    # Map DataFrame columns to target node properties
+    .option("relationship.target.node.properties", "product:name")
+    # Map DataFrame columns to relationship properties
+    .option("relationship.properties", "quantity,order")
     .save()
 )
+----
 
-# Read the nodes with `:Person` label from Neo4j
-(
+=== Read from Neo4j and write to Delta tables
+
+The following example shows how to read data from Neo4j and write it as a Delta table.
+
+The example assumes that a new node property `status` (with values `Gold` and `Silver`) has been added to the data in the Neo4j database from the previous example.
+
+[source, python, role=nocollapse]
+----
+# Read the nodes with `:Customer` label from Neo4j
+df = (
     spark.read.format("org.neo4j.spark.DataSource")
-    .option("labels", ":Person")
+    .option("labels", ":Customer")
     .load()
-    .show()
 )
+
+# Write the DataFrame to another Delta table
+df.write.saveAsTable("customers_status_example")
 ----
