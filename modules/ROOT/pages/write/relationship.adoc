@@ -4,10 +4,7 @@ include::partial$sparksession.adoc[]
 
 With the `relationship` option, the connector writes a Spark DataFrame to the Neo4j database by specifying source, target nodes, and a relationship.
 
-[WARNING]
-====
-To avoid deadlocks, always use a single partition (for example with `coalesce(1)`) before writing relationships to Neo4j.
-====
+include::partial$avoid-deadlocks.adoc[]
 
 The connector builds a `CREATE` or a `MERGE` Cypher query (depending on the xref:writing.adoc#save-mode[save mode]) that uses the `UNWIND` clause to write a batch of rows (an `events` list with size defined by the `batch.size` option).
 

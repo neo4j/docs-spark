@@ -138,10 +138,7 @@ neoDF.write.saveAsTable("users_new_example")
 
 === Delta tables to Neo4j nodes and relationships
 
-[WARNING]
-====
-To avoid deadlocks, always use a single partition (with `coalesce(1)` or `repartition(1)`) before writing relationships to Neo4j.
-====
+include::partial$avoid-deadlocks.adoc[]
 
 The following example shows how to read a Delta table and write its data as both nodes and relationships to Neo4j.
 See the xref:writing.adoc[Writing] page for details on using the `Overwrite` mode and on writing nodes only.
