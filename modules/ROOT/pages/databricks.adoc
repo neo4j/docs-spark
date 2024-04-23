@@ -18,7 +18,7 @@ Shared access modes are not currently supported.
 . Select *Install new* and select *Maven* as the library source.
 . Install the connector using either of the following methods:
 * Copy the coordinates from the xref:overview.adoc#_spark_and_scala_compatibility[overview page] (for example `org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3`) and select *Install*.
-* Select *Search Packages* and search the connector on Maven Central (*not* on Spark Packages).
+* Select *Search Packages* and search for `neo4j-spark-connector` on Spark Packages.
 
 +
 [NOTE]
