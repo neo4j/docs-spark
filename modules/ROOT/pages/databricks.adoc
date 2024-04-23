@@ -200,8 +200,6 @@ relDF = spark.read.table("customers_products_example")
 The following example shows how to read nodes from Neo4j and write them to a Delta table.
 See the xref:reading.adoc[Reading] page for details on reading relationships.
 
-The example assumes that a new node property `status` (with values `Gold` and `Silver`) has been added to the data in the Neo4j database from the previous example.
-
 [source, python, role=nocollapse]
 ----
 # Read the nodes with `:Customer` label from Neo4j
