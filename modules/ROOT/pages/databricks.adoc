@@ -141,8 +141,8 @@ neoDF.write.saveAsTable("users_new_example")
 To avoid deadlocks, always use a single partition (with `coalesce(1)` or `repartition(1)`) before writing relationships to Neo4j.
 ====
 
-The following example shows how to read a Delta table and write its data as nodes and relationships to Neo4j.
-See the xref:writing.adoc#write-node[Writing] page for more details on how to write nodes only.
+The following example shows how to read a Delta table and write its data as both nodes and relationships to Neo4j.
+See the xref:writing.adoc[Writing] page for details on using the `Overwrite` mode and on writing nodes only.
 
 [%collapsible]
 .Content of the Delta table
@@ -196,7 +196,7 @@ relDF = spark.read.table("customers_products_example")
 === Neo4j nodes to Delta tables
 
 The following example shows how to read nodes from Neo4j and write them to a Delta table.
-See the xref:writing.adoc#write-rel[Writing] page for more details on how to write relationships too.
+See the xref:reading.adoc[Reading] page for details on reading relationships.
 
 The example assumes that a new node property `status` (with values `Gold` and `Silver`) has been added to the data in the Neo4j database from the previous example.
 
