@@ -130,7 +130,9 @@ neoDF = (
     .load()
 )
 
-# Write the DataFrame to another Delta table
+# Write the DataFrame to another Delta table,
+# which will contain the additional columns
+# `<id>` and `<labels>`
 neoDF.write.saveAsTable("users_new_example")
 ----
 
