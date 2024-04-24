@@ -92,6 +92,7 @@ can generally do as many write threads to Neo4j as there are cores in the server
 
 Since the sampling process can be expensive and impact the performance of a data extraction job, it is crucial to tune the sampling parameters properly.
 
+[#sampling-apoc]
 === APOC sampling
 
 If APOC is installed, the schema inference uses the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.nodeTypeProperties/[`apoc.meta.nodeTypeProperties`^] and the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.relTypeProperties/[`apoc.meta.relTypeProperties`^] procedures.
