@@ -81,18 +81,17 @@ CREATE (n:Person {fullName: fullName})
 [#script-option]
 == `script` option
 
-The script option allows you to execute a series of preparation script before Spark
-Job execution.
-The result of the last query can be reused in combination with the `query` ingestion mode as it follows:
+The `script` option allows to run a sequence of Cypher queries before executing the read operation.
+
+The result of the script can be used in a subsequent query, for example to inject query parameters.
 
 [source, scala]
 ----
-val ds = Seq(SimplePerson("Andrea", "Santurbano")).toDS()
+val df = Seq(Person("John", "Doe", 42)).toDF()
 
-ds.write
-  .format(classOf[DataSource].getName)
-  .mode(SaveMode.ErrorIfExists)
-  .option("url", SparkConnectorScalaSuiteIT.server.getBoltUrl)
+df.write
+  .format("org.neo4j.spark.DataSource")
+  .mode(SaveMode.Append)
   .option("query", "CREATE (n:Person{fullName: event.name + ' ' + event.surname, age: scriptResult[0].age})")
   .option("script",
     """CREATE INDEX person_surname FOR (p:Person) ON (p.surname);
@@ -104,16 +103,13 @@ ds.write
   .save()
 ----
 
-Before the import starts, the connector runs the content of the `script` option,
-and the result of the last query is injected into the `query`. At the end the full
-query executed by the connector while the data is being ingested is the following:
+In this example, the actual query the connector runs is the following:
 
 [source, cypher]
 ----
 WITH $scriptResult AS scriptResult
 UNWIND $events AS event
-CREATE (n:Person{fullName: event.name + ' ' + event.surname, age: scriptResult[0].age})
+CREATE (n:Person {fullName: event.name + ' ' + event.surname, age: scriptResult[0].age})
 ----
 
-`scriptResult` is the result from the last query contained within the `script` options
-that is `RETURN 36 AS age;`
+`scriptResult` is the result of the last Cypher query of the `script`, in this case `RETURN 36 AS age`.

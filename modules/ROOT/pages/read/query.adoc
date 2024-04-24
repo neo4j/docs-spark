@@ -4,6 +4,9 @@ include::partial$sparksession.adoc[]
 
 If you need more flexibility, you can use the `query` option to run a custom Cypher query.
 
+The query *must* include a `RETURN` clause.
+With stored procedures, you need to include a `YIELD` clause before `RETURN`.
+
 .`query` option example
 [source, scala]
 ----
@@ -30,24 +33,20 @@ spark.read.format("org.neo4j.spark.DataSource")
 
 [TIP]
 ====
-We recommend individual property fields to be returned, rather than returning graph entity (node, relationship, and path) types. This best maps to Spark's type system and yields the best results. So instead of writing:
+You should only return individual properties rather than graph entities (nodes, relationships, paths).
+If you need to return a graph entity, use the `labels` or `relationship` read options instead.
 
+.Do this:
+`MATCH (p:Person) RETURN id(p) AS id, p.name AS name`
+
+.Do NOT do this:
 `MATCH (p:Person) RETURN p`
-
-write the following:
-
-`MATCH (p:Person) RETURN id(p) AS id, p.name AS name`.
-
-If your query returns a graph entity, use the `labels` or `relationship` modes instead.
 ====
 
-The structure of the DataFrame returned by the query is influenced by the query itself.
-In this particular context, it could happen that the connector isn't able to sample the Schema from the query,
-so in these cases, we suggest trying with the option `schema.strategy` set to `string` as described xref:quickstart.adoc#string-strategy[here].
+== DataFrame columns
 
-[NOTE]
-Read query *must always* return some data (read: *must always* have a return statement).
-If you use store procedures, remember to `YIELD` and then `RETURN` data.
+The structure of the result DataFrame is defined by the query itself.
+See the xref:read/schema.adoc#query[Schema inference] page for more details.
 
 [[limit-query]]
 == Limit the results

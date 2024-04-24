@@ -21,6 +21,7 @@ Every value will be casted to string.
 
 In this case you should xref:read/schema-user.adoc[define a schema] instead.
 
+[#labels]
 == `labels` option
 
 If APOC is installed, the connector uses the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.nodeTypeProperties/[`apoc.meta.nodeTypeProperties`^] procedure.
@@ -36,6 +37,7 @@ LIMIT <limit> <2>
 <1> `<labels>` is the list of labels provided by the `labels` option.
 <2> `<limit>` is the value provided by the `schema.flatten.limit` option.
 
+[#relationships]
 == `relationships` option
 
 If APOC is installed, the connector uses the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.relTypeProperties/[`apoc.meta.relTypeProperties`^] procedure.
@@ -53,6 +55,7 @@ LIMIT <limit> <4>
 <3> `<relationship>` is the list of labels provided by `relationship` option.
 <4> `<limit>` is the value provided via `schema.flatten.limit`.
 
+[#query]
 == `query` option
 
 With the `query` option, the connector uses the first _n_ results (defined by the `schema.flatten.limit` option) of the query result to infer the schema.
