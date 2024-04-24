@@ -1,31 +1,61 @@
-= User-defined schema
+= Define a schema
 
-You can skip the automatic schema extraction process by providing a user defined schema using the `.schema()` method.
+There are two ways to disable schema inference:
 
-.Using user defined schema
-[source,scala]
+* <<string-strategy>>.
+* <<custom-schema>>.
+
+[#string-strategy]
+== Use the `string` strategy
+
+When you set the `schema.strategy` option to `string`, every DataFrame column is assigned the `String` type.
+For example, you can do the following:
+
+[source, scala]
+----
+val df = spark.read
+  .format("org.neo4j.spark.DataSource")
+  .option("schema.strategy", "string")
+  .option("query", "MATCH (n:Person) WITH n LIMIT 2 RETURN id(n) as id, n.age as age")
+  .load()
+----
+
+This strategy is useful when property types may differ, for example when a property accepts both number and string values.
+
+[#custom-schema]
+== Define a custom schema
+
+If you need more control, you can provide your own schema using the `.schema()` method.
+
+[source, scala]
 ----
 import org.apache.spark.sql.types.{DataTypes, StructType, StructField}
-import org.apache.spark.sql.{SaveMode, SparkSession}
 
-val spark = SparkSession.builder().getOrCreate()
+val userSchema = StructType(
+  Array(
+    StructField("id", DataTypes.StringType), 
+    StructField("age", DataTypes.StringType)
+  )
+)
 
-(spark.read.format("org.neo4j.spark.DataSource")
-  .option("url", "neo4j://localhost:7687")
-  .option("authentication.basic.username", "neo4j")
-  .option("authentication.basic.password", "letmein!")
-  .schema(StructType(Array(StructField("id", DataTypes.StringType), StructField("name", DataTypes.StringType))))
-  .option("query", "MATCH (n:Person) WITH n LIMIT 2 RETURN id(n) as id, n.name as name")
+spark.read.format("org.neo4j.spark.DataSource")
+  .schema(userSchema)
+  .option("query", "MATCH (n:Person) WITH n LIMIT 2 RETURN id(n) as id, n.age as age")
   .load()
-  .show())
 ----
 
-.Result of the above code
-|===
-|id |name
+The user-defined schema only works if all the values of a property can be converted to the desired type.
 
-|"0"|"John Doe"
-|"1"|"Jane Doe"
-|===
+If you need to convert only _some_ of the values, use the <<string-strategy, `string` strategy>> and some custom Scala or Python code:
 
-In this way you have total control over the schema.
+[source, scala]
+----
+import scala.jdk.CollectionConverters._
+
+val result = df.collectAsList()
+
+for (row <- result.asScala) {
+  // if <some specific condition> then convert like below
+  println(s"""Age is: ${row.getString(0).toLong}""")
+}
+----

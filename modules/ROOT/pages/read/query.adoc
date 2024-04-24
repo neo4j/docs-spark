@@ -49,36 +49,6 @@ so in these cases, we suggest trying with the option `schema.strategy` set to `s
 Read query *must always* return some data (read: *must always* have a return statement).
 If you use store procedures, remember to `YIELD` and then `RETURN` data.
 
-== Schema
-The first 10 (or any number specified by the `schema.flatten.limit` option) results are flattened, and the schema is created from those properties.
-
-If the query returns no data, sampling is not possible.
-In this case the connector creates a schema from the `RETURN` statement, with every column of type `String`.
-This does not cause any issues since the result set is empty.
-
-.Query with empty result set
-[source, cypher]
-----
-MATCH (n:NON_EXISTENT_LABEL)
-RETURN id(n) AS id, n.name, n.age
-----
-
-.Result
-|===
-|Column|Type
-
-|id|String
-|n.name|String
-|n.age|String
-|===
-
-[TIP]
-====
-In Neo4j 3.x and Neo4j 4.0, the order of the returned columns is not guaranteed to match the `RETURN` statement.
-
-Starting from Neo4j 4.1, the order is the same.
-====
-
 [[limit-query]]
 == Limit the results
 

@@ -1,4 +1,4 @@
-= Inferred schema
+= Schema inference
 
 Since Neo4j is essentially schemaless while Spark DataFrames use a fixed tabular schema, the Spark connector uses a schema inference system to convert graph data into DataFrames.
 
@@ -8,17 +8,18 @@ You can xref:performance/tuning.adoc#sampling-adoc[tune] both.
 When using the `query` option, the schema is inferred from the result of the query itself.
 
 Both methods use sampling, which is the default value (`sample`) of the `schema.strategy` option.
-This strategy works when all instances of a property in Neo4j have the same type.
+The exact APOC procedure or Cypher query depends on the read option.
 
-You can disable schema inference by setting `schema.strategy` to `string`; with this setting, every DataFrame column is set to the `String` type.
-This strategy works when property types may differ, for example when a property accepts both number and string values.
-In this case, unless the strategy is set to `string`, the connector logs a message like the following:
+This strategy works when all instances of a property in Neo4j have the same type.
+Otherwise, the connector still attempts to infer a schema but it logs a message like the following:
 
 [source]
 ----
 The field "age" has different types: [String, Long]
 Every value will be casted to string.
 ----
+
+In this case you should xref:read/schema-user.adoc[define a schema] instead.
 
 == `labels` option
 
@@ -60,23 +61,20 @@ For example, if the read query is `MATCH (n:Person) WITH n LIMIT 2 RETURN id(n) 
 
 [source, cypher]
 ----
-MATCH (n:Person) WITH n LIMIT 2 RETURN id(n) as id, n.name as name <1>
+MATCH (n:Person) WITH n LIMIT 2 RETURN id(n) as id, n.age as age <1>
 ORDER BY rand()
 LIMIT <limit> <2>
 ----
 <1> The original read query.
 <2> `<limit>` is the value provided via `schema.flatten.limit`.
 
-If you need to convert only _some_ of the values, use the `string` strategy and some custom Scala or Python code like in the following example:
+If the query returns no data, sampling is not possible.
+In this case the connector creates a schema from the `RETURN` statement, with every column of type `String`.
+This does not cause any issues since the result set is empty.
 
-[source, scala]
-----
-import scala.jdk.CollectionConverters._
+[TIP]
+====
+In Neo4j 3.x and Neo4j 4.0, the order of the returned columns is not guaranteed to match the order in the `RETURN` statement.
 
-val result = df.collectAsList()
-
-for (row <- result.asScala) {
-  // if <some specific condition> then convert like below
-  println(s"""Age is: ${row.getString(0).toLong}""")
-}
-----
+Starting from Neo4j 4.1, the order is guaranteed to be the same.
+====
