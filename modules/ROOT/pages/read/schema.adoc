@@ -37,6 +37,8 @@ LIMIT <limit> <2>
 <1> `<labels>` is the list of labels provided by the `labels` option.
 <2> `<limit>` is the value provided by the `schema.flatten.limit` option.
 
+The schema is then inferred from the query result.
+
 [#relationships]
 == `relationships` option
 
@@ -55,6 +57,8 @@ LIMIT <limit> <4>
 <3> `<relationship>` is the list of labels provided by `relationship` option.
 <4> `<limit>` is the value provided via `schema.flatten.limit`.
 
+The schema is then inferred from the query result.
+
 [#query]
 == `query` option
 
@@ -70,6 +74,8 @@ LIMIT <limit> <2>
 ----
 <1> The original read query.
 <2> `<limit>` is the value provided via `schema.flatten.limit`.
+
+The schema is then inferred from the query result.
 
 If the query returns no data, sampling is not possible.
 In this case the connector creates a schema from the `RETURN` statement, with every column of type `String`.
