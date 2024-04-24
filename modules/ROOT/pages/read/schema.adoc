@@ -19,7 +19,7 @@ The field "age" has different types: [String, Long]
 Every value will be casted to string.
 ----
 
-In this case you should xref:read/schema-user.adoc[define a schema] instead.
+In this case you should xref:read/define-schema.adoc[define a schema] instead.
 
 [#labels]
 == `labels` option
