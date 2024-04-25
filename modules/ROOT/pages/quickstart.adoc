@@ -55,7 +55,7 @@ Wrap chained methods in parentheses to avoid syntax errors.
 [NOTE]
 ======
 Some common API constants are specified as strings in the PySpark API.
-For example, the save mode in the Python API is set with `df.mode("ErrorIfExists")`.
+For example, the save mode in the Python API is set with `df.mode("Append")`.
 ======
 
 [source, python]

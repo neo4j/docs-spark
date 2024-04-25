@@ -189,7 +189,7 @@ val df = Seq(
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
-  .mode("Overwrite")
+  .mode(SaveMode.Overwrite)
   .format("org.neo4j.spark.DataSource")
   .option("relationship", "BOUGHT")
   .option("relationship.save.strategy", "keys")
@@ -240,7 +240,7 @@ val df = Seq(
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
-  .mode("Overwrite")
+  .mode(SaveMode.Overwrite)
   .format("org.neo4j.spark.DataSource")
   .option("relationship", "BOUGHT")
   .option("relationship.save.strategy", "keys")
@@ -337,7 +337,7 @@ val df = Seq(
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
-  .mode("Overwrite")
+  .mode(SaveMode.Overwrite)
   .format("org.neo4j.spark.DataSource")
   .option("relationship", "BOUGHT")
   .option("relationship.save.strategy", "keys")

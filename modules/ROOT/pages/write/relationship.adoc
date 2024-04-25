@@ -109,7 +109,7 @@ val df = Seq(
 
 df.write
   // Create new relationships
-  .mode("Append")
+  .mode(SaveMode.Append)
   .format("org.neo4j.spark.DataSource")
   // Assign a type to the relationships
   .option("relationship", "BOUGHT")
@@ -192,7 +192,7 @@ val df = Seq(
 
 df.write
   // Create new relationships
-  .mode("Append")
+  .mode(SaveMode.Append)
   .format("org.neo4j.spark.DataSource")
   // Assign a type to the relationships
   .option("relationship", "BOUGHT")
@@ -247,7 +247,7 @@ val df = Seq(
 
 df.write
   // Create new relationships
-  .mode("Append")
+  .mode(SaveMode.Append)
   .format("org.neo4j.spark.DataSource")
   // Assign a type to the relationships
   .option("relationship", "BOUGHT")
@@ -308,7 +308,7 @@ val df = Seq(
 
 df.write
   // Overwrite relationships
-  .mode("Overwrite")
+  .mode(SaveMode.Overwrite)
   .format("org.neo4j.spark.DataSource")
   // Assign a type to the relationships
   .option("relationship", "BOUGHT")
