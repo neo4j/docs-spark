@@ -291,3 +291,64 @@ SET rel += event.rel.properties
 ====
 Due to the concurrency of Spark jobs, when using the `Overwrite` mode you should use the xref:write/schema-optimization.adoc#node-constraints-unique[property uniqueness constraint] to guarantee node uniqueness.
 ====
+
+== Overwrite nodes and relationships
+
+If you need to upsert both nodes and relationships, you must use the `Overwrite` mode for all the `relationship.source.node.keys`, `relationship.target.node.keys`, and `mode` options.
+
+If run multiple times, the following example does not create any duplicate nodes or relationships.
+
+.Overwrite
+[source, scala, role=nocollapse]
+----
+val df = Seq(
+  ("John", "Doe", 1, "Product 1", 200, "ABC100"),
+  ("Jane", "Doe", 2, "Product 2", 100, "ABC200")
+).toDF("name", "surname", "customerID", "product", "quantity", "order")
+
+df.write
+  // Create new relationships
+  .mode("Overwrite")
+  .format("org.neo4j.spark.DataSource")
+  // Assign a type to the relationships
+  .option("relationship", "BOUGHT")
+  // Use `keys` strategy
+  .option("relationship.save.strategy", "keys")
+  // Overwrite source nodes and assign them a label
+  .option("relationship.source.save.mode", "Append")
+  .option("relationship.source.labels", ":Customer")
+  // Map the DataFrame columns to node properties
+  .option("relationship.source.node.properties", "name,surname,customerID:id")
+  // Node keys are mandatory for overwrite save mode
+  .option("relationship.source.node.keys", "customerID:id")
+  // Overwrite target nodes and assign them a label
+  .option("relationship.target.save.mode", "Append")
+  .option("relationship.target.labels", ":Product")
+  // Map the DataFrame columns to node properties
+  .option("relationship.target.node.properties", "product:name")
+  // Node keys are mandatory for overwrite save mode
+  .option("relationship.target.node.keys", "product:name")
+  // Map the DataFrame columns to relationship properties
+  .option("relationship.properties", "quantity,order")
+  .save()
+----
+
+.Equivalent Cypher query
+[%collapsible]
+====
+[source, cypher]
+----
+UNWIND $events AS event
+MERGE (source:Customer {id: event.source.keys.id})
+SET source += event.source.properties
+MERGE (target:Product {name: event.target.keys.name})
+SET target += event.target.properties
+MERGE (source)-[rel:BOUGHT]->(target)
+SET rel += event.rel.properties
+----
+====
+
+[IMPORTANT]
+====
+Due to the concurrency of Spark jobs, when using the `Overwrite` mode you should use the xref:write/schema-optimization.adoc#node-constraints-unique[property uniqueness constraint] to guarantee node uniqueness.
+====
