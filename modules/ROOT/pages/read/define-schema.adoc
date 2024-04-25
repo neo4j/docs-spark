@@ -1,6 +1,6 @@
 = Define a schema
 
-There are two ways to disable schema inference:
+There are two alternatives to using schema inference:
 
 * <<string-strategy>>.
 * <<custom-schema>>.
@@ -9,8 +9,8 @@ There are two ways to disable schema inference:
 == Use the `string` strategy
 
 When you set the `schema.strategy` option to `string`, every DataFrame column is assigned the `String` type.
-For example, you can do the following:
 
+.`string` strategy example
 [source, scala]
 ----
 val df = spark.read
@@ -27,6 +27,7 @@ This strategy is useful when property types may differ, for example when a prope
 
 If you need more control, you can provide your own schema using the `.schema()` method.
 
+.Custom schema example
 [source, scala]
 ----
 import org.apache.spark.sql.types.{DataTypes, StructType, StructField}
@@ -46,8 +47,9 @@ spark.read.format("org.neo4j.spark.DataSource")
 
 The user-defined schema only works if all the values of a property can be converted to the desired type.
 
-If you need to convert only _some_ of the values, use the <<string-strategy, `string` strategy>> and some custom Scala or Python code:
+If you need to convert only _some_ of the values, use the <<string-strategy, `string` strategy>> and some custom Scala or Python code.
 
+.Type conversion example
 [source, scala]
 ----
 import scala.jdk.CollectionConverters._
