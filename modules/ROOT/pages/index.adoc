@@ -22,7 +22,7 @@ The connector supports writing DataFrames to Neo4j as well, and custom Cypher qu
 == Compatibility
 
 === Neo4j compatibility
-The connector supports Neo4j 4.4 and 5.x, whether run as a single instance, as a cluster, or a managed service in Neo4j Aura.
+The connector supports Neo4j 5.x and 4.4, whether run as a managed service in link:{neo4j-docs-base-uri}/aura/[Neo4j Aura], as a single instance, or as a cluster.
 It supports both the Community and the Enterprise Edition.
 
 === Spark and Scala compatibility
@@ -31,8 +31,7 @@ The connector currently supports Spark 3.0+ with Scala 2.12 and Scala 2.13.
 
 == Training
 
-If you want an introduction on the Neo4j Connector for Apache Spark, take a look at the training that Andrea Santurbano
-presented at NODES2020.
+An introduction to the connector by Andrea Santurbano is available on YouTube.
 
 ++++
 <iframe width="560" height="315" src="https://www.youtube.com/embed/581Zd-Yihew?start=58" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
