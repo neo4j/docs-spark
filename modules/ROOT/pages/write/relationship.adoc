@@ -198,14 +198,14 @@ df.write
   .option("relationship", "BOUGHT")
   // Use `keys` strategy
   .option("relationship.save.strategy", "keys")
-  // Overwrite source nodes and assign them a label
+  // Match source nodes with the specified label
   .option("relationship.source.save.mode", "Match")
   .option("relationship.source.labels", ":Customer")
   // Map the DataFrame columns to node properties
   .option("relationship.source.node.properties", "name,surname,customerID:id")
   // Node keys are mandatory for overwrite save mode
   .option("relationship.source.node.keys", "customerID:id")
-  // Overwrite target nodes and assign them a label
+  // Match target nodes with the specified label
   .option("relationship.target.save.mode", "Match")
   .option("relationship.target.labels", ":Product")
   // Map the DataFrame columns to node properties
