@@ -188,8 +188,8 @@ partitions and each one manages 20 records (we use `SKIP / LIMIT` queries).
 
 Partitioning the dataset makes sense only if you're dealing with a big dataset (>= 10M of records).
 
-[[parallelize]]
-=== How to parallelize the query execution
+[#parallelize]
+=== How to parallelize query execution
 
 Three options are available:
 

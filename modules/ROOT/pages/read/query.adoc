@@ -81,7 +81,8 @@ RETURN p.name
 When you rewrite a query, make sure the new query is equivalent to your original query so that the result is the same.
 ====
 
-You may also use the `query.count` option rather than reformulating your query (more on it <<quickstart.adoc#parallelize,here>>).
+You may also use the `query.count` option rather than reformulating your query.
+See the xref:performance/spark.adoc#parallelize[Spark optimizations] page for more details.
 
 == The `script` option
 
