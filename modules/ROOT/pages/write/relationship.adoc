@@ -307,7 +307,7 @@ val df = Seq(
 ).toDF("name", "surname", "customerID", "product", "quantity", "order")
 
 df.write
-  // Create new relationships
+  // Overwrite relationships
   .mode("Overwrite")
   .format("org.neo4j.spark.DataSource")
   // Assign a type to the relationships
