@@ -125,5 +125,4 @@ See xref:types.adoc[] for the full type mapping between Spark DataFrames and Neo
 == Performance considerations
 
 If the schema is not specified, the Spark Connector uses xref:read/schema.adoc[sampling].
-
-Since sampling is potentially an expensive operation, consider xref:read/define-schema.adoc[supplying a schema].
+Since sampling is potentially an expensive operation, consider xref:read/define-schema.adoc[defining a schema].

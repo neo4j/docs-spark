@@ -24,7 +24,7 @@ include::partial$dwh-list.adoc[]
 ** xref:write/query.adoc[]
 ** xref:write/schema-optimization.adoc[]
 ** xref:write/options.adoc[]
-* Improving performance
+* xref:architecture.adoc[]
 ** xref:performance/modeling.adoc[]
 ** xref:performance/tuning.adoc[]
 ** xref:performance/spark.adoc[]
