@@ -13,20 +13,15 @@ The schema optimization options described here cannot be used with the `query` o
 If you are using a xref:write/query.adoc[custom Cypher query], you need to create indexes and constraints manually using the xref:write/query.adoc#script-option[`script` option].
 ====
 
-[IMPORTANT]
-====
-label:new[New in 5.3]
-
-The `schema.optimization.type` option is deprecated in favor of `schema.optimization.node.keys`, `schema.optimization.relationship.keys`, and `schema.optimization`.
-====
-
 .Schema optimization options
-[cols="4, 3, 2, 1"]
+[cols="4,3,2,1"]
 |===
 |Option|Description|Value|Default
 
 |`schema.optimization.type` label:deprecated[Deprecated in 5.3]
 |Creates <<indexes, indexes>> and <<node-constraints-unique, property uniqueness>> constraints on nodes using the properties defined by the `node.keys` option.
+
+(*Deprecated* in favor of `schema.optimization.node.keys`, `schema.optimization.relationship.keys`, `schema.optimization`)
 |One of `NONE`, `INDEX`, `NODE_CONSTRAINTS`
 |`NONE`
 
@@ -71,15 +66,18 @@ df.write
   .save()
 ----
 
+[%collapsible]
+.Schema query
+====
 Before the writing process starts, the connector runs the following schema query:
 
-.Schema query
 [source, cypher]
 ----
 CREATE INDEX spark_INDEX_Product_name FOR (n:Product) ON (n.name)
 ----
 
 The format of the index name is `spark_INDEX_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
+====
 
 Notes:
 
@@ -111,13 +109,16 @@ df.write
   .save()
 ----
 
+[%collapsible]
+.Schema query
+====
 Before the writing process starts, the connector runs the following schema query:
 
-.Schema query
 [source, cypher]
 ----
 CREATE CONSTRAINT `spark_NODE_UNIQUE-CONSTRAINT_Product_name` IF NOT EXISTS FOR (e:Product) REQUIRE (e.name) IS UNIQUE
 ----
+====
 
 Notes:
 
@@ -158,13 +159,16 @@ df.write
   .save()
 ----
 
+[%collapsible]
+.Schema query
+====
 Before the writing process starts, the connector runs the following schema query:
 
-.Schema query
 [source, cypher]
 ----
 CREATE CONSTRAINT `spark_NODE_KEY-CONSTRAINT_Product_name` IF NOT EXISTS FOR (e:Product) REQUIRE (e.name) IS NODE KEY
 ----
+====
 
 Notes:
 
@@ -207,13 +211,16 @@ df.write
   .save()
 ----
 
+[%collapsible]
+.Schema query
+====
 Before the writing process starts, the connector runs the following schema query:
 
-.Schema query
 [source, cypher]
 ----
 CREATE CONSTRAINT `spark_RELATIONSHIP_UNIQUE-CONSTRAINT_BOUGHT_order` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE (e.order) IS UNIQUE
 ----
+====
 
 Notes:
 
@@ -258,13 +265,16 @@ df.write
   .save()
 ----
 
+[%collapsible]
+.Schema query
+====
 Before the writing process starts, the connector runs the following schema query:
 
-.Schema query
 [source, cypher]
 ----
 CREATE CONSTRAINT `spark_RELATIONSHIP_KEY-CONSTRAINT_BOUGHT_order` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE (e.order) IS RELATIONSHIP KEY
 ----
+====
 
 Notes:
 
@@ -305,9 +315,11 @@ df.write
   .save()
 ----
 
+[%collapsible]
+.Schema queries
+====
 Before the writing process starts, the connector runs the following schema queries (one query for each DataFrame column):
 
-.Schema query
 [source, cypher]
 ----
 CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-name` IF NOT EXISTS FOR (e:Person) REQUIRE e.name IS :: STRING
@@ -320,11 +332,11 @@ CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Person-age` IF NOT EXISTS FOR (e:P
 If a DataFrame column is not nullable, the connector runs additional schema queries.
 For example, if the `age` column is not nullable, the connector runs the following schema query:
 
-.Schema query
 [source, cypher]
 ----
 CREATE CONSTRAINT `spark_NODE-NOT_NULL-CONSTRAINT-Person-age` IF NOT EXISTS FOR (e:Person) REQUIRE e.age IS NOT NULL
 ----
+====
 
 === On relationships
 
@@ -354,9 +366,11 @@ df.write
   .save()
 ----
 
+[%collapsible]
+.Schema queries
+====
 Before the writing process starts, the connector runs the following schema queries (property type constraint queries for source and target node properties, then one property type constraint query for each DataFrame column representing a relationship property):
 
-.Schema query
 [source, cypher]
 ----
 CREATE CONSTRAINT `spark_NODE-TYPE-CONSTRAINT-Customer-name` IF NOT EXISTS FOR (e:Customer) REQUIRE e.name IS :: STRING
@@ -381,3 +395,4 @@ CREATE CONSTRAINT `spark_NODE-NOT_NULL-CONSTRAINT-Customer-id` IF NOT EXISTS FOR
 
 CREATE CONSTRAINT `spark_RELATIONSHIP-NOT_NULL-CONSTRAINT-BOUGHT-quantity` IF NOT EXISTS FOR ()-[e:BOUGHT]->() REQUIRE e.quantity IS NOT NULL
 ----
+====
