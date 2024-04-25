@@ -36,7 +36,7 @@ The connector is available via link:https://spark-packages.org/?q=neo4j-connecto
 =====
 [source, shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/spark-shell --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3
+$SPARK_HOME/bin/spark-shell --packages org.neo4j:neo4j-connector-apache-spark_{scala-version}:{exact-connector-version}_for_spark_3
 ----
 =====
 
@@ -44,7 +44,7 @@ $SPARK_HOME/bin/spark-shell --packages org.neo4j:neo4j-connector-apache-spark_2.
 =====
 [source, shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/pyspark --packages org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3
+$SPARK_HOME/bin/pyspark --packages org.neo4j:neo4j-connector-apache-spark_{scala-version}:{exact-connector-version}_for_spark_3
 ----
 =====
 ====
@@ -57,7 +57,7 @@ Alternatively, you can download the connector JAR file from the link:https://neo
 =====
 [source, shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/spark-shell --jars neo4j-connector-apache-spark_2.12-{exact-connector-version}_for_spark_3.jar
+$SPARK_HOME/bin/spark-shell --jars neo4j-connector-apache-spark_{scala-version}-{exact-connector-version}_for_spark_3.jar
 ----
 =====
 
@@ -65,7 +65,7 @@ $SPARK_HOME/bin/spark-shell --jars neo4j-connector-apache-spark_2.12-{exact-conn
 =====
 [source, shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/pyspark --jars neo4j-connector-apache-spark_2.12-{exact-connector-version}_for_spark_3.jar
+$SPARK_HOME/bin/pyspark --jars neo4j-connector-apache-spark_{scala-version}-{exact-connector-version}_for_spark_3.jar
 ----
 =====
 ====
@@ -98,7 +98,7 @@ If you use the link:https://github.com/databricks/sbt-spark-package[sbt-spark-pa
 
 [source, shell, subs="attributes+"]
 ----
-scala spDependencies += "org.neo4j/neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3"
+scala spDependencies += "org.neo4j/neo4j-connector-apache-spark_{scala-version}:{exact-connector-version}_for_spark_3"
 ----
 =====
 
@@ -119,6 +119,6 @@ include::example$java/pom.xml[]
 ----
 dependencies {
     // list of dependencies
-    compile "org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3"
+    compile "org.neo4j:neo4j-connector-apache-spark_{scala-version}:{exact-connector-version}_for_spark_3"
 }
 ----
