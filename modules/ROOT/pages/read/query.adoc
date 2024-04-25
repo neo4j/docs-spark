@@ -31,22 +31,29 @@ spark.read.format("org.neo4j.spark.DataSource")
 |1|Jane Doe
 |===
 
-[TIP]
-====
-You should only return individual properties rather than graph entities (nodes, relationships, paths).
-If you need to return a graph entity, use the `labels` or `relationship` read options instead.
-
-.Do this:
-`MATCH (p:Person) RETURN id(p) AS id, p.name AS name`
-
-.Do NOT do this:
-`MATCH (p:Person) RETURN p`
-====
-
 == DataFrame columns
 
 The structure of the result DataFrame is defined by the query itself.
 See the xref:read/schema.adoc#query[Schema inference] page for more details.
+
+This option is best suited when you return individual properties rather than graph entities (nodes, relationships, paths).
+Returning a graph entity, anyway, does not cause an error.
+
+[cols="1l,1l"]
+|===
+|Recommended|Not recommended
+
+|MATCH (p:Person)
+RETURN id(p) AS id, p.name AS name
+
+|MATCH (p:Person)
+RETURN p
+|===
+
+[TIP]
+====
+If you need to return a graph entity, use the xref:read/labels.adoc[`labels`] or xref:read/relationship.adoc[`relationship`] read options instead.
+====
 
 [[limit-query]]
 == Limit the results
@@ -81,7 +88,7 @@ RETURN p.name
 When you rewrite a query, make sure the new query is equivalent to your original query so that the result is the same.
 ====
 
-You may also use the `query.count` option rather than reformulating your query.
+You can also use the `query.count` option instead of rewriting your query.
 See the xref:performance/spark.adoc#parallelize[Spark optimizations] page for more details.
 
 == The `script` option
