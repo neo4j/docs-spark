@@ -80,10 +80,3 @@ The schema is then inferred from the query result.
 If the query returns no data, sampling is not possible.
 In this case the connector creates a schema from the `RETURN` statement, with every column of type `String`.
 This does not cause any issues since the result set is empty.
-
-[TIP]
-====
-In Neo4j 3.x and Neo4j 4.0, the order of the returned columns is not guaranteed to match the order in the `RETURN` statement.
-
-Starting from Neo4j 4.1, the order is guaranteed to be the same.
-====
