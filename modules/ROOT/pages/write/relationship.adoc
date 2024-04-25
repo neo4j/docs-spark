@@ -247,7 +247,7 @@ val df = Seq(
 
 df.write
   // Create new relationships
-  .mode("Overwrite")
+  .mode("Append")
   .format("org.neo4j.spark.DataSource")
   // Assign a type to the relationships
   .option("relationship", "BOUGHT")
