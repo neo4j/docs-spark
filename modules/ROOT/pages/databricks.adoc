@@ -15,16 +15,15 @@ include::partial$third-party.adoc[]
 Shared access modes are not currently supported.
 ====
 . Once the cluster is available, open its page and select the *Libraries* tab.
-. Select *Install new* and select *Maven* as the library source.
-. Install the connector using either of the following methods:
-* Copy the coordinates from the xref:overview.adoc#_spark_and_scala_compatibility[overview page] (for example `org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3`) and select *Install*.
-* Select *Search Packages* and search for `neo4j-spark-connector` on Spark Packages.
-
+. Select *Install new* and choose *Maven* as the library source.
+. Select *Search Packages*, search for `neo4j-spark-connector` on Spark Packages, then *Select* it.
 +
 [NOTE]
 ====
-Make sure to select the correct version of the connector by matching both the Scala version and the Spark version to the cluster's runtime.
+Make sure to select the correct version of the connector by matching the Scala version to the cluster's runtime.
 ====
+
+. Select *Install*.
 
 === Unity Catalog
 
@@ -39,7 +38,7 @@ You can set the Spark configuration on the cluster you are running your notebook
 . Select the *Advanced Options* toggle under *Configuration*.
 . Select the *Spark* tab.
 
-For example, you can add Neo4j authentication configuration in the text area as follows:
+For example, you can add Neo4j Bearer authentication configuration in the text area as follows:
 
 .Bearer authentication example
 [source]
@@ -138,10 +137,7 @@ neoDF.write.saveAsTable("users_new_example")
 
 === Delta tables to Neo4j nodes and relationships
 
-[WARNING]
-====
-To avoid deadlocks, always use a single partition (with `coalesce(1)` or `repartition(1)`) before writing relationships to Neo4j.
-====
+include::partial$avoid-deadlocks.adoc[]
 
 The following example shows how to read a Delta table and write its data as both nodes and relationships to Neo4j.
 See the xref:writing.adoc[Writing] page for details on using the `Overwrite` mode and on writing nodes only.

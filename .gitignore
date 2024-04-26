@@ -39,3 +39,8 @@ node_modules/
 
 # IDE
 .vscode/
+
+# Examples
+scripts/run-examples/scala-example
+scripts/run-examples/java-example
+scripts/run-examples/python-example
