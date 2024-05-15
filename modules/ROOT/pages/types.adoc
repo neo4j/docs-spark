@@ -47,6 +47,8 @@ In some cases, there are data types that Neo4j provides that Spark does not have
 |`DateTime`
 |`timestamp`
 |Example: `2020-09-11 12:17:39.192`
+This mapping only applies when _reading_ from Neo4j; otherwise, a `timestamp` is _written_ to Neo4j as a `LocalDateTime`.
+If you need to write a `DateTime`, use a xref:write/query.adoc[Cypher write query].
 
 |`LocalDateTime`
 |`timestamp`
