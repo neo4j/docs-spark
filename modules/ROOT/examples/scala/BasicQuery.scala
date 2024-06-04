@@ -23,7 +23,8 @@ val queryDF = List(
 ).toDF()
 
 // Define the Cypher query to use in the write
-val writeQuery = "CREATE (n:Person {fullName: event.name + ' ' + event.surname})"
+val writeQuery =
+  "CREATE (n:Person {fullName: event.name + ' ' + event.surname})"
 
 queryDF.write
   .format("org.neo4j.spark.DataSource")

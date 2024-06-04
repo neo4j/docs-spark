@@ -39,8 +39,7 @@ df = (
     spark.read.format("org.neo4j.spark.DataSource")
     # ":Person:Employee" and "Person:Employee"
     # are equivalent
-    .option("labels", ":Person:Employee")
-    .load()
+    .option("labels", ":Person:Employee").load()
 )
 
 df.show()
