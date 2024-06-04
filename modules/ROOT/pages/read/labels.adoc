@@ -58,16 +58,26 @@ The query may include `SKIP` and `LIMIT` clauses depending on the level of paral
 You can read nodes with multiple labels using the colon as a separator.
 The colon before the first label is optional.
 
-.Read nodes with multiple labels
-[source,scala]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
 ----
-val df = spark.read
-  .format("org.neo4j.spark.DataSource")
-  // ":Person:Employee" and "Person:Employee"
-  // are equivalent
-  .option("labels", ":Person:Employee")
-  .load()
+include::example$scala/MultipleLabels.scala[tags=code-read]
 ----
+=====
+
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
+----
+include::example$python/multiple_labels.py[tags=code-read]
+----
+=====
+====
 
 == DataFrame columns
 

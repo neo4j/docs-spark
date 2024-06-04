@@ -43,17 +43,26 @@ SET n += event.properties
 You can write nodes with multiple labels using the colon as a separator.
 The colon before the first label is optional.
 
-.Create nodes with multiple labels
-[source, scala]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
 ----
-df.write
-  .format("org.neo4j.spark.DataSource")
-  .mode(SaveMode.Append)
-  // ":Person:Employee" and "Person:Employee"
-  // are equivalent
-  .option("labels", ":Person:Employee")
-  .save()
+include::example$scala/MultipleLabels.scala[tags=code-write]
 ----
+=====
+
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
+----
+include::example$python/multiple_labels.py[tags=code-write]
+----
+=====
+====
 
 == Node keys
 
