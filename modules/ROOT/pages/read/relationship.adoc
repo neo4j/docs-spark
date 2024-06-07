@@ -4,10 +4,26 @@ include::partial$sparksession.adoc[]
 
 You can read a relationship and its source and target nodes by specifying the relationship type, the source node labels, and the target node labels.
 
-[source, scala]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse]
 ----
 include::example$scala/BasicRelationship.scala[tags=code-read]
 ----
+=====
+
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse]
+----
+include::example$python/basic_relationship.py[tags=code-read]
+----
+=====
+====
 
 .Equivalent Cypher query
 [%collapsible]
@@ -50,23 +66,28 @@ a|
 * `target`: map of target node properties
 |===
 
-Examples:
-
 [[rel-schema-no-map]]
 .`relationship.nodes.map` set to `false`
-[source, scala]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse, indent=0]
 ----
-val df = spark.read
-  .format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  // It can be omitted, since `false` is the default
-  .option("relationship.nodes.map", "false")
-  .option("relationship.source.labels", ":Customer")
-  .option("relationship.target.labels", ":Product")
-  .load()
+include::example$scala/ReadRelationship.scala[tags=code-nodes-map-false]
+----
+=====
 
-df.show()
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse, indent=0]
 ----
+include::example$python/read_relationship.py[tags=code-nodes-map-false]
+----
+=====
+====
 
 .Result
 |===
@@ -77,19 +98,26 @@ df.show()
 |===
 
 .`relationship.nodes.map` set to `true`
-[source, scala]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse, indent=0]
 ----
-val df = spark.read
-  .format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  .option("relationship.nodes.map", "true")
-  .option("relationship.source.labels", ":Customer")
-  .option("relationship.target.labels", ":Product")
-  .load()
-  
-// Use `false` to print the whole DataFrame
-df.show(false)
+include::example$scala/ReadRelationship.scala[tags=code-nodes-map-true]
 ----
+=====
+
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse, indent=0]
+----
+include::example$python/read_relationship.py[tags=code-nodes-map-true]
+----
+=====
+====
 
 .Result
 [cols="2,2,3l,3l,2,2"]
@@ -124,17 +152,26 @@ a|
 Examples:
 
 .`relationship.nodes.map` set to `false`
-[source, scala]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse, indent=0]
 ----
-val df = spark.read.format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  .option("relationship.nodes.map", "false")
-  .option("relationship.source.labels", ":Customer")
-  .option("relationship.target.labels", ":Product")
-  .load()
+include::example$scala/ReadRelationship.scala[tags=code-nodes-map-false-filter]
+----
+=====
 
-df.where("`source.id` > 1").show()
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse, indent=0]
 ----
+include::example$python/read_relationship.py[tags=code-nodes-map-false-filter]
+----
+=====
+====
 
 .Result
 |===
@@ -144,18 +181,26 @@ df.where("`source.id` > 1").show()
 |===
 
 .`relationship.nodes.map` set to `true`
-[source, scala]
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+.Example
+[source, scala, role=nocollapse, indent=0]
 ----
-val df = spark.read.format("org.neo4j.spark.DataSource")
-  .option("relationship", "BOUGHT")
-  .option("relationship.nodes.map", "true")
-  .option("relationship.source.labels", ":Customer")
-  .option("relationship.target.labels", ":Product")
-  .load()
+include::example$scala/ReadRelationship.scala[tags=code-nodes-map-true-filter]
+----
+=====
 
-// Use `false` to print the whole DataFrame
-df.where("`<source>`.`id` > 1").show(false)
+[.include-with-Python]
+=====
+.Example
+[source, python, role=nocollapse, indent=0]
 ----
+include::example$python/read_relationship.py[tags=code-nodes-map-true-filter]
+----
+=====
+====
 
 .Result
 [cols="2,2,3l,3l,2,2"]
