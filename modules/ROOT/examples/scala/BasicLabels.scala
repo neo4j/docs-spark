@@ -7,32 +7,32 @@ val username = "neo4j"
 val password = "password"
 
 val spark = SparkSession.builder
-  .config("neo4j.url", url)
-  .config("neo4j.authentication.basic.username", username)
-  .config("neo4j.authentication.basic.password", password)
-  .getOrCreate()
+    .config("neo4j.url", url)
+    .config("neo4j.authentication.basic.username", username)
+    .config("neo4j.authentication.basic.password", password)
+    .getOrCreate()
 // end::setup[]
 
 // tag::code-write[]
 case class Person(name: String, surname: String, age: Int)
 
 val peopleDF = List(
-  Person("John", "Doe", 42),
-  Person("Jane", "Doe", 40)
+    Person("John", "Doe", 42),
+    Person("Jane", "Doe", 40)
 ).toDF()
 
 peopleDF.write
-  .format("org.neo4j.spark.DataSource")
-  .mode(SaveMode.Append)
-  .option("labels", ":Person")
-  .save()
+    .format("org.neo4j.spark.DataSource")
+    .mode(SaveMode.Append)
+    .option("labels", ":Person")
+    .save()
 // end::code-write[]
 
 // tag::code-read[]
 val df = spark.read
-  .format("org.neo4j.spark.DataSource")
-  .option("labels", ":Person")
-  .load()
+    .format("org.neo4j.spark.DataSource")
+    .option("labels", ":Person")
+    .load()
 
 df.show()
 // end::code-read[]

@@ -7,10 +7,10 @@ val username = "neo4j"
 val password = "password"
 
 val spark = SparkSession.builder
-  .config("neo4j.url", url)
-  .config("neo4j.authentication.basic.username", username)
-  .config("neo4j.authentication.basic.password", password)
-  .getOrCreate()
+    .config("neo4j.url", url)
+    .config("neo4j.authentication.basic.username", username)
+    .config("neo4j.authentication.basic.password", password)
+    .getOrCreate()
 // end::setup[]
 
 // tag::code-write[]
@@ -18,19 +18,19 @@ case class Person(name: String, surname: String, age: Int)
 
 // Create an example DataFrame
 val queryDF = List(
-  Person("John", "Doe", 42),
-  Person("Jane", "Doe", 40)
+    Person("John", "Doe", 42),
+    Person("Jane", "Doe", 40)
 ).toDF()
 
 // Define the Cypher query to use in the write
 val writeQuery =
-  "CREATE (n:Person {fullName: event.name + ' ' + event.surname})"
+    "CREATE (n:Person {fullName: event.name + ' ' + event.surname})"
 
 queryDF.write
-  .format("org.neo4j.spark.DataSource")
-  .option("query", writeQuery)
-  .mode(SaveMode.Overwrite)
-  .save()
+    .format("org.neo4j.spark.DataSource")
+    .option("query", writeQuery)
+    .mode(SaveMode.Overwrite)
+    .save()
 // end::code-write[]
 
 // tag::code-read[]
@@ -40,9 +40,9 @@ val readQuery = """
 """
 
 val df = spark.read
-  .format("org.neo4j.spark.DataSource")
-  .option("query", readQuery)
-  .load()
+    .format("org.neo4j.spark.DataSource")
+    .option("query", readQuery)
+    .load()
 
 df.show()
 // end::code-read[]
