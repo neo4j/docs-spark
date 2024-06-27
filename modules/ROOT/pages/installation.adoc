@@ -8,21 +8,26 @@ Make sure to match both the Spark version and the Scala version of your setup.
 Here is a compatibility table to help you choose the correct version of the connector.
 
 .Compatibility table
-[cols="1,1,3,2,2"]
+[cols="1,3,3"]
 |===
-| | Group ID | Artifact ID | Version (Spark 3.0 and 3.1) | Version (Spark 3.2+)
+| Spark Version | Artifact ID (*Scala 2.12*) | Artifact ID (*Scala 2.13*)
 
-|*Scala 2.12*
-|`org.neo4j`
-|`neo4j-connector-apache-spark_2.12`
-|`4.1.5_for_spark_3`
-|`{exact-connector-version}_for_spark_3`
+|*3.4+*
+|`org.neo4j:neo4j-connector-apache-spark_2.12:{exact-connector-version}_for_spark_3`
+|`org.neo4j:neo4j-connector-apache-spark_2.13:{exact-connector-version}_for_spark_3`
 
-|*Scala 2.13*
-|`org.neo4j`
-|`neo4j-connector-apache-spark_2.13`
-|`4.1.5_for_spark_3`
-|`{exact-connector-version}_for_spark_3`
+|*3.3*
+|`org.neo4j:neo4j-connector-apache-spark_2.12:5.1.0_for_spark_3`
+|`org.neo4j:neo4j-connector-apache-spark_2.13:5.1.0_for_spark_3`
+
+|*3.2*
+|`org.neo4j:neo4j-connector-apache-spark_2.12:5.0.3_for_spark_3`
+|`org.neo4j:neo4j-connector-apache-spark_2.13:5.0.3_for_spark_3`
+
+|*3.0 and 3.1*
+|`org.neo4j:neo4j-connector-apache-spark_2.12:4.1.5_for_spark_3`
+|`org.neo4j:neo4j-connector-apache-spark_2.13:4.1.5_for_spark_3`
+
 |===
 
 [#shell]
