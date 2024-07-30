@@ -13,7 +13,6 @@ val spark = SparkSession.builder
     .getOrCreate()
 // end::setup[]
 
-// tag::code-write[]
 case class Person(name: String, surname: String, age: Int)
 
 val peopleDF = List(
@@ -21,17 +20,22 @@ val peopleDF = List(
     Person("Jane", "Doe", 40)
 ).toDF()
 
+// tag::code-write[]
 peopleDF.write
     .format("org.neo4j.spark.DataSource")
     .mode(SaveMode.Append)
-    .option("labels", ":Person")
+    // ":Person:Employee" and "Person:Employee"
+    // are equivalent
+    .option("labels", ":Person:Employee")
     .save()
 // end::code-write[]
 
 // tag::code-read[]
 val df = spark.read
     .format("org.neo4j.spark.DataSource")
-    .option("labels", ":Person")
+    // ":Person:Employee" and "Person:Employee"
+    // are equivalent
+    .option("labels", ":Person:Employee")
     .load()
 
 df.show()

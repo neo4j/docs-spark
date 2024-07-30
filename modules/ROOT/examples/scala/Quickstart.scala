@@ -6,28 +6,28 @@ val username = "neo4j"
 val password = "password"
 
 val spark = SparkSession.builder
-  .config("neo4j.url", url)
-  .config("neo4j.authentication.basic.username", username)
-  .config("neo4j.authentication.basic.password", password)
-  .getOrCreate()
+    .config("neo4j.url", url)
+    .config("neo4j.authentication.basic.username", username)
+    .config("neo4j.authentication.basic.password", password)
+    .getOrCreate()
 
 // Create example DataFrame
 val df = List(
-  ("John", "Doe", 42),
-  ("Jane", "Doe", 40)
+    ("John", "Doe", 42),
+    ("Jane", "Doe", 40)
 ).toDF("name", "surname", "age")
 
 // Write to Neo4j
 df.write
-  .format("org.neo4j.spark.DataSource")
-  .mode(SaveMode.Overwrite)
-  .option("labels", "Person")
-  .option("node.keys", "name,surname")
-  .save()
+    .format("org.neo4j.spark.DataSource")
+    .mode(SaveMode.Overwrite)
+    .option("labels", "Person")
+    .option("node.keys", "name,surname")
+    .save()
 
 // Read from Neo4j
 spark.read
-  .format("org.neo4j.spark.DataSource")
-  .option("labels", "Person")
-  .load()
-  .show()
+    .format("org.neo4j.spark.DataSource")
+    .option("labels", "Person")
+    .load()
+    .show()
