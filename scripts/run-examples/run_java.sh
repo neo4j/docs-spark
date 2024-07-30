@@ -10,6 +10,6 @@ cp ../../../modules/ROOT/examples/java/SparkApp.java src/main/java/
 mvn package
 
 $SPARK_HOME/bin/spark-submit \
-  --packages org.neo4j:neo4j-connector-apache-spark_2.12:5.3.0_for_spark_3 \
+  --packages org.neo4j:neo4j-connector-apache-spark_2.12:5.3.1_for_spark_3 \
   --class SparkApp \
   target/spark-app-1.0.jar
