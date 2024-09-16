@@ -147,7 +147,8 @@ For the streaming to work, you need each record to have a property of type `time
 to leverage when reading new data from Neo4j to be sent to the stream.
 
 Behind the scenes the connector is building a query with a `WHERE` clause that checks for the
-records that have `[timestampProperty] >= currentTimestamp() AND [timestampProperty] IS NOT NULL`.
+records that have this `[timestampProperty]` between a range of timestamps computed from checkpoint data
+and latest offset available in the database.
 
 So it's required that each node has the timestamp property of a Neo4j type (Long),
 and it *must* be not `null`.
@@ -191,7 +192,7 @@ df = spark.readStream \
     .option("streaming.property.name", "timestamp") \
     .option("query", \
         """MATCH (p:Test3_Person)
-           WHERE p.timestamp > $stream.offset
+           WHERE p.timestamp > $stream.from AND p.timestamp <= $stream.to
            RETURN p.age AS age, p.timestamp AS timestamp""") \
     .option("streaming.query.offset", \
         "MATCH (p:Test3_Person) RETURN max(p.timestamp)") \
@@ -199,10 +200,16 @@ df = spark.readStream \
 ----
 
 As you can see, the `streaming.from` and `streaming.property.name` must be specified anyway, but you need to take care of the `WHERE` clause by yourself.
-You are provided with a variable `$stream.offset` that contains the value of the timestamp that is being used.
+You are provided with two parameters to the query, `$stream.to` and `$stream.from`, which describes the range of changes we need to read.
+
+[NOTE]
+====
+Although the query parameter `$stream.offset`, which is now deprecated, is still supported in the query, all queries will be rewritten to also filter against `$stream.from` and `$stream.to` parameters.
+In order for database to query changes efficiently, update your queries to use these new query parameters.
+====
 
 In this case, the `streaming.query.offset` option is mandatory;
-this option is used by the connector to read the last timestamp in the database, and the result is set as a value of the `$stream.offset` parameter.
+this option is used by the connector to read the last timestamp in the database, and the result is used to compute the ranges to be selected.
 
 === Additional examples
 
