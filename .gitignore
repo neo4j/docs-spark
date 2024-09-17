@@ -41,6 +41,6 @@ node_modules/
 .vscode/
 
 # Examples
-scripts/run-examples/scala-example
-scripts/run-examples/java-example
-scripts/run-examples/python-example
+scripts/run-examples/run-app/scala-example
+scripts/run-examples/run-app/java-example
+scripts/run-examples/run-app/python-example
