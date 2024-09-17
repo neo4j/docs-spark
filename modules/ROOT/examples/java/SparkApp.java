@@ -9,6 +9,7 @@ public class SparkApp {
         String url = "neo4j://localhost:7687";
         String username = "neo4j";
         String password = "password";
+        String dbname = "neo4j";
 
         SparkSession spark = SparkSession
             .builder()
@@ -16,6 +17,7 @@ public class SparkApp {
             .config("neo4j.url", url)
             .config("neo4j.authentication.basic.username", username)
             .config("neo4j.authentication.basic.password", password)
+            .config("neo4j.database", dbname)
             .getOrCreate();
 
         Dataset<Row> data = spark.read().json("example.jsonl");
