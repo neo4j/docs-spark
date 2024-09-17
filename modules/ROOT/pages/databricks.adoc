@@ -76,11 +76,13 @@ from pyspark.sql import SparkSession
 url = "neo4j+s://xxxxxxxx.databases.neo4j.io"
 username = dbutils.secrets.get(scope="neo4j", key="username")
 password = dbutils.secrets.get(scope="neo4j", key="password")
+dbname = "neo4j"
 
 spark = (
     SparkSession.builder.config("neo4j.url", url)
     .config("neo4j.authentication.basic.username", username)
     .config("neo4j.authentication.basic.password", password)
+    .config("neo4j.database", dbname)
     .getOrCreate()
 )
 ----
