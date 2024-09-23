@@ -215,8 +215,13 @@ While for node and relationship extraction, you leverage the https://neo4j.com/d
 about the nodes/relationships you're trying pulling off, for the (3) you have two possible approaches:
 
 * Compute a count over the query that you're using.
-* Compute a count over a second *optimized* query that leverages indexes. In this case, you can pass
-it via the `.option("query.count", "<your cypher query>")` the query must always return only
+* Compute a global count over a second *optimized* query that leverages indexes. In this case, you can pass
+it via the `.option("query.count", "<your cypher query>")`.
+
+The option can be set in two ways:
+
+* as an integer: `.option("query.count", 100)`
+* as a query, that must always return only
 one field named `count` which is the result of the count:
 
 [source,cypher]
