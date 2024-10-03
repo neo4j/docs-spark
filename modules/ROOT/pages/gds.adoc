@@ -71,7 +71,7 @@ spark.read.format("org.neo4j.spark.DataSource")
 
 which will show a result like this:
 
-```bash
+```
 +------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------+-----------------+-------------+
 |nodeProjection                            |relationshipProjection                                                                                                                                                                    |graphName|nodeCount|relationshipCount|projectMillis|
 +------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+---------+-----------------+-------------+
@@ -103,7 +103,7 @@ spark.read.format("org.neo4j.spark.DataSource")
 ----
 (
   spark.read.format("org.neo4j.spark.DataSource")
-  .option("gds", "gds.pageRank.stream")
+  .option("gds", "gds.pageRank.stream.estimate")
   .option("gds.graphName", "myGraph")
   .option("gds.configuration.concurrency", "2")
   .load()
@@ -187,12 +187,11 @@ As you can see, we have now only the two columns `nodeId` and `score`, let's see
     # we'll assume that `spark` variable is already present
     # we create the `nodes_df`
     nodes_df = spark.read.format("org.neo4j.spark.DataSource") \
-      .option("url", "neo4j://localhost:7687") \
       .option("labels", "Page") \
       .load()
 
     # we join `nodes_df` with `pr_df` created in the step before
-    new_df = nodes_df.join(pr_df, nodes_df.col("<id>").equalTo(pr_df.col("nodeId")))
+    new_df = nodes_df.join(pr_df, nodes_df["<id>"] == pr_df["nodeId"])
     new_df.show(truncate=False)
 ----
 
