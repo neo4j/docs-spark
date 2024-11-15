@@ -33,7 +33,28 @@ Here is a compatibility table to help you choose the correct version of the conn
 [#shell]
 == Usage with the Spark shell
 
-The connector is available via link:https://spark-packages.org/?q=neo4j-connector-apache-spark[Spark Packages]:
+The connector is available via link:https://spark-packages.org/package/neo4j/neo4j-spark-connector[Spark Packages]:
+
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+[source, shell, subs="attributes+"]
+----
+$SPARK_HOME/bin/spark-shell --packages neo4j:neo4j-spark-connector:{exact-connector-version}-s_{scala-version}
+----
+=====
+
+[.include-with-Python]
+=====
+[source, shell, subs="attributes+"]
+----
+$SPARK_HOME/bin/pyspark --packages neo4j:neo4j-spark-connector:{exact-connector-version}-s_{scala-version}
+----
+=====
+====
+
+or through artifacts deployed to Maven Central:
 
 [.tabbed-example]
 ====
