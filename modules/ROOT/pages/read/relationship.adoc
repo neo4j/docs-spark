@@ -93,8 +93,8 @@ include::example$python/read_relationship.py[tags=code-nodes-map-false]
 |===
 |<rel.id>|<rel.type>|<source.id>|<source.labels>|source.surname|source.name|source.id|<target.id>|<target.labels>|target.name|rel.order|rel.quantity
 
-|3189|BOUGHT|1100|[Customer]|Doe|John|1|1040|[Product]|Product1|ABC100|200
-|3190|BOUGHT|1099|[Customer]|Doe|Jane|2|1039|[Product]|Product1|ABC200|100
+|3189|BOUGHT|1100|[Customer]|Doe|John|1|1040|[Product]|Product 1|ABC100|200
+|3190|BOUGHT|1099|[Customer]|Doe|Jane|2|1039|[Product]|Product 2|ABC200|100
 |===
 
 .`relationship.nodes.map` set to `true`
@@ -175,7 +175,7 @@ include::example$python/read_relationship.py[tags=code-nodes-map-false-filter]
 
 .Result
 |===
-|<rel.id>|<rel.type>|<source.id>|<source.labels>|source.surname|source.name|<target.id>|<target.labels>|target.name|rel.order|rel.quantity
+|<rel.id>|<rel.type>|<source.id>|<source.labels>|source.surname|source.name|source.id|<target.id>|<target.labels>|target.name|rel.order|rel.quantity
 
 |3190|BOUGHT|1099|[Customer]|Doe|Jane|2|1039|[Product]|Product 2|ABC200|100
 |===
