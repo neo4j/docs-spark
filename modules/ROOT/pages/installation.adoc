@@ -75,7 +75,7 @@ $SPARK_HOME/bin/pyspark --packages org.neo4j:neo4j-connector-apache-spark_{scala
 =====
 ====
 
-Alternatively, you can download the connector JAR file from the link:https://neo4j.com/product/connectors/apache-spark-connector/[Neo4j Connector Page] or from the link:https://github.com/neo4j-contrib/neo4j-spark-connector/releases[GitHub releases page] and run the following command to launch a Spark interactive shell with the connector included:
+Alternatively, you can download the connector JAR file from the link:https://neo4j.com/product/connectors/apache-spark-connector/[Neo4j Connector Page] or from the link:https://github.com/neo4j/neo4j-spark-connector/releases[GitHub releases page] and run the following command to launch a Spark interactive shell with the connector included:
 
 [.tabbed-example]
 ====
