@@ -33,7 +33,28 @@ Here is a compatibility table to help you choose the correct version of the conn
 [#shell]
 == Usage with the Spark shell
 
-The connector is available via link:https://spark-packages.org/?q=neo4j-connector-apache-spark[Spark Packages]:
+The connector is available via link:https://spark-packages.org/package/neo4j/neo4j-spark-connector[Spark Packages]:
+
+[.tabbed-example]
+====
+[.include-with-Scala]
+=====
+[source, shell, subs="attributes+"]
+----
+$SPARK_HOME/bin/spark-shell --packages neo4j:neo4j-spark-connector:{exact-connector-version}-s_{scala-version}
+----
+=====
+
+[.include-with-Python]
+=====
+[source, shell, subs="attributes+"]
+----
+$SPARK_HOME/bin/pyspark --packages neo4j:neo4j-spark-connector:{exact-connector-version}-s_{scala-version}
+----
+=====
+====
+
+or through artifacts deployed to Maven Central:
 
 [.tabbed-example]
 ====
@@ -54,7 +75,7 @@ $SPARK_HOME/bin/pyspark --packages org.neo4j:neo4j-connector-apache-spark_{scala
 =====
 ====
 
-Alternatively, you can download the connector JAR file from the link:https://neo4j.com/product/connectors/apache-spark-connector/[Neo4j Connector Page] or from the link:https://github.com/neo4j-contrib/neo4j-spark-connector/releases[GitHub releases page] and run the following command to launch a Spark interactive shell with the connector included:
+Alternatively, you can download the connector JAR file from the link:https://neo4j.com/product/connectors/apache-spark-connector/[Neo4j Connector Page] or from the link:https://github.com/neo4j/neo4j-spark-connector/releases[GitHub releases page] and run the following command to launch a Spark interactive shell with the connector included:
 
 [.tabbed-example]
 ====
