@@ -5,6 +5,7 @@ on:
   pull_request_target:
     branches:
       - main
+      - '4.[0-2]'
     types:
       - closed
 
