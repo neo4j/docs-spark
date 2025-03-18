@@ -4,8 +4,7 @@ name: "Documentation Teardown"
 on:
   pull_request_target:
     branches:
-      - dev
-      - 5.x
+      - main
     types:
       - closed
 
