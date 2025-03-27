@@ -158,6 +158,11 @@ Available values are:
 |_(Neo4j Driver default)_
 |No
 
+|`db.transaction.timeout`
+|Transaction timeout in milliseconds
+|_(Neo4j Driver default)_
+|No
+
 4+|*Session options*
 
 |`database`
