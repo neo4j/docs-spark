@@ -9,7 +9,7 @@ asciidoc:
   attributes:
     theme: docs
     connector-version: '5.3'
-    exact-connector-version: '5.3.5'
+    exact-connector-version: '5.3.6'
     scala-version: '2.12'
     copyright: Neo4j Inc.
     url-neo4j-product-gds-lib: https://neo4j.com/product/graph-data-science-library/
