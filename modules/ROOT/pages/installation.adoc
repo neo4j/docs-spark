@@ -83,7 +83,7 @@ Alternatively, you can download the connector JAR file from the link:https://neo
 =====
 [source, shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/spark-shell --jars neo4j-connector-apache-spark_{scala-version}-{exact-connector-version}_for_spark_3.jar
+$SPARK_HOME/bin/spark-shell --jars neo4j-spark-connector-{exact-connector-version}-s_{scala-version}.jar
 ----
 =====
 
@@ -91,7 +91,7 @@ $SPARK_HOME/bin/spark-shell --jars neo4j-connector-apache-spark_{scala-version}-
 =====
 [source, shell, subs="attributes+"]
 ----
-$SPARK_HOME/bin/pyspark --jars neo4j-connector-apache-spark_{scala-version}-{exact-connector-version}_for_spark_3.jar
+$SPARK_HOME/bin/pyspark --jars neo4j-spark-connector-{exact-connector-version}-s_{scala-version}.jar
 ----
 =====
 ====
@@ -115,7 +115,7 @@ See the xref:quickstart.adoc#applications[Quickstart] for code examples.
 [.include-with-Scala]
 =====
 .A minimal `build.sbt`
-[source, sbt]
+[source, sbt, subs="attributes+"]
 ----
 include::example$scala/build.sbt[]
 ----
@@ -131,7 +131,7 @@ scala spDependencies += "org.neo4j/neo4j-connector-apache-spark_{scala-version}:
 [.include-with-Java]
 =====
 .A minimal `pom.xml`
-[source, xml]
+[source, xml, subs="attributes+"]
 ----
 include::example$java/pom.xml[]
 ----

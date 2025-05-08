@@ -8,14 +8,14 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-sql_2.12</artifactId>
-      <version>3.5.1</version>
+      <artifactId>spark-sql_{scala-version}</artifactId>
+      <version>{spark-version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.neo4j</groupId>
-      <artifactId>neo4j-connector-apache-spark_2.12</artifactId>
-      <version>5.3.1_for_spark_3</version>
+      <artifactId>neo4j-connector-apache-spark_{scala-version}</artifactId>
+      <version>{exact-connector-version}_for_spark_3</version>
     </dependency>
   </dependencies>
 </project>
