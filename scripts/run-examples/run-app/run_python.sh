@@ -1,6 +1,6 @@
 EXAMPLES_ROOT=../../../../modules/ROOT/examples
 CONNECTOR_VERSION=$(grep -o "exact-connector-version: .\+" ../../../antora.yml | grep -o "\d\+\.\d\+\.\d\+")
-SCALA_VERSION=$(grep -o "scala-version: .\+" ../../../antora.yml | grep -o "\d\+\.\d\+")
+SCALA_VERSION=$(grep -o " scala-version: .\+" ../../../antora.yml | grep -o "\d\+\.\d\+")
 
 mkdir -p python-example
 cd python-example
