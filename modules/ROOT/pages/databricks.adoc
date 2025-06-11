@@ -16,7 +16,7 @@ Shared access modes are not currently supported.
 ====
 . Once the cluster is available, open its page and select the *Libraries* tab.
 . Select *Install new* and choose *Maven* as the library source.
-. Select *Search Packages*, search for `neo4j-spark-connector` on Spark Packages, then *Select* it.
+. Select *Search Packages* and search for either `neo4j-spark-connector` (Spark Packages) or `neo4j-connector-apache-spark` (Maven Central) from the `neo4j` organization, then *Select* the most recent one.
 +
 [NOTE]
 ====
