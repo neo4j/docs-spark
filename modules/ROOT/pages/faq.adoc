@@ -110,3 +110,29 @@ To avoid this issue you can use the xref:quickstart.adoc#user-defined-schema[use
 Aura customers connecting from Databricks may encounter SSL handshake errors due to Databricks' custom Java security settings removing support for some encryption ciphers.
 
 See the Aura support article link:https://support.neo4j.com/s/article/1500003161121-Connecting-to-Aura-with-Databricks[Connecting to Aura with Databricks] for more information.
+
+== Troubleshooting
+
+=== How do I get the underlying Neo4j driver debug logs?
+
+[NOTE]
+====
+This is only possible with versions 4.1.4 and later of the Spark connector.
+====
+
+The Spark program needs to be configured for logging, as documented in https://spark.apache.org/docs/latest/configuration.html#configuring-logging[the Spark manual].
+
+Set the level to `TRACE` for the package `org.neo4j.driver`.
+It is also advised to set a higher level, like `WARN` or `ERROR`, for the packages under  `org.neo4j.driver.internal.shaded` to avoid getting too many logs.
+
+Log messages such as the following examples will then appear, offering a detailed view of the Bolt exchange between Neo4j's Bolt server and the Spark connector's Neo4j driver (format may vary based on your logging configuration):
+
+
+[source,logs]
+====
+2025-06-23 16:32:22 INFO  org.neo4j.driver.internal.DriverFactory:41 - Direct driver instance 584203303 created for server address localhost:63380
+2025-06-23 16:32:22 TRACE org.neo4j.driver.internal.async.pool.ConnectionPoolImpl:76 - Acquiring a connection from pool towards localhost:63380
+2025-06-23 16:32:22 TRACE org.neo4j.driver.internal.async.connection.ChannelConnectedListener:76 - [0x6651d7e4][localhost:63380][] Channel [id: 0x6651d7e4, L:/127.0.0.1:63395 - R:localhost/127.0.0.1:63380] connected, initiating bolt handshake
+2025-06-23 16:32:22 DEBUG org.neo4j.driver.internal.async.connection.ChannelConnectedListener:62 - [0x6651d7e4][localhost:63380][] C: [Bolt Handshake] [0x6060b017, 132100, 260, 4, 3]
+2025-06-23 16:32:22 DEBUG org.neo4j.driver.internal.async.connection.HandshakeHandler:62 - [0x6651d7e4][localhost:63380][] S: [Bolt Handshake] 4.4
+====
