@@ -22,7 +22,7 @@ The connector supports writing DataFrames to Neo4j as well, and custom Cypher qu
 == Compatibility
 
 === Neo4j compatibility
-The connector supports Neo4j 5.x and 4.4, whether run as a managed service in link:{neo4j-docs-base-uri}/aura/[Neo4j Aura], as a single instance, or as a cluster.
+The connector supports Neo4j 2025.x, 5.x, and 4.4, whether run as a managed service in link:{neo4j-docs-base-uri}/aura/[Neo4j Aura], as a single instance, or as a cluster.
 It supports both the Community and the Enterprise Edition.
 
 === Spark and Scala compatibility
