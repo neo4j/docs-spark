@@ -125,7 +125,7 @@ The Spark program needs to be configured for logging, as documented in https://s
 Set the level to `TRACE` for the package `org.neo4j.driver`.
 It is also advised to set a higher level, like `WARN` or `ERROR`, for the packages under  `org.neo4j.driver.internal.shaded` to avoid getting too many logs.
 
-Log messages such as the following examples will then appear, offering a detailed view of the Bolt exchange between Neo4j's Bolt server and the Spark connector's Neo4j driver (format may vary based on your logging configuration):
+Log messages similar to the following will then appear, offering a detailed view of the Bolt exchange between Neo4j's Bolt server and the Spark connector's Neo4j driver (format may vary based on your logging configuration):
 
 
 [source,logs]
