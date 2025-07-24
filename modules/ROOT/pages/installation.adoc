@@ -22,6 +22,8 @@ Here is a compatibility table to help you choose the correct version of the conn
 
 |===
 
+Spark versions prior to 3.3 are not supported.
+
 [#shell]
 == Usage with the Spark shell
 
