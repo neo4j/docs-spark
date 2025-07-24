@@ -20,15 +20,9 @@ Here is a compatibility table to help you choose the correct version of the conn
 |`org.neo4j:neo4j-connector-apache-spark_2.12:5.1.0_for_spark_3`
 |`org.neo4j:neo4j-connector-apache-spark_2.13:5.1.0_for_spark_3`
 
-|*3.2*
-|`org.neo4j:neo4j-connector-apache-spark_2.12:5.0.3_for_spark_3`
-|`org.neo4j:neo4j-connector-apache-spark_2.13:5.0.3_for_spark_3`
-
-|*3.0 and 3.1*
-|`org.neo4j:neo4j-connector-apache-spark_2.12:4.1.5_for_spark_3`
-|`org.neo4j:neo4j-connector-apache-spark_2.13:4.1.5_for_spark_3`
-
 |===
+
+Spark versions prior to 3.3 are not supported.
 
 [#shell]
 == Usage with the Spark shell
