@@ -47,10 +47,10 @@ val dfProduct = spark.read.format("org.neo4j.spark.DataSource")
         .load()
 ----
 == Custom authentication supplier label:new[v.5.3.9]
-Starting from version 5.3.9 Neo4j Spark Connectors provides an option to use custom authentication supplier in addition to
+Starting from version 5.3.9, the connector provides an option to use a custom authentication supplier in addition to
 already supported authentication types, such as `none`, `basic`, `kerberos`, `custom` and `bearer`.
 
-Authentication supplier needs to implement interface `org.neo4j.connectors.authn.AuthenticationTokenSupplierFactory` from `org.neo4j.connectors:commons-authn-spi` library.
+The authentication supplier needs to implement interface `org.neo4j.connectors.authn.AuthenticationTokenSupplierFactory` from the `org.neo4j.connectors:commons-authn-spi` library.
 The interface requires implementing two methods:
 
 * *String getName()* - returns the name of the supplier.
@@ -58,7 +58,7 @@ Must be unique and not clash with existing authentication types.
 
 * *Supplier<AuthenticationToken> create(String, String, Map<String, String>)* - accepts username, password and additional parameters and return a supplier of `AuthenticationToken`.
 
-An `AuthenticationToken` instances is an abstract representation of an arbitrary authentication to be presented to the Neo4j server and can contain a principal and its credentials (username and password), a token or other ways of confirming an identity.
+An `AuthenticationToken` instance is an abstract representation of an arbitrary authentication to be presented to the Neo4j server and can contain a principal and its credentials (username and password), a token or other ways of confirming an identity.
 
 The interface itself offers the following factories:
 
