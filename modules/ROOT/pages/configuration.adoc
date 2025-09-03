@@ -92,7 +92,7 @@ include::example$java/KeycloakOIDCAuthenticationSupplierFactory.java[]
 include::example$java/KeycloakOIDCAuthenticationSupplier.java[]
 ----
 
-Configuration options for it would look like
+You can configure Spark to use keycloak authentication as follows:
 [source, scala]
 ----
 val df = spark.read
