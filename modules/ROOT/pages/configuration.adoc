@@ -77,13 +77,15 @@ of the supplier. Additional parameters can be specified as configuration options
 === Keycloak authentication supplier example
 
 An authentication supplier for link:https://www.keycloak.org/[Keycloak] is provided as part of the `org.neo4j.connectors:commons-authn-keycloak` library.
-It consists of a factory class creating an instance of an authentication token supplier;
+It includes:
+
+* A factory class creating an instance of an authentication token supplier:
 [source, java]
 ----
 include::example$java/KeycloakOIDCAuthenticationSupplierFactory.java[]
 ----
 
-and a supplier that collects an access token from a Keycloak server and refreshes it on expiration.
+* A supplier that collects an access token from a Keycloak server and refreshes it on expiration:
 
 [source, java]
 ----
