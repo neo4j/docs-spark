@@ -75,18 +75,25 @@ Custom authentication supplier can be used via the service loader mechanism and 
 of the supplier. Additional parameters can be specified as configuration options prefixed with `authentication.$name.`.
 
 === Keycloak authentication supplier example
+[WARNING]
+====
+This supplier is based on the Keycloak client, which requires Java 11 or later.
+However, the custom authentication supplier bases classes require Java 8 or later and compatible with older runtimes.
+====
 
 An authentication supplier for link:https://www.keycloak.org/[Keycloak] is provided as part of the `org.neo4j.connectors:commons-authn-keycloak` library.
+
 It includes:
 
 * A factory class creating an instance of an authentication token supplier:
++
 [source, java]
 ----
 include::example$java/KeycloakOIDCAuthenticationSupplierFactory.java[]
 ----
 
 * A supplier that collects an access token from a Keycloak server and refreshes it on expiration:
-
++
 [source, java]
 ----
 include::example$java/KeycloakOIDCAuthenticationSupplier.java[]
