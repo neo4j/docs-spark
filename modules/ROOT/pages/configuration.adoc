@@ -78,7 +78,6 @@ of the supplier. Additional parameters can be specified as configuration options
 [WARNING]
 ====
 This supplier is based on the Keycloak client, which requires Java 11 or later.
-However, the custom authentication supplier bases classes require Java 8 or later and compatible with older runtimes.
 ====
 
 An authentication supplier for link:https://www.keycloak.org/[Keycloak] is provided as part of the `org.neo4j.connectors:commons-authn-keycloak` library.
