@@ -39,7 +39,25 @@ The DataSource Writer has several options to connect and persist data into Neo4j
 |_(none)_
 |No
 
+|`node.keys.skip.nulls`
+label:new[New in 5.3.10]
+| Whether to skip rows which contain null values for any of the specified columns in `node.keys`.
+|`false`
+|No
+
 4+|*Relationship specific options*
+
+|`relationship.keys`
+label:new[New in 5.3]
+|Comma-separated list of properties considered as relationship keys
+|_(none)_
+|No
+
+|`relationship.keys.skip.nulls`
+label:new[New in 5.3.10]
+| Whether to skip rows which contain null values for any of the specified columns in `relationship.keys`.
+|`false`
+|No
 
 |`relationship.properties`
 |Map used as keys for specifying the *relationship* properties. Used only if `relationship.save.strategy` is `keys`
@@ -61,6 +79,12 @@ The DataSource Writer has several options to connect and persist data into Neo4j
 |_(empty)_
 |No
 
+|`relationship.source.node.keys.skip.nulls`
+label:new[New in 5.3.10]
+| Whether to skip rows which contain null values for any of the specified columns in `relationship.source.node.keys`.
+|`false`
+|No
+
 |`relationship.source.save.mode`
 |Source <<node-save-modes,Node save mode>>
 |`Match`
@@ -79,6 +103,12 @@ The DataSource Writer has several options to connect and persist data into Neo4j
 |`relationship.target.node.keys`
 |Map used as keys for matching the *target* node
 |_(empty)_
+|No
+
+|`relationship.target.node.keys.skip.nulls`
+label:new[New in 5.3.10]
+| Whether to skip rows which contain null values for any of the specified columns in `relationship.target.node.keys`.
+|`false`
 |No
 
 |`relationship.target.save.mode`
