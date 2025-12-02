@@ -27,7 +27,7 @@ It supports both the Community and the Enterprise Edition.
 
 === Spark and Scala compatibility
 
-The connector currently supports Spark 3.3.2+ \/ Databricks 12.2+ with Scala 2.12 and Scala 2.13.
+The connector currently supports Spark 3.3.2+ / Databricks 12.2+ with Scala 2.12 and Scala 2.13.
 
 == Training
 
