@@ -32,7 +32,7 @@ In some cases, there are data types that Neo4j provides that Spark does not have
 |v5.4.0
 |Example: `"16725.77423461"`
 This mapping only applies when _writing_ to Neo4j.
-If you need to read a spark `decimal`, please parse the string representation in an appropriate way for your use case.
+If you need to read a spark `decimal`, parse the string representation in an appropriate way for your use case.
 
 |`Boolean`
 |`boolean`
