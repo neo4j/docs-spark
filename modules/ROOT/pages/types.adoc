@@ -88,7 +88,9 @@ This behavior can be restored after 5.4.0 by setting `type.conversion` to `legac
 |`Duration`
 |Spark SQL `INTERVAL` types
 |v5.4.0*
-|Example: `INTERVAL '10 05:30' DAY TO MINUTE`, `INTERVAL '4-5' YEAR TO MONTH` or `timestamp('2025-01-02 18:30:00.454') - timestamp('2024-01-01 00:00:00')`. Prior to 5.4.0, Spark durations and intervals are stored as long. This behavior can be restored after 5.4.0 with the setting `type.conversion` set to `legacy`.
+|Example: `INTERVAL '10 05:30' DAY TO MINUTE`, `INTERVAL '4-5' YEAR TO MONTH` or `timestamp('2025-01-02 18:30:00.454') - timestamp('2024-01-01 00:00:00')`.
+Prior to 5.4.0, Spark durations and intervals are stored as `long`.
+This behavior can be restored after 5.4.0 by setting `type.conversion` to `legacy`.
 
 |`Node`
 |`struct { <id>: long, <labels>: array[string], (PROPERTIES) }`
