@@ -79,7 +79,9 @@ Spark local timestamps (`TIMESTAMP_NTZ`) are written as `LocalDateTime`. Prior t
 |`Duration`
 |`duration` or `period` objects
 |v5.4.0*
-|Example: `java.time.Duration.ofDays(42)` or `java.time.Period.ofMonths(5)`. Prior to 5.4.0, Spark durations and intervals are stored as long. This behavior can be restored after 5.4.0 with the setting `type.conversion` set to `legacy`.
+|Example: `java.time.Duration.ofDays(42)` or `java.time.Period.ofMonths(5)`. 
+Prior to 5.4.0, Spark durations and intervals are stored as `long`.
+This behavior can be restored after 5.4.0 by setting `type.conversion` to `legacy`.
 
 |`Duration`
 |Spark SQL `INTERVAL` types
