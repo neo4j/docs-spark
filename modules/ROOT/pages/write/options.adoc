@@ -32,7 +32,9 @@ The DataSource Writer has several options to connect and persist data into Neo4j
 |No
 
 |`index.await.timeout`
-|Adjust the maximum timeout to wait for index generation. Before writing, Cpyher procedure `db.awaitIndexes` will be called with specified timeout in whole seconds. Set to `0` to disable
+|Adjust the maximum timeout to wait for index generation.
+Before writing, the `db.awaitIndexes` Cypher procedure will be called with the timeout specified in whole seconds.
+Set to `0` to disable.
 |300
 |No
 
