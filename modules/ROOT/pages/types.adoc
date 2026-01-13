@@ -69,7 +69,9 @@ Spark timestamps (`TIMESTAMP`) are written as `ZonedDateTime` in UTC. Prior to 5
 |`timestamp_ntz`
 |v5.4.0*
 |Example: `2020-09-11 12:14:49.081`
-Spark local timestamps (`TIMESTAMP_NTZ`) are written as `LocalDateTime`. Prior to 5.4.0. these timestamps are written as a numerical value. This behavior can be restored after 5.4.0 with the setting `type.conversion` set to `legacy`.
+Spark local timestamps (`TIMESTAMP_NTZ`) are written as `LocalDateTime`. 
+Prior to 5.4.0. these timestamps are written as a numerical value.
+This behavior can be restored after 5.4.0 by setting `type.conversion` to `legacy`.
 
 |`Duration`
 |`struct { type: string, months: long, days: long, seconds: long, nanonseconds: integer, value: string }`
