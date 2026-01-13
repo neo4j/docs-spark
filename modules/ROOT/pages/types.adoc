@@ -63,7 +63,9 @@ If you need to read a spark `decimal`, please parse the string representation in
 |`timestamp`
 |v5.4.0*
 |Example: `2020-09-11 12:17:39.192+02:00`
-Spark timestamps (`TIMESTAMP`) are written as `ZonedDateTime` in UTC. Prior to 5.4.0. these timestamps are written as `LocalDateTime`. This behavior can be restored after 5.4.0 with the setting `type.conversion` set to `legacy`.
+Spark timestamps (`TIMESTAMP`) are written as `ZonedDateTime` in UTC. 
+Prior to 5.4.0. these timestamps are written as `LocalDateTime`.
+This behavior can be restored after 5.4.0 by setting `type.conversion` to `legacy`.
 
 |`LocalDateTime`
 |`timestamp_ntz`
