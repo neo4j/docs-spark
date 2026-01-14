@@ -72,7 +72,10 @@ label:new[New in 5.3.10]
 |No
 
 |`relationship.properties`
-|Map used as keys for specifying the *relationship* properties. Used only if `relationship.save.strategy` is `keys`
+|Used only if `relationship.save.strategy` is `keys`.
+Map used as keys for specifying the *relationship* properties.
+When set, only the relationships included in the map are set as relationship properties. footnote:[Before 5.4.0, relationship properties not included in the map were set too with their original names.]
+When the option is not set, all unmapped fields are set as relationship properties.
 |_(empty)_
 |No
 
