@@ -25,8 +25,8 @@ In some cases, there are data types that Neo4j provides that Spark does not have
 |Example: `3.141592`
 
 |`String`
-|`decimal` label:new[New in 5.4.0]
-|Example: `"16725.77423461"`
+|`decimal`
+|label:new[New in 5.4.0] Example: `"16725.77423461"`
 This mapping only applies when _writing_ to Neo4j.
 If you need to read a spark `decimal`, parse the string representation in an appropriate way for your use case.
 
@@ -51,42 +51,42 @@ If you need to read a spark `decimal`, parse the string representation in an app
 |Example: `[local-time, 12:18:11.628]`
 
 |`ZonedDateTime`
-|`timestamp` label:new[New in 5.4.0]
-|Example: `2020-09-11 12:17:39.192+02:00`
+|`timestamp`
+|label:new[New in 5.4.0] Example: `2020-09-11 12:17:39.192+02:00`
 Spark timestamps (`TIMESTAMP`) are written as `ZonedDateTime` in UTC.
 
 |`LocalDateTime`
 |`timestamp`
-|Deprecated in 5.4.0. Set `data.conversion` to `legacy` to continue using it.
+|label:deprecated[Deprecated since 5.4.0] Set `data.conversion` to `legacy` to continue using it.
 
 |`LocalDateTime`
-|`timestamp_ntz` label:new[New in 5.4.0]
-|Example: `2020-09-11 12:14:49.081`
+|`timestamp_ntz`
+|label:new[New in 5.4.0] Example: `2020-09-11 12:14:49.081`
 Spark local timestamps (`TIMESTAMP_NTZ`) are written as `LocalDateTime`. 
 
 |`Integer`
 |`timestamp_ntz`
-|Deprecated in 5.4.0. Set `data.conversion` to `legacy` to continue using it.
+|label:deprecated[Deprecated since 5.4.0] Set `data.conversion` to `legacy` to continue using it.
 
 |`Duration`
 |`struct { type: string, months: long, days: long, seconds: long, nanonseconds: integer, value: string }`
 |See link:https://neo4j.com/docs/cypher-manual/current/values-and-types/temporal/#cypher-temporal-durations[Temporal functions: duration].
 
 |`Duration`
-|`duration` or `period` objects label:new[New in 5.4.0]
-|Example: `java.time.Duration.ofDays(42)` or `java.time.Period.ofMonths(5)`.
+|`duration` or `period` objects
+|label:new[New in 5.4.0] Example: `java.time.Duration.ofDays(42)` or `java.time.Period.ofMonths(5)`.
 
 |`Long`
 |`duration` or `period` objects
-|Deprecated in 5.4.0. Set `data.conversion` to `legacy` to continue using it.
+|label:deprecated[Deprecated since 5.4.0] Set `data.conversion` to `legacy` to continue using it.
 
 |`Duration`
-|Spark SQL `INTERVAL` types label:new[New in 5.4.0]
-|Example: `INTERVAL '10 05:30' DAY TO MINUTE`, `INTERVAL '4-5' YEAR TO MONTH` or `timestamp('2025-01-02 18:30:00.454') - timestamp('2024-01-01 00:00:00')`.
+|Spark SQL `INTERVAL` types
+|label:new[New in 5.4.0] Example: `INTERVAL '10 05:30' DAY TO MINUTE`, `INTERVAL '4-5' YEAR TO MONTH` or `timestamp('2025-01-02 18:30:00.454') - timestamp('2024-01-01 00:00:00')`.
 
 |`Long`
 |Spark SQL `INTERVAL` types
-|Deprecated in 5.4.0. Set `data.conversion` to `legacy` to continue using it.
+|label:deprecated[Deprecated since 5.4.0] Set `data.conversion` to `legacy` to continue using it.
 
 |`Node`
 |`struct { <id>: long, <labels>: array[string], (PROPERTIES) }`
@@ -101,12 +101,12 @@ Spark local timestamps (`TIMESTAMP_NTZ`) are written as `LocalDateTime`.
 |Example: `path[(322)<-[20280:AIRLINE]-(33510)]`.  _For ease of use it is recommended to use link:https://neo4j.com/docs/cypher-manual/current/values-and-types/lists/[path functions] to return individual properties/aspects of a path from a query._
 
 |`ByteArray`
-|`binary`, `array[byte]` label:new[New in 5.4.0]
-| Binary writes are treated specifically as Neo4j's `ByteArray` type.
+|`binary`, `array[byte]`
+|label:new[New in 5.4.0] Binary writes are treated specifically as Neo4j's `ByteArray` type.
 
 |`List<Integer>`
 |`binary`, `array[byte]`
-|Deprecated in 5.4.0. Set `data.conversion` to `legacy` to continue using it.
+|label:deprecated[Deprecated since 5.4.0] Set `data.conversion` to `legacy` to continue using it.
 
 |`[Array of same type]`
 |`array[element]`
