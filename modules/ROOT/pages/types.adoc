@@ -28,7 +28,7 @@ In some cases, there are data types that Neo4j provides that Spark does not have
 |Example: `3.141592`
 
 |`String`
-|`decimal`
+|`decimal` label:new[New in 5.4.0]
 |v5.4.0
 |Example: `"16725.77423461"`
 This mapping only applies when _writing_ to Neo4j.
