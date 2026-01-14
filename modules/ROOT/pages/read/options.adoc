@@ -66,6 +66,11 @@ your Neo4j installation.
 |`1`
 |No
 
+|`type.conversion` label:new[v5.4]
+|Data conversion logic. When set to `legacy`, timestamps, intervals and byte arrays are processed the same way as they were before 5.4.0. See xref:../types.adoc[] for more information.
+|`default`
+|No
+
 4+|*Query specific options*
 
 |`query.count`
