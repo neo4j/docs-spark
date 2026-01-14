@@ -103,8 +103,10 @@ Spark local timestamps (`TIMESTAMP_NTZ`) are written as `LocalDateTime`.
 |`ByteArray`
 |`binary`, `array[byte]` label:new[New in 5.4.0]
 | Binary writes are treated specifically as Neo4j's `ByteArray` type.
-Prior to 5.4.0, Spark `tinyint` arrays are persisted as a list of numbers.
-This behavior can be restored after 5.4.0 by setting `type.conversion` to `legacy`.
+
+|`List<Integer>`
+|`binary`, `array[byte]`
+|Deprecated in 5.4.0. Set `data.conversion` to `legacy` to continue using it.
 
 |`[Array of same type]`
 |`array[element]`
