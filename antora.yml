@@ -9,7 +9,7 @@ asciidoc:
   attributes:
     theme: docs
     connector-version: '5.4'
-    exact-connector-version: '5.4.0'
+    exact-connector-version: '5.4.1'
     scala-version: '2.12'
     exact-scala-version: '2.12.20'
     spark-version: '3.5.6'
