@@ -67,7 +67,7 @@ You can solve it by installing APOC: this removes the error, but
 all the values for that field are cast to String. This happens because Spark is not schema-free
 and needs each column always to have its own type.
 
-You can read more <<quickstart.adoc#read-known-problem, here>>.
+You can read more xref:read/schema.adoc[here].
 
 === I am getting an error _TableProvider implementation org.neo4j.spark.DataSource cannot be written with ErrorIfExists mode, please use Append or Overwrite modes instead_. What should I do?
 
@@ -101,7 +101,7 @@ Refer to xref:overview.adoc#_spark_and_scala_compatibility[this page] to know wh
 This might happen when creating a new graph using the GDS library.
 The issue here is that the query is run the first time to extract the DataFrame schema and then is run again to get the data.
 
-To avoid this issue you can use the xref:quickstart.adoc#user-defined-schema[user defined schema] approach.
+To avoid this issue you can use the xref:read/define-schema.adoc#custom-schema[user defined schema] approach.
 
 == Databricks setup
 
