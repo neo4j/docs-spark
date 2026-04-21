@@ -54,12 +54,12 @@ This is used to get the last timestamp in the database for a given query. More o
 
 == Sink
 
-Writing a stream to a Neo4j instance is pretty easy and can be done using any of the xref:writing.adoc#_write_data[three writing strategies].
+Writing a stream to a Neo4j instance is pretty easy and can be done using any of the xref:writing.adoc#examples[three writing strategies].
 
 [TIP]
-The same xref:quickstart.adoc#_schema[schema concepts] also apply here.
+The same xref:read/schema.adoc[schema concepts] also apply here.
 If you start a streaming read with an empty result set, you need to specify the schema using
-the xref:quickstart.adoc#user-defined-schema[user defined schema], or the batch read fails.
+the xref:read/define-schema.adoc#custom-schema[user defined schema], or the batch read fails.
 
 .Code example that reads from a Kafka topic and writes to Neo4j.
 [source,python]
@@ -86,7 +86,7 @@ query = df.writeStream \
     .start()
 ----
 
-As said, you can use any writing strategy: xref:writing.adoc#write-node[Node], xref:writing.adoc#write-rel[Relationship], or xref:writing.adoc#write-query[Query].
+As said, you can use any writing strategy: xref:writing.adoc#example-labels[Node], xref:writing.adoc#example-relationship[Relationship], or xref:writing.adoc#example-query[Query].
 
 The only difference is that you must set the `checkpointLocation` and `save.mode` options.
 
@@ -168,7 +168,7 @@ To achieve this you can set the `streaming.from` option to one of these two valu
 
 === Reading mode
 
-As for Sink mode, you can use any of the reading strategies: xref:reading.adoc#read-node[Node], xref:reading.adoc#read-rel[Relationship], or xref:reading.adoc#read-query[Query].
+As for Sink mode, you can use any of the reading strategies: xref:reading.adoc#example-labels[Node], xref:reading.adoc#example-relationship[Relationship], or xref:reading.adoc#example-query[Query].
 
 ==== Notes on `query` mode
 

@@ -3,7 +3,7 @@
 Since Neo4j is essentially schemaless while Spark DataFrames use a fixed tabular schema, the Spark connector uses a schema inference system to convert graph data into DataFrames.
 
 . If APOC is installed, the connector uses the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.nodeTypeProperties/[`apoc.meta.nodeTypeProperties`^] and the link:{neo4j-docs-base-uri}/apoc/current/overview/apoc.meta/apoc.meta.relTypeProperties/[`apoc.meta.relTypeProperties`^] procedures.
-You can xref:performance/tuning.adoc#sampling-adoc[tune] both.
+You can xref:performance/tuning.adoc#sampling[tune] both.
 . If APOC is not installed, the connector uses the first _n_ results (defined by the `schema.flatten.limit` option) of an additional Cypher query to infer the schema by the type of each column.
 When using the `query` option, the schema is inferred from the result of the query itself.
 

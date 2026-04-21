@@ -80,7 +80,7 @@ When the option is not set, all unmapped fields are set as relationship properti
 |No
 
 |`relationship.save.strategy`
-|<<strategies,Save strategy>> to be used
+|xref:write/relationship.adoc#strategies[Save strategy] to be used
 |`native`
 |Yes
 
@@ -101,7 +101,7 @@ label:new[New in 5.3.10]
 |No
 
 |`relationship.source.save.mode`
-|Source <<node-save-modes,Node save mode>>
+|Source xref:write/relationship.adoc#node-save-modes[Node save mode]
 |`Match`
 |No
 
@@ -127,7 +127,7 @@ label:new[New in 5.3.10]
 |No
 
 |`relationship.target.save.mode`
-|Target <<node-save-modes,Node save mode>>
+|Target xref:write/relationship.adoc#node-save-modes[Node save mode]
 |`Match`
 |No
 
