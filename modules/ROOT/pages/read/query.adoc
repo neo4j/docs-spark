@@ -120,3 +120,44 @@ spark.read.format("org.neo4j.spark.DataSource")
 |1|foo
 |2|foo
 |===
+
+The `script` option is not meant to inject a massive volume of data.
+Doing so would result in very inefficient queries.
+
+.DON'T DO THIS - sending too large values to Neo4j
+[source, scala]
+----
+// imagine a high number of (:Filter) nodes
+val script = "MATCH (f:Filter) RETURN collect(f.id) AS ids"
+// sending a large list of values to the server would add a lot of memory pressure
+val query = """
+  MATCH (n:Comment)
+  WHERE n.filterId IN scriptResult[0].ids
+  RETURN n.id AS id
+"""
+spark.read.format("org.neo4j.spark.DataSource")
+  .option("script", script)
+  .option("query", query)
+  .load()
+  .show()
+----
+
+In high volume scenarios, it is recommended to create a specific dataframe with the "script" data and join it with another dataframe performing the actual reads against Neo4j.
+Spark supports multiple pushdown optimizations, including filter push-down, which means the resulting main read query will actually be efficient.
+
+.DO THIS - rely on Spark pushdown optimizations
+[source, scala]
+----
+import org.apache.spark.sql.functions.col
+
+val filterDf = spark.read.format("org.neo4j.spark.DataSource")
+  .option("labels", "Filter")
+  .load()
+
+val commentDf = spark.read.format("org.neo4j.spark.DataSource")
+  .option("labels", "Comment")
+  .load()
+
+// Pushdown optimizations filter data at the source (Neo4j) to minimize data transfer
+val resultDf = commentDf.join(filterDf, col("filterId") === filterDf("id"))
+----
