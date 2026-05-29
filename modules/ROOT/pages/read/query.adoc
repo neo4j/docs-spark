@@ -121,15 +121,25 @@ spark.read.format("org.neo4j.spark.DataSource")
 |2|foo
 |===
 
-The `script` option is not meant to inject a massive volume of data.
-Doing so would result in very inefficient queries.
+=== Performance considerations
 
-.DON'T DO THIS - sending too large values to Neo4j
+The `script` option is not meant to inject a massive volume of data.
+Doing so would result in inefficient queries.
+
+The recommended process is to create a dedicated dataframe containing the new data, then join it with another dataframe performing the actual reads against Neo4j.
+Spark supports multiple pushdown optimizations including filter pushdown, which means the resulting read query will be efficient.
+
+[.tabbed-example]
+====
+[.include-with-Wrong-usage]
+=====
 [source, scala]
 ----
-// imagine a high number of (:Filter) nodes
+// Suppose there are many nodes that match,
+// resulting in a large list of values
 val script = "MATCH (f:Filter) RETURN collect(f.id) AS ids"
-// sending a large list of values to the server would add a lot of memory pressure
+
+// Sending a large list to the server would add a lot of memory pressure
 val query = """
   MATCH (n:Comment)
   WHERE n.filterId IN scriptResult[0].ids
@@ -141,11 +151,10 @@ spark.read.format("org.neo4j.spark.DataSource")
   .load()
   .show()
 ----
+=====
 
-In high volume scenarios, it is recommended to create a specific dataframe with the "script" data and join it with another dataframe performing the actual reads against Neo4j.
-Spark supports multiple pushdown optimizations, including filter push-down, which means the resulting main read query will actually be efficient.
-
-.DO THIS - rely on Spark pushdown optimizations
+[.include-with-Correct-usage]
+=====
 [source, scala]
 ----
 import org.apache.spark.sql.functions.col
@@ -161,3 +170,5 @@ val commentDf = spark.read.format("org.neo4j.spark.DataSource")
 // Pushdown optimizations filter data at the source (Neo4j) to minimize data transfer
 val resultDf = commentDf.join(filterDf, col("filterId") === filterDf("id"))
 ----
+=====
+====
