@@ -121,6 +121,7 @@ spark.read.format("org.neo4j.spark.DataSource")
 |2|foo
 |===
 
+[[performance]]
 === Performance considerations
 
 The `script` option is not meant to inject a massive volume of data.
