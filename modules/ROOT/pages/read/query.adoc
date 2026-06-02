@@ -97,6 +97,12 @@ The `script` option allows to run a sequence of Cypher queries _before_ executin
 
 The result of the `script` can be used in a subsequent `query`, for example to inject query parameters.
 
+[CAUTION]
+====
+Do not use this option to inject large amounts of data in a Cypher query.
+See the <<performance>> section below for the recommended alternative.
+====
+
 .`script` and `query` example
 [source, scala]
 ----
