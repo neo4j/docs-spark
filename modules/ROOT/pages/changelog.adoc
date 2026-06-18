@@ -1,0 +1,163 @@
+= Changelog
+:description: This chapter lists the notable changes for each release of the Neo4j Connector for Apache Spark, mirroring the GitHub release entries.
+
+This page mirrors the link:https://github.com/neo4j/neo4j-spark-connector/releases[GitHub releases^] of the Neo4j Connector for Apache Spark, listing headline features, fixes, and breaking changes for every minor and patch release of the 5.x line.
+
+[TIP]
+====
+Releases that contain a *breaking change* are flagged with a label:caution[Breaking] badge.
+For step-by-step upgrade instructions across those boundaries, see xref:migration.adoc[].
+====
+
+[#_5_4]
+== 5.4.x
+
+[#_5_4_3]
+=== 5.4.3 (26 May 2026)
+
+* *Fixes*: corrected inner escaping of names when generating constraints (see xref:write/schema-optimization.adoc[]).
+
+[#_5_4_2]
+=== 5.4.2 (16 Apr 2026)
+
+* *Fixes*: type constraints now prioritise the target property name (see xref:write/schema-optimization.adoc[]).
+
+[#_5_4_1]
+=== 5.4.1 (27 Mar 2026)
+
+* *Features*: upgraded to the latest Neo4j 4.x Java driver, which unblocks the use of a custom URL resolver (see xref:configuration.adoc[]).
+
+[#_5_4_0]
+=== 5.4.0 (12 Jan 2026) label:caution[Breaking]
+
+* label:caution[Breaking] *Type conversion default changed*. Timestamps, intervals, and byte arrays are now converted differently from previous releases. Set the `type.conversion` reader option to `legacy` to keep the pre-5.4.0 behavior. See xref:types.adoc[] and xref:migration.adoc#_5_3_to_5_4[Migration 5.3 → 5.4].
+* label:caution[Breaking] *Strict `relationship.properties` map*. When `relationship.properties` is set, only the listed properties are written; previously, unmapped fields were written too. See xref:write/options.adoc[] and xref:migration.adoc#_5_3_to_5_4[Migration 5.3 → 5.4].
+* *Features*:
+** Native support for mapping Spark intervals to and from the Neo4j `Duration` type (see xref:types.adoc[]).
+** New `type.conversion` reader option to opt back into the legacy conversion logic (see xref:read/options.adoc[]).
+** Global await for index creation during schema optimization (see xref:write/schema-optimization.adoc[]).
+* *Fixes*: return `null` when no last offset is available while streaming (see xref:streaming.adoc[]).
+
+[#_5_3]
+== 5.3.x
+
+[#_5_3_10]
+=== 5.3.10 (17 Sep 2025)
+
+* *Features*: new `skip.null.keys` write option; ability to override the user agent.
+* *Fixes*: transaction configuration is now also applied to auto-commit transactions.
+
+[#_5_3_9]
+=== 5.3.9 (9 Sep 2025)
+
+* *Features*: support for an authentication token provider (see xref:configuration.adoc[]).
+* *Fixes*: Java 8 compatibility restored in the commons library.
+
+[#_5_3_8]
+=== 5.3.8 (5 Jun 2025)
+
+* *Features*: automatic retry logic for reader queries to improve reliability (see xref:reading.adoc[]).
+
+[#_5_3_7]
+=== 5.3.7 (8 May 2025)
+
+* *Fixes*: corrected a partition-size computation overflow.
+* *Changes*: Scala 2.12 is now the default build target (see xref:installation.adoc[]).
+
+[#_5_3_6]
+=== 5.3.6 (27 Mar 2025)
+
+* *Features*: support for a transaction timeout on the Neo4j driver (see xref:configuration.adoc[]).
+
+[#_5_3_5]
+=== 5.3.5 (24 Feb 2025)
+
+* *Features*: the Cypher version is prepended to internal queries for explicit version selection, guaranteeing compatibility with Neo4j's calendar-based versions.
+
+[#_5_3_4]
+=== 5.3.4 (13 Feb 2025)
+
+* *Changes*: maintenance release with dependency upgrades.
+
+[#_5_3_3]
+=== 5.3.3 (24 Jan 2025)
+
+* *Features*: support for Neo4j calendar version 2025.x.
+* *Fixes*: connectivity checks via `verifyConnectivity`; improved partition counting for custom queries that use a limit.
+
+[#_5_3_2]
+=== 5.3.2 (16 Sep 2024)
+
+* *Features*: checkpointing support on structured streams (see xref:streaming.adoc#_checkpoint[Streaming checkpoint]).
+* *Fixes*: retry logic is now compatible with the driver retry mechanisms.
+
+[#_5_3_1]
+=== 5.3.1 (27 Jun 2024)
+
+* *Features*: ability to exclude node properties from relationships.
+* *Fixes*: improved schema option validation; resolver handling during driver construction.
+
+[#_5_3_0]
+=== 5.3.0 (9 Feb 2024)
+
+* *Features*:
+** Inferred schema type and existence constraints based on the `DataFrame` definition, plus improved management of existing constraints (see xref:write/schema-optimization.adoc[]).
+** Metrics support on the sink path.
+** Improved user-agent and query-error management.
+** The Spark version is now configurable.
+
+[#_5_2]
+== 5.2.x
+
+[#_5_2_0]
+=== 5.2.0 (29 Sep 2023) label:caution[Breaking]
+
+* label:caution[Breaking] *Spark baseline raised to 3.4*. This release requires Apache Spark 3.4 or later in order to support the new push-down Top N optimization. See xref:installation.adoc#version[the compatibility table] and xref:migration.adoc#_5_1_to_5_2[Migration 5.1 → 5.2].
+* *Features*:
+** Push-down Top N optimization, controlled by the `pushdown.topN.enabled` reader option (see xref:read/options.adoc[]).
+** Example notebooks / playground added, available from the xref:quickstart.adoc[Quickstart] (the legacy `/spark/current/playground/` URL redirects there).
+* *Changes*: the documentation was extracted to a separate repository at link:https://github.com/neo4j/docs-spark/[neo4j/docs-spark^].
+
+[#_5_1]
+== 5.1.x
+
+[#_5_1_0]
+=== 5.1.0 (30 Aug 2023) label:caution[Breaking]
+
+* label:caution[Breaking] *Spark baseline raised to 3.3*. This release requires Apache Spark 3.3 or later in order to support push-down v2 filters and limit optimizations. 5.1.0 is the last release compatible with Spark 3.3. See xref:installation.adoc#version[the compatibility table] and xref:migration.adoc#_5_0_to_5_1[Migration 5.0 → 5.1].
+* *Features*:
+** Push-down v2 filter support, controlled by the `pushdown.filters.enabled` reader option (see xref:read/options.adoc[]).
+** Push-down LIMIT support, controlled by the `pushdown.limit.enabled` reader option (see xref:read/options.adoc[]).
+** First-class support for xref:gds.adoc[Graph Data Science (GDS)].
+** Bearer authentication support (see xref:configuration.adoc[]).
+* *Fixes*: handling of datetime properties that have `null` values; Spark version validation.
+
+[#_5_0]
+== 5.0.x
+
+[#_5_0_3]
+=== 5.0.3 (19 Jun 2023)
+
+* *Fixes*: insertion of the Neo4j `Map` data type; broken documentation links.
+
+[#_5_0_2]
+=== 5.0.2 (23 May 2023)
+
+* *Fixes*: Spark version validation failures on AWS EMR and EMR Serverless.
+
+[#_5_0_1]
+=== 5.0.1 (20 Mar 2023)
+
+* *Fixes*: `LocalTime` and `Time` fields are now written as single struct fields instead of individual fields (see xref:types.adoc[]).
+
+[#_5_0_0]
+=== 5.0.0 (7 Oct 2022)
+
+* *Features*:
+** First official release that fully supports Neo4j 5.0 and Neo4j 4.4, including the Neo4j 5.0 indexes and constraints syntax changes.
+** Push-down Aggregate support based on the Spark 3.2 DataSource V2 API, controlled by the `pushdown.aggregate.enabled` reader option (requires Spark > 3.2.2 due to an upstream Spark bug). See xref:read/options.adoc[].
+
+[NOTE]
+====
+If you run Neo4j 4.3 or earlier, keep using version 4.2 of the connector.
+====
