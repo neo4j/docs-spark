@@ -26,6 +26,7 @@ For the complete list of changes per release, see xref:changelog.adoc[].
 
 *What changed*: the baseline Apache Spark version was raised from 3.2 to *3.3* to support push-down v2 filters and LIMIT optimizations.
 Connector builds for Spark 3.2 are no longer compatible with 5.1.0.
+If you need to stay on Spark 3.3, connector version 5.1.0 is the latest available — see xref:installation.adoc#version[the compatibility table].
 
 *How to migrate*:
 
@@ -38,12 +39,6 @@ org.neo4j:neo4j-connector-apache-spark_{scala-version}:5.1.0_for_spark_3
 ----
 +
 . If you cannot upgrade Spark, stay on the 5.0.x line.
-
-[NOTE]
-====
-5.1.0 is the last release compatible with Spark 3.3.
-To stay on Spark 3.3 going forward, pin the connector to 5.1.0 — see xref:installation.adoc#version[the compatibility table].
-====
 
 See the xref:changelog.adoc#_5_1_0[5.1.0 release notes] for the full list of changes.
 
