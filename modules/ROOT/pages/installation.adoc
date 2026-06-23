@@ -31,7 +31,7 @@ Here is a compatibility table to help you choose the correct version of the conn
 |`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:5.4.3_for_spark_3`
 |===
 
-For older versions, please refer to the xref:compatibility.adoc#eol-versions[EOL compatibility table].
+For older versions, please refer to the xref:compatibility.adoc[EOL compatibility table].
 
 [#shell]
 == Usage with the Spark shell
