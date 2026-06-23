@@ -23,7 +23,7 @@ The connector supports writing DataFrames to Neo4j as well, and custom Cypher qu
 
 The following table highlights the compatible versions between this connector, Neo4j and Spark.
 
-.Connector version with minumum version support matrix
+.Connector version compatibility table
 |===
 |Connector |Neo4j |Spark |Databricks
 
