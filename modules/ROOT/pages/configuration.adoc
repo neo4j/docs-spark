@@ -46,7 +46,7 @@ val dfProduct = spark.read.format("org.neo4j.spark.DataSource")
         .option("labels", "Product")
         .load()
 ----
-[#custom-auth-supplier, role=label--new-5.3.9]
+
 == Custom authentication supplier
 Starting from version 5.3.9, the connector provides an option to use a custom authentication supplier in addition to
 already supported authentication types, such as `none`, `basic`, `kerberos`, `custom` and `bearer`.
