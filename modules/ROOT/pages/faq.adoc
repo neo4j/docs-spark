@@ -28,11 +28,6 @@ For best performance, make sure you are familiar with the material in the link:h
 It is important to keep in mind that Neo4j scales writes vertically and reads horizontally.  In
 the link:https://neo4j.com/docs/operations-manual/current/clustering/introduction/[Causal Cluster Model], only the cluster leader (1 machine) may accept writes. For this reason, focus on getting the best hardware and performance on your cluster leader to maximize write throughput.
 
-=== Why are the returned columns not in the same order as I specified in the query?
-
-Unfortunately, this is a known issue and is there for Neo4j 3.x and Neo4j 4.0.
-From Neo4j 4.1 onwards, you get the same order as it's specified in the return statement.
-
 === Where can I get help?
 
 link:https://community.neo4j.com/[The Neo4j Community] site is a great place to ask questions, talk with other users who use the connector, and get help from Neo4j experts.
@@ -114,11 +109,6 @@ See the Aura support article link:https://support.neo4j.com/s/article/1500003161
 == Troubleshooting
 
 === How do I get the underlying Neo4j driver debug logs?
-
-[NOTE]
-====
-This is only possible with versions 4.1.4 and later of the Spark connector.
-====
 
 The Spark program needs to be configured for logging, as documented in https://spark.apache.org/docs/latest/configuration.html#configuring-logging[the Spark manual].
 
