@@ -5,7 +5,9 @@
 == Choose the correct version
 
 Make sure to match both the Spark version and the Scala version of your setup.
-Here is a compact compatibility table to help you choose the correct version of the connector given your version of Spark.
+Spark versions prior to 3.3 are not supported.
+Below is a compact compatibility table to help you choose the correct version of the connector given your version of Spark.
+Refer to xref:overview.adoc#_compatibility[this page] for full compatibility information.
 
 .Compatibility table
 [cols="1,3,3"]
