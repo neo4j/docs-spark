@@ -34,49 +34,6 @@ If you are using a xref:write/query.adoc[custom Cypher query], you need to creat
 |`NONE`
 |===
 
-[#indexes]
-[role=label--deprecated]
-== Indexes on node properties
-
-link:https://neo4j.com/docs/cypher-manual/current/indexes/search-performance-indexes/overview/[Indexes] in Neo4j are often used to increase search performance.
-
-You can create an index by setting the `schema.optimization.type` option to `INDEX`.
-
-.Example
-[source, scala, role=nocollapse]
-----
-val df = List(
-  "Product 1",
-  "Product 2",
-).toDF("name")
-
-df.write
-  .format("org.neo4j.spark.DataSource")
-  .mode(SaveMode.Overwrite)
-  .option("labels", ":Product")
-  .option("node.keys", "name")
-  .option("schema.optimization.type", "INDEX")
-  .save()
-----
-
-[%collapsible]
-.Schema query
-====
-Before the writing process starts, the connector runs the following schema query:
-
-[source, cypher]
-----
-CREATE INDEX spark_INDEX_Product_name FOR (n:Product) ON (n.name)
-----
-
-The format of the index name is `spark_INDEX_<LABEL>_<NODE_KEYS>`, where `<LABEL>` is the first label from the `labels` option and `<NODE_KEYS>` is a dash-separated sequence of one or more properties as specified in the `node.keys` options.
-====
-
-Notes:
-
-* The index is not recreated if already present.
-* With multiple labels, only the first label is used to create the index.
-
 [#node-constraints-unique]
 == Node property uniqueness constraints
 
