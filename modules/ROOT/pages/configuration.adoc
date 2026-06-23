@@ -1,7 +1,7 @@
 [#options]
 = Options and configuration
 
-:description: The chapter describes configuration options of Neo4j Connector for Apache Spark.  
+:description: The chapter describes configuration options of Neo4j Connector for Apache Spark.
 
 When using the connector, any valid Neo4j driver option can be set using the `option` method in
 Spark, like so:
@@ -148,8 +148,8 @@ The authentication methods to be used:
 * `basic`
 * `kerberos`
 * `custom`
-* `bearer` label:new[v.5.1]
-* any <<custom-auth-supplier, custom authentication supplier>> label:new[v.5.3.9]
+* `bearer`
+* any <<custom-auth-supplier, custom authentication supplier>>
 
 See link:https://neo4j.com/docs/java-manual/4.4/client-applications/#java-driver-authentication[Authentication] for more information.
 |`basic`
@@ -246,7 +246,7 @@ yet in case you set this option, it has the priority compared to the one defined
 |No
 
 |`access.mode`
-a|Possible values are: 
+a|Possible values are:
 
 * `read`
 * `write`
