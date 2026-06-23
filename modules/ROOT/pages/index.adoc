@@ -27,16 +27,6 @@ The following table highlights the compatible versions between this connector, N
 |===
 |Connector |Neo4j |Spark |Databricks
 
-|5.0
-|4.4, 5.x
-|3.2
-|End of Support
-
-|5.1
-|4.4, 5.x
-|3.3
-|End of Support
-
 |5.2
 |4.4, 5.x
 |3.4, 3.5
@@ -56,6 +46,7 @@ The following table highlights the compatible versions between this connector, N
 
 Neo4j versions includes both community editions and enterprise editions.
 All Neo4j Connector for Apache Spark versions of the 5.x family supports Scala version 2.12 and 2.13, with minimum required Java runtime version 8.
+If your version is missing from the table, please refer to the xref:compatibility.adoc[End of Life versions] page.
 
 == Training
 
