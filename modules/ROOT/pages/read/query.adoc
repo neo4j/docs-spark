@@ -99,7 +99,9 @@ The result of a script can be used in a subsequent query, for example to inject 
 This is not possible if the script contains schema operations.
 
 Use the `script` option to run a *single* Cypher query.
-To run *multiple* queries, use the indexed `script.N` options, where each query is passed in its own option. label:new[New in v5.5]
+
+[role=label--new-5.5]
+To run *multiple* queries, use the indexed `script.N` options, where each query is passed in its own option.
 
 [IMPORTANT]
 ====
