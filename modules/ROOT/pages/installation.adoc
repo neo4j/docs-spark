@@ -5,33 +5,8 @@
 == Choose the correct version
 
 Make sure to match both the Spark version and the Scala version of your setup.
-Here is a compatibility table to help you choose the correct version of the connector.
-
-.Compatibility table
-[cols="1,1,2,2,4"]
-|===
-| Spark | Connector | Scala | Python | Maven Artifact
-
-|*4.1*
-|`6.0.0-RC01`
-|`2.13`
-|`3.14`, `3.13`, `3.12`, `3.11`, `3.10`
-|`org.neo4j.connectors:spark:6.0.0-RC01`
-
-|*4.0*
-|`6.0.0-RC01`
-|`2.13`
-|`3.14`, `3.13`, `3.12`, `3.11`, `3.10`
-|`org.neo4j.connectors:spark:6.0.0-RC01`
-
-|*3.5*
-|`5.4.3`
-|`2.13`, `2.12`
-|`3.13`, `3.12`, `3.11`, `3.10`, `3.9`
-|`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:5.4.3_for_spark_3`
-|===
-
-For older versions, please refer to the xref:compatibility.adoc[EOL compatibility table].
+Have a look at the xref:compatibility.adoc[compatibility tables] to determine what connector version is suitable for your setup.
+The examples below will demonstrate using the latest {connector-version} connector.
 
 [#shell]
 == Usage with the Spark shell

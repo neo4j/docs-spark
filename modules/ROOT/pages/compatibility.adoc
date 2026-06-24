@@ -1,11 +1,43 @@
-[#eol-versions]
-= End of Life versions
+= Compatibiltiy
+:description: This page presents all compatibility tables both for active versions and old versions.
+
+Different versions of the connector have requirements on your environemnt's runtimes.
+You will find those requirements for both active and end of life connectors on this page.
+
+== Active versions
+
+These are the current actively developed connector versions and their respective requirements.
+
+.Compatibility table
+[cols="1,1,1,2,4"]
+|===
+| Spark | Connector | Scala | Python | Maven Artifact
+
+|*4.1*
+|6.0.0-RC02
+|2.13
+|3.14, 3.13, 3.12, 3.11, 3.10
+|`org.neo4j.connectors:spark:6.0.0-RC02`
+
+|*4.0*
+|6.0.0-RC02
+|2.13
+|3.14, 3.13, 3.12, 3.11, 3.10
+|`org.neo4j.connectors:spark:6.0.0-RC02`
+
+|*3.5*
+|5.4.3
+|2.13, 2.12
+|3.13, 3.12, 3.11, 3.10, 3.9
+|`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:5.4.3_for_spark_3`
+|===
+
+== End of life versions
 
 [WARNING]
 ====
 These versions have long reached the End of Life status.
 They are not suitable for production purposes.
-Please refer to the xref:installation.adoc#version[installation guide] for updated and safe-to-use versions.
 ====
 
 .Compatibility table
@@ -14,38 +46,38 @@ Please refer to the xref:installation.adoc#version[installation guide] for updat
 | Spark | Connector | Scala | Python | Maven Artifact
 
 |*3.4*
-|`5.4.3`
-|`2.13`, `2.12`
-|`3.13`, `3.12`, `3.11`, `3.10`, `3.9`
+|5.4.3
+|2.13, 2.12
+|3.13, 3.12, 3.11, 3.10, 3.9
 |`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:5.4.3_for_spark_3`
 
 |*3.3*
-|`5.2.0`
-|`2.13`, `2.12`
-|`3.8`, `3.7`
+|5.2.0
+|2.13, 2.12
+|3.8, 3.7
 |`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:5.2.0_for_spark_3`
 
 |*3.2*
-|`5.0.3`
-|`2.13`, `2.12`
-|`3.8`, `3.7`
+|5.0.3
+|2.13, 2.12
+|3.8, 3.7
 |`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:5.0.3_for_spark_3`
 
 |*3.1*
-|`4.1.5`
-|`2.13`, `2.12`, `2.11`
-|`3.8`, `3.7`, `3.6`
+|4.1.5
+|2.13, 2.12, 2.11
+|3.8, 3.7, 3.6
 |`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:4.1.2_for_spark_3`
 
 |*3.0*
-|`4.1.5`
-|`2.13`, `2.12`
-|`3.8`, `3.7`, `3.6`
+|4.1.5
+|2.13, 2.12
+|3.8, 3.7, 3.6
 |`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:4.2.0_for_spark_3`
 
 |*2.4*
-|`4.1.5`
-|`2.12`, `2.11`
-|`3.7`, `3.6`
+|4.1.5
+|2.12, 2.11
+|3.7, 3.6
 |`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:4.1.5_for_spark_2.4`
 |===

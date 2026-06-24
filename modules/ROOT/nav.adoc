@@ -34,5 +34,5 @@ include::partial$dwh-list.adoc[]
 * *Reference*
 * xref:types.adoc[]
 * xref:configuration.adoc[]
-* xref:faq.adoc[]
 * xref:compatibility.adoc[]
+* xref:faq.adoc[]

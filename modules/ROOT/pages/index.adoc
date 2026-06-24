@@ -21,7 +21,8 @@ The connector supports writing DataFrames to Neo4j as well, and custom Cypher qu
 
 == Compatibility
 
-The following table highlights the compatible versions between this connector, Neo4j and Spark.
+The following table overview the compatible versions between this connector, Neo4j, Spark and Databricks.
+For a more detailed compatibility view, see the xref:compatibility.adoc[compatibility tables] page.
 
 .Connector version compatibility table
 |===
@@ -45,8 +46,8 @@ The following table highlights the compatible versions between this connector, N
 |===
 
 Neo4j versions includes both community editions and enterprise editions.
-All Neo4j Connector for Apache Spark versions of the 5.x family supports Scala version 2.12 and 2.13, with minimum required Java runtime version 8.
-If your version is missing from the table, please refer to the xref:compatibility.adoc[End of Life versions] page.
+All Neo4j Connector for Apache Spark versions of the 5.x family supports Scala version 2.12 and 2.13.
+Minimum required runtime of Java version 8.
 
 == Training
 
