@@ -122,7 +122,7 @@ UNWIND $events AS event
 CREATE (n:Person {fullName: event.name + ' ' + event.surname, age: scriptResult[0].age})
 ----
 
-`scriptResult` is the result of the last script query, which in this case is `RETURN 36 AS age`.
+`scriptResult` is the result of the last script, which in this case is `RETURN 36 AS age`.
 
 `events` is one batch created from the dataset.
 ====
