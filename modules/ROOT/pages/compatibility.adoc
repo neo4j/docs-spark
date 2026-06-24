@@ -9,7 +9,6 @@ Please refer to the xref:installation.adoc#version[installation guide] for updat
 ====
 
 .Compatibility table
-====
 [cols="1,1,2,2,4"]
 |===
 | Spark | Connector | Scala | Python | Maven Artifact
@@ -50,4 +49,3 @@ Please refer to the xref:installation.adoc#version[installation guide] for updat
 |`3.7`, `3.6`
 |`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:4.1.5_for_spark_2.4`
 |===
-====
