@@ -30,8 +30,8 @@ This page mirrors the link:https://github.com/neo4j/neo4j-spark-connector/releas
 [#_5_4_0]
 === 5.4.0 (12 Jan 2026)
 
-* label:caution[Breaking] *Type conversion default changed*. Timestamps, intervals, and byte arrays are now converted differently from previous releases. Set the `type.conversion` reader option to `legacy` to keep the pre-5.4.0 behavior. See xref:types.adoc[] and xref:migration.adoc#_5_3_to_5_4[Migration 5.3 → 5.4].
-* label:caution[Breaking] *Strict `relationship.properties` map*. When `relationship.properties` is set, only the listed properties are written; previously, unmapped fields were written too. See xref:write/options.adoc[] and xref:migration.adoc#_5_3_to_5_4[Migration 5.3 → 5.4].
+* label:breaking[] *Type conversion default changed*. Timestamps, intervals, and byte arrays are now converted differently from previous releases. Set the `type.conversion` reader option to `legacy` to keep the pre-5.4.0 behavior. See xref:types.adoc[] and xref:migration.adoc#_5_3_to_5_4[Migration 5.3 → 5.4].
+* label:breaking[] *Strict `relationship.properties` map*. When `relationship.properties` is set, only the listed properties are written; previously, unmapped fields were written too. See xref:write/options.adoc[] and xref:migration.adoc#_5_3_to_5_4[Migration 5.3 → 5.4].
 
 *Features*
 
@@ -123,12 +123,9 @@ This page mirrors the link:https://github.com/neo4j/neo4j-spark-connector/releas
 [#_5_3_2]
 === 5.3.2 (16 Sep 2024)
 
-*Features*
-
-* Checkpointing support on structured streams (see xref:streaming.adoc#_checkpoint[Streaming checkpoint]).
-
 *Fixes*
 
+* Checkpointing support on structured streams (see xref:streaming.adoc#_checkpoint[Streaming checkpoint]).
 * Retry logic is now compatible with the driver retry mechanisms.
 
 [#_5_3_1]
@@ -159,7 +156,7 @@ This page mirrors the link:https://github.com/neo4j/neo4j-spark-connector/releas
 [#_5_2_0]
 === 5.2.0 (29 Sep 2023)
 
-* label:caution[Breaking] *Spark baseline raised to 3.4*. This release requires Apache Spark 3.4 or later in order to support the new push-down Top N optimization. See xref:installation.adoc#version[the compatibility table] and xref:migration.adoc#_5_1_to_5_2[Migration 5.1 → 5.2].
+* label:breaking[] *Spark baseline raised to 3.4*. This release requires Apache Spark 3.4 or later in order to support the new push-down Top N optimization. See xref:installation.adoc#version[the compatibility table] and xref:migration.adoc#_5_1_to_5_2[Migration 5.1 → 5.2].
 
 *Features*
 
@@ -176,7 +173,7 @@ This page mirrors the link:https://github.com/neo4j/neo4j-spark-connector/releas
 [#_5_1_0]
 === 5.1.0 (30 Aug 2023)
 
-* label:caution[Breaking] *Spark baseline raised to 3.3*. This release requires Apache Spark 3.3 or later in order to support push-down v2 filters and limit optimizations. 5.1.0 is the last release compatible with Spark 3.3. See xref:installation.adoc#version[the compatibility table] and xref:migration.adoc#_5_0_to_5_1[Migration 5.0 → 5.1].
+* label:breaking[] *Spark baseline raised to 3.3*. This release requires Apache Spark 3.3 or later in order to support push-down v2 filters and limit optimizations. 5.1.0 is the last release compatible with Spark 3.3. See xref:installation.adoc#version[the compatibility table] and xref:migration.adoc#_5_0_to_5_1[Migration 5.0 → 5.1].
 
 *Features*
 
