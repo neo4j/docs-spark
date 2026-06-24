@@ -85,7 +85,7 @@ Instead of implementing the supplier yourself, add this library as a dependency 
 
 [NOTE]
 ====
-Check link:https://central.sonatype.com/artifact/org.neo4j.connectors/commons-authn-keycloak[Maven Central] for the latest available version and use it in place of `LATEST_VERSION` below.
+Check link:https://central.sonatype.com/artifact/org.neo4j.connectors/commons-authn-keycloak[Maven Central] for the latest available version.
 ====
 
 [source, xml]
@@ -93,7 +93,7 @@ Check link:https://central.sonatype.com/artifact/org.neo4j.connectors/commons-au
 <dependency>
   <groupId>org.neo4j.connectors</groupId>
   <artifactId>commons-authn-keycloak</artifactId>
-  <version>LATEST_VERSION</version>
+  <version>{connectors-commons-version}</version>
 </dependency>
 ----
 
