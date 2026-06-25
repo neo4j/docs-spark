@@ -47,7 +47,7 @@ These versions have reached the End of Life status and are not suitable for prod
 |5.4.3
 |2.13, 2.12
 |3.13, 3.12, 3.11, 3.10, 3.9
-|`org.neo4j:neo4j-connector-apache-spark_$\{scala.version}:5.4.3_for_spark_3`
+|`org.neo4j:neo4j-connector-apache-spark_${scala.version}:5.4.3_for_spark_3`
 
 |*3.3*
 |5.2.0
