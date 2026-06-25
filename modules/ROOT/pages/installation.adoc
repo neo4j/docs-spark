@@ -12,6 +12,12 @@ The examples below show the installation process using the latest {connector-ver
 [#shell]
 == Usage with the Spark shell
 
+[NOTE]
+====
+Starting from version 5.4.0, the connector is not published to
+Spark Packages anymore.
+====
+
 The connector is available via Maven Central:
 
 [.tabbed-example]
