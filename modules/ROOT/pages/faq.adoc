@@ -93,7 +93,7 @@ Caused by: java.lang.ClassNotFoundException: scala.collection.IterableOnce
 ----
 
 This means that your Spark version doesn't match the Spark version on the connector.
-Refer to xref:overview.adoc#_compatibility[this page] to know which version you need.
+Refer to xref:compatibility.adoc[] to choose the right version.
 
 [[graph-already-exists]]
 === I am getting an error _Failed to invoke procedure gds.graph.create.cypher: Caused by: java.lang.IllegalArgumentException: A graph with name [name] already exists_. What should I do?

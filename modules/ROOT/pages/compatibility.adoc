@@ -1,8 +1,7 @@
-= Compatibiltiy
+= Compatibility
 :description: This page presents all compatibility tables both for active versions and old versions.
 
-Different versions of the connector have requirements on your environemnt's runtimes.
-You will find those requirements for both active and end of life connectors on this page.
+This page lists the environment requirements for each version of the connector.
 
 == Active versions
 
@@ -36,8 +35,7 @@ These are the current actively developed connector versions and their respective
 
 [WARNING]
 ====
-These versions have long reached the End of Life status.
-They are not suitable for production purposes.
+These versions have reached the End of Life status and are not suitable for production purposes.
 ====
 
 .Compatibility table
